@@ -1,0 +1,65 @@
+# =============================================================================
+# NEXUS AI — .gitignore
+# =============================================================================
+
+# Environment files (NEVER commit)
+.env
+.env.local
+.env.*.local
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+dist/
+build/
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Node / Frontend
+node_modules/
+frontend/dist/
+frontend/.vite/
+*.log
+npm-debug.log*
+
+# Storage uploads (local dev files)
+storage/uploads/
+*.pdf
+*.docx
+
+# Database
+*.sqlite
+*.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
+
+# Alembic
+backend/alembic.ini.local
+
+# Secrets
+*.pem
+*.key
+*.crt
+secrets/
