@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Download, Copy, Check, Eye, Code2, ExternalLink, ShieldCheck, FileText, CheckCircle2 } from 'lucide-react';
+import { Download, Copy, Check, Eye, Code2, ExternalLink, ShieldCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Modal from './Modal';
 import Button from './Button';
@@ -40,16 +40,14 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
   };
 
   // ─── Inline Markdown Formatter ───────────────────────────────────────────────
-  // Parses **bold**, *italic*, `code`, and [link](url) cleanly without raw syntax leaks
   const formatInlineText = (text: string): React.ReactNode => {
     if (!text) return '';
 
-    // Regex matching [link](url) | **bold** | `code` | *italic*
     const tokenRegex = /(\[[^\]]+\]\([^\)]+\)|\*\*[^\*]+\*\*|`[^`]+`|\*[^\s\*][^\*]*\*)/g;
     const parts = text.split(tokenRegex);
 
     return parts.map((part, i) => {
-      // 1. Link: [label](url)
+      // 1. Link
       const linkMatch = part.match(/^\[([^\]]+)\]\(([^\)]+)\)$/);
       if (linkMatch) {
         return (
@@ -58,7 +56,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
             href={linkMatch[2]}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-blue-400 hover:text-blue-300 underline underline-offset-2 font-medium transition-colors"
+            className="inline-flex items-center gap-1 text-sky-600 dark:text-sky-400 hover:text-sky-500 underline underline-offset-2 font-medium transition-colors"
           >
             {linkMatch[1]}
             <ExternalLink className="w-2.5 h-2.5 opacity-80 shrink-0" />
@@ -66,29 +64,29 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
         );
       }
 
-      // 2. Bold: **text**
+      // 2. Bold
       if (part.startsWith('**') && part.endsWith('**') && part.length >= 4) {
         const inner = part.slice(2, -2);
         return (
-          <strong key={i} className="font-semibold text-white">
+          <strong key={i} className="font-bold text-slate-900 dark:text-white">
             {formatInlineText(inner)}
           </strong>
         );
       }
 
-      // 3. Inline code: `text`
+      // 3. Inline code
       if (part.startsWith('`') && part.endsWith('`') && part.length >= 2) {
         return (
-          <code key={i} className="px-1.5 py-0.5 rounded bg-[#070b14] border border-slate-800 text-amber-300 font-mono text-[11px]">
+          <code key={i} className="px-1.5 py-0.5 rounded-md bg-sky-100/80 dark:bg-sky-950/60 border border-sky-200 dark:border-sky-500/30 text-sky-800 dark:text-sky-200 font-mono text-[11px]">
             {part.slice(1, -1)}
           </code>
         );
       }
 
-      // 4. Italic: *text*
+      // 4. Italic
       if (part.startsWith('*') && part.endsWith('*') && part.length >= 2) {
         return (
-          <em key={i} className="text-slate-300 italic">
+          <em key={i} className="text-slate-700 dark:text-slate-300 italic">
             {part.slice(1, -1)}
           </em>
         );
@@ -108,12 +106,12 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
     const flushTable = (key: number) => {
       if (tableRows.length === 0) return null;
       const headers = tableRows[0];
-      const rows = tableRows.slice(2); // Skip separator row
+      const rows = tableRows.slice(2);
       const el = (
-        <div key={`table-${key}`} className="my-5 overflow-x-auto rounded-xl border border-slate-800 bg-[#070b14]/70 shadow-inner">
+        <div key={`table-${key}`} className="my-5 overflow-x-auto rounded-xl border border-sky-200 dark:border-sky-500/20 bg-white/60 dark:bg-[#071324]/70 shadow-sm backdrop-blur-sm">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-[#0b1120] border-b border-slate-800 text-slate-200 font-semibold uppercase tracking-wider text-[11px]">
+              <tr className="bg-sky-100/60 dark:bg-sky-950/60 border-b border-sky-200 dark:border-sky-500/20 text-sky-900 dark:text-sky-200 font-bold uppercase tracking-wider text-[11px]">
                 {headers.map((h, i) => (
                   <th key={i} className="py-3 px-3.5 whitespace-nowrap">
                     {formatInlineText(h.trim())}
@@ -121,11 +119,11 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60 font-sans">
+            <tbody className="divide-y divide-sky-100 dark:divide-sky-500/15 font-sans">
               {rows.map((row, ri) => (
-                <tr key={ri} className="hover:bg-slate-850/40 transition-colors">
+                <tr key={ri} className="hover:bg-sky-50/50 dark:hover:bg-sky-950/30 transition-colors">
                   {row.map((cell, ci) => (
-                    <td key={ci} className="py-2.5 px-3.5 text-slate-300 leading-relaxed align-top">
+                    <td key={ci} className="py-2.5 px-3.5 text-slate-700 dark:text-slate-200 leading-relaxed align-top">
                       {formatInlineText(cell.trim())}
                     </td>
                   ))}
@@ -155,45 +153,45 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
 
       if (trimmed.startsWith('# ')) {
         elements.push(
-          <div key={idx} className="mt-2 mb-4 pb-3 border-b border-slate-800">
-            <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+          <div key={idx} className="mt-2 mb-4 pb-3 border-b border-sky-200/80 dark:border-sky-500/20">
+            <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               {formatInlineText(trimmed.slice(2))}
             </h1>
           </div>
         );
       } else if (trimmed.startsWith('## ')) {
         elements.push(
-          <div key={idx} className="flex items-center gap-2 mt-6 mb-3 pt-3 border-t border-slate-800/80">
-            <span className="w-1.5 h-4 bg-blue-500 rounded-full shrink-0" />
-            <h2 className="text-sm sm:text-base font-semibold text-blue-400 uppercase tracking-wide">
+          <div key={idx} className="flex items-center gap-2 mt-6 mb-3 pt-3 border-t border-sky-200/60 dark:border-sky-500/20">
+            <span className="w-1.5 h-4 bg-sky-500 rounded-full shrink-0" />
+            <h2 className="text-sm sm:text-base font-bold text-sky-700 dark:text-sky-300 uppercase tracking-wide">
               {formatInlineText(trimmed.slice(3))}
             </h2>
           </div>
         );
       } else if (trimmed.startsWith('### ')) {
         elements.push(
-          <h3 key={idx} className="text-xs sm:text-sm font-semibold text-slate-200 mt-4 mb-2 flex items-center gap-1.5">
-            <span className="w-1 h-1 bg-slate-400 rounded-full" />
+          <h3 key={idx} className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 mt-4 mb-2 flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 bg-sky-400 rounded-full" />
             {formatInlineText(trimmed.slice(4))}
           </h3>
         );
       } else if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
         elements.push(
-          <li key={idx} className="text-xs text-slate-300 ml-4 list-disc my-1.5 leading-relaxed">
+          <li key={idx} className="text-xs text-slate-700 dark:text-slate-300 ml-4 list-disc my-1.5 leading-relaxed">
             {formatInlineText(trimmed.slice(2))}
           </li>
         );
       } else if (/^\d+\.\s/.test(trimmed)) {
         elements.push(
-          <li key={idx} className="text-xs text-slate-300 ml-4 list-decimal my-1.5 leading-relaxed">
+          <li key={idx} className="text-xs text-slate-700 dark:text-slate-300 ml-4 list-decimal my-1.5 leading-relaxed">
             {formatInlineText(trimmed.replace(/^\d+\.\s/, ''))}
           </li>
         );
       } else if (trimmed === '---') {
-        elements.push(<hr key={idx} className="my-5 border-slate-800/80" />);
+        elements.push(<hr key={idx} className="my-5 border-sky-200/80 dark:border-sky-500/20" />);
       } else if (trimmed.length > 0) {
         elements.push(
-          <p key={idx} className="text-xs text-slate-300 my-2 leading-relaxed">
+          <p key={idx} className="text-xs text-slate-700 dark:text-slate-300 my-2 leading-relaxed">
             {formatInlineText(trimmed)}
           </p>
         );
@@ -216,26 +214,26 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
     <Modal isOpen={isOpen} onClose={onClose} title={title} maxWidth="5xl">
       <div className="space-y-4">
         {/* Header Ribbon */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-800">
+        <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-sky-100 dark:border-sky-500/20">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1 text-[11px] font-mono uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-0.5 rounded-full font-semibold">
-              <ShieldCheck className="w-3 h-3 text-emerald-400" />
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 px-3 py-1 rounded-full font-bold">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
               Verified Multi-Agent Artifact
             </span>
-            <span className="text-[11px] text-slate-500 font-mono">
+            <span className="text-[11px] text-slate-500 dark:text-sky-300/70 font-mono">
               {new Date(artifact.created_at).toLocaleString()}
             </span>
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="bg-slate-900 border border-slate-800 rounded-lg p-0.5 flex items-center">
+            <div className="bg-sky-100/70 dark:bg-sky-950/70 border border-sky-200 dark:border-sky-500/30 rounded-xl p-1 flex items-center gap-1">
               <button
                 type="button"
                 onClick={() => setViewMode('formatted')}
-                className={`px-3 py-1 rounded text-xs flex items-center gap-1.5 transition-colors ${
+                className={`px-3 py-1 rounded-lg text-xs flex items-center gap-1.5 transition-all ${
                   viewMode === 'formatted'
-                    ? 'bg-blue-600 text-white font-medium'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white font-bold shadow-xs'
+                    : 'text-slate-600 dark:text-sky-200 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 <Eye className="w-3.5 h-3.5" />
@@ -244,10 +242,10 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
               <button
                 type="button"
                 onClick={() => setViewMode('raw')}
-                className={`px-3 py-1 rounded-md text-xs flex items-center gap-1.5 transition-all ${
+                className={`px-3 py-1 rounded-lg text-xs flex items-center gap-1.5 transition-all ${
                   viewMode === 'raw'
-                    ? 'bg-indigo-600 text-white font-medium shadow-xs'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
+                    ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white font-bold shadow-xs'
+                    : 'text-slate-600 dark:text-sky-200 hover:text-slate-900 dark:hover:text-white'
                 }`}
               >
                 <Code2 className="w-3.5 h-3.5" />
@@ -259,9 +257,9 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
               variant="secondary"
               size="xs"
               onClick={handleCopy}
-              className="flex items-center gap-1.5 text-xs text-slate-300 hover:text-white"
+              className="flex items-center gap-1.5 text-xs"
             >
-              {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+              {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
               {copied ? 'Copied' : 'Copy'}
             </Button>
 
@@ -284,13 +282,13 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
         </div>
 
         {/* Modal Body */}
-        <div className="max-h-[70vh] overflow-y-auto pr-2 rounded-lg">
+        <div className="max-h-[70vh] overflow-y-auto pr-2 rounded-2xl">
           {viewMode === 'formatted' ? (
-            <div className="p-5 bg-[#0a0f1e] rounded-xl border border-slate-800/80 font-sans leading-relaxed text-slate-200">
+            <div className="p-6 bg-white/70 dark:bg-[#071324]/80 rounded-2xl border border-sky-200/80 dark:border-sky-500/20 font-sans leading-relaxed backdrop-blur-md">
               {renderFormattedMarkdown(content)}
             </div>
           ) : (
-            <pre className="p-4 bg-[#070b16] rounded-xl border border-slate-800/90 text-slate-300 font-mono text-xs overflow-x-auto whitespace-pre-wrap leading-relaxed">
+            <pre className="p-5 bg-sky-50/80 dark:bg-[#050c18] rounded-2xl border border-sky-200/80 dark:border-sky-500/25 text-slate-800 dark:text-sky-200 font-mono text-xs overflow-x-auto whitespace-pre-wrap leading-relaxed">
               {content}
             </pre>
           )}

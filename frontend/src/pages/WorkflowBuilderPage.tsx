@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
   ReactFlow,
   MiniMap,
@@ -22,90 +22,106 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useWorkflows } from '../hooks/useWorkflows';
+import { useTheme } from '../context/ThemeContext';
 import Button from '../components/Button';
 import type { WorkflowNode, WorkflowEdge } from '../types';
 
-const defaultNodeStyle = {
-  background: '#0f172a',
-  color: '#f8fafc',
-  borderRadius: '8px',
-  border: '1px solid #334155',
-  padding: '10px 14px',
-  fontSize: '12px',
-  fontWeight: '500',
-  boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.3)',
-};
-
-const initialNodes: Node[] = [
-  {
-    id: 'start-1',
-    type: 'input',
-    position: { x: 50, y: 150 },
-    data: { label: 'Start Trigger' },
-    style: { ...defaultNodeStyle, borderLeft: '4px solid #3b82f6' },
-  },
-  {
-    id: 'planner-1',
-    position: { x: 230, y: 150 },
-    data: { label: 'Planner Agent' },
-    style: { ...defaultNodeStyle, borderLeft: '4px solid #6366f1' },
-  },
-  {
-    id: 'research-1',
-    position: { x: 420, y: 80 },
-    data: { label: 'Research Agent' },
-    style: { ...defaultNodeStyle, borderLeft: '4px solid #0ea5e9' },
-  },
-  {
-    id: 'analysis-1',
-    position: { x: 420, y: 220 },
-    data: { label: 'Analysis Agent' },
-    style: { ...defaultNodeStyle, borderLeft: '4px solid #f59e0b' },
-  },
-  {
-    id: 'reviewer-1',
-    position: { x: 610, y: 150 },
-    data: { label: 'Reviewer Agent' },
-    style: { ...defaultNodeStyle, borderLeft: '4px solid #84cc16' },
-  },
-  {
-    id: 'report-1',
-    position: { x: 800, y: 150 },
-    data: { label: 'Report Generator' },
-    style: { ...defaultNodeStyle, borderLeft: '4px solid #10b981' },
-  },
-  {
-    id: 'end-1',
-    type: 'output',
-    position: { x: 990, y: 150 },
-    data: { label: 'End Artifact' },
-    style: { ...defaultNodeStyle, borderLeft: '4px solid #64748b' },
-  },
-];
-
-const initialEdges: Edge[] = [
-  { id: 'e1-2', source: 'start-1', target: 'planner-1', style: { stroke: '#475569' } },
-  { id: 'e2-3', source: 'planner-1', target: 'research-1', style: { stroke: '#475569' } },
-  { id: 'e2-4', source: 'planner-1', target: 'analysis-1', style: { stroke: '#475569' } },
-  { id: 'e3-5', source: 'research-1', target: 'reviewer-1', style: { stroke: '#475569' } },
-  { id: 'e4-5', source: 'analysis-1', target: 'reviewer-1', style: { stroke: '#475569' } },
-  { id: 'e5-6', source: 'reviewer-1', target: 'report-1', style: { stroke: '#475569' } },
-  { id: 'e6-7', source: 'report-1', target: 'end-1', style: { stroke: '#475569' } },
-];
-
 const NODE_TEMPLATES = [
-  { type: 'start', label: 'Start Trigger', border: '#3b82f6' },
-  { type: 'planner', label: 'Planner Agent', border: '#6366f1' },
+  { type: 'start', label: 'Start Trigger', border: '#0284c7' },
+  { type: 'planner', label: 'Planner Agent', border: '#2563eb' },
   { type: 'research', label: 'Research Agent', border: '#0ea5e9' },
   { type: 'document', label: 'Document Agent', border: '#06b6d4' },
   { type: 'analysis', label: 'Analysis Agent', border: '#f59e0b' },
-  { type: 'reviewer', label: 'Reviewer Agent', border: '#84cc16' },
-  { type: 'report', label: 'Report Generator', border: '#10b981' },
-  { type: 'approval', label: 'Human Approval Gate', border: '#ef4444' },
+  { type: 'reviewer', label: 'Reviewer Agent', border: '#10b981' },
+  { type: 'report', label: 'Report Generator', border: '#059669' },
+  { type: 'approval', label: 'Human Approval Gate', border: '#f43f5e' },
   { type: 'end', label: 'End Artifact', border: '#64748b' },
 ];
 
 export const WorkflowBuilderPage: React.FC = () => {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
+  const nodeBaseStyle = useMemo(
+    () => ({
+      background: isDark ? 'rgba(12, 24, 43, 0.88)' : 'rgba(255, 255, 255, 0.92)',
+      color: isDark ? '#f8fafc' : '#0f172a',
+      borderRadius: '10px',
+      border: isDark ? '1px solid rgba(56, 189, 248, 0.25)' : '1px solid rgba(186, 230, 253, 0.9)',
+      padding: '10px 14px',
+      fontSize: '12px',
+      fontWeight: '600' as const,
+      boxShadow: isDark
+        ? '0 4px 12px 0 rgba(0, 0, 0, 0.4)'
+        : '0 4px 12px 0 rgba(14, 165, 233, 0.08)',
+      backdropFilter: 'blur(12px)',
+    }),
+    [isDark]
+  );
+
+  const initialNodes: Node[] = useMemo(
+    () => [
+      {
+        id: 'start-1',
+        type: 'input',
+        position: { x: 50, y: 150 },
+        data: { label: 'Start Trigger' },
+        style: { ...nodeBaseStyle, borderLeft: '4px solid #0284c7' },
+      },
+      {
+        id: 'planner-1',
+        position: { x: 230, y: 150 },
+        data: { label: 'Planner Agent' },
+        style: { ...nodeBaseStyle, borderLeft: '4px solid #2563eb' },
+      },
+      {
+        id: 'research-1',
+        position: { x: 420, y: 80 },
+        data: { label: 'Research Agent' },
+        style: { ...nodeBaseStyle, borderLeft: '4px solid #0ea5e9' },
+      },
+      {
+        id: 'analysis-1',
+        position: { x: 420, y: 220 },
+        data: { label: 'Analysis Agent' },
+        style: { ...nodeBaseStyle, borderLeft: '4px solid #f59e0b' },
+      },
+      {
+        id: 'reviewer-1',
+        position: { x: 610, y: 150 },
+        data: { label: 'Reviewer Agent' },
+        style: { ...nodeBaseStyle, borderLeft: '4px solid #10b981' },
+      },
+      {
+        id: 'report-1',
+        position: { x: 800, y: 150 },
+        data: { label: 'Report Generator' },
+        style: { ...nodeBaseStyle, borderLeft: '4px solid #059669' },
+      },
+      {
+        id: 'end-1',
+        type: 'output',
+        position: { x: 990, y: 150 },
+        data: { label: 'End Artifact' },
+        style: { ...nodeBaseStyle, borderLeft: '4px solid #64748b' },
+      },
+    ],
+    [nodeBaseStyle]
+  );
+
+  const initialEdges: Edge[] = useMemo(
+    () => [
+      { id: 'e1-2', source: 'start-1', target: 'planner-1', style: { stroke: isDark ? '#38bdf8' : '#0284c7', strokeWidth: 2 } },
+      { id: 'e2-3', source: 'planner-1', target: 'research-1', style: { stroke: isDark ? '#38bdf8' : '#0284c7', strokeWidth: 2 } },
+      { id: 'e2-4', source: 'planner-1', target: 'analysis-1', style: { stroke: isDark ? '#38bdf8' : '#0284c7', strokeWidth: 2 } },
+      { id: 'e3-5', source: 'research-1', target: 'reviewer-1', style: { stroke: isDark ? '#38bdf8' : '#0284c7', strokeWidth: 2 } },
+      { id: 'e4-5', source: 'analysis-1', target: 'reviewer-1', style: { stroke: isDark ? '#38bdf8' : '#0284c7', strokeWidth: 2 } },
+      { id: 'e5-6', source: 'reviewer-1', target: 'report-1', style: { stroke: isDark ? '#38bdf8' : '#0284c7', strokeWidth: 2 } },
+      { id: 'e6-7', source: 'report-1', target: 'end-1', style: { stroke: isDark ? '#38bdf8' : '#0284c7', strokeWidth: 2 } },
+    ],
+    [isDark]
+  );
+
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [workflowName, setWorkflowName] = useState('Standard Multi-Agent Pipeline');
@@ -113,8 +129,17 @@ export const WorkflowBuilderPage: React.FC = () => {
   const { createWorkflow, loading } = useWorkflows();
 
   const onConnect = useCallback(
-    (params: Connection) => setEdges((eds) => addEdge({ ...params, style: { stroke: '#475569' } }, eds)),
-    [setEdges]
+    (params: Connection) =>
+      setEdges((eds) =>
+        addEdge(
+          {
+            ...params,
+            style: { stroke: isDark ? '#38bdf8' : '#0284c7', strokeWidth: 2 },
+          },
+          eds
+        )
+      ),
+    [setEdges, isDark]
   );
 
   const addCustomNode = (template: typeof NODE_TEMPLATES[0]) => {
@@ -124,7 +149,7 @@ export const WorkflowBuilderPage: React.FC = () => {
       position: { x: 300 + Math.random() * 80, y: 150 + Math.random() * 80 },
       data: { label: template.label, nodeType: template.type },
       style: {
-        ...defaultNodeStyle,
+        ...nodeBaseStyle,
         borderLeft: `4px solid ${template.border}`,
       },
     };
@@ -170,16 +195,18 @@ export const WorkflowBuilderPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#0a0f1d]">
+    <div className="flex flex-col h-full bg-slate-50 dark:bg-[#071120] transition-colors duration-200">
       {/* Top Action Bar */}
-      <div className="h-14 border-b border-slate-800/80 px-5 flex items-center justify-between bg-[#0a0f1e]">
+      <div className="h-14 border-b border-sky-100 dark:border-sky-400/20 px-5 flex items-center justify-between bg-white/80 dark:bg-[#0c182b]/85 backdrop-blur-xl shadow-sm z-20">
         <div className="flex items-center gap-2.5">
-          <GitFork className="w-4 h-4 text-slate-400" />
+          <div className="w-7 h-7 rounded-lg bg-sky-100 dark:bg-sky-950/60 border border-sky-200 dark:border-sky-400/30 flex items-center justify-center text-sky-600 dark:text-sky-400">
+            <GitFork className="w-4 h-4" />
+          </div>
           <input
             type="text"
             value={workflowName}
             onChange={(e) => setWorkflowName(e.target.value)}
-            className="bg-transparent font-semibold text-slate-100 text-sm focus:outline-none border-b border-transparent hover:border-slate-700 focus:border-indigo-500 transition-colors px-1"
+            className="bg-transparent font-semibold text-slate-800 dark:text-slate-100 text-sm focus:outline-none border-b border-transparent hover:border-sky-300 dark:hover:border-sky-500/50 focus:border-sky-500 transition-colors px-1"
           />
         </div>
 
@@ -195,25 +222,25 @@ export const WorkflowBuilderPage: React.FC = () => {
 
       {/* Validation Banner if errors */}
       {validationErrors.length > 0 && (
-        <div className="bg-rose-500/10 border-b border-rose-500/30 px-5 py-2 text-xs text-rose-300 flex items-center gap-2">
-          <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+        <div className="bg-rose-500/10 border-b border-rose-500/30 px-5 py-2 text-xs text-rose-700 dark:text-rose-300 flex items-center gap-2 backdrop-blur-md">
+          <AlertCircle className="w-3.5 h-3.5 shrink-0 text-rose-600 dark:text-rose-400" />
           <span>{validationErrors.join(' • ')}</span>
         </div>
       )}
 
       {/* Mobile Node Palette Strip */}
-      <div className="sm:hidden bg-[#0a0f1e] border-b border-slate-800/80 px-3 py-2 overflow-x-auto flex items-center gap-2 shrink-0">
-        <span className="text-[10px] uppercase font-bold text-slate-500 whitespace-nowrap">Add:</span>
+      <div className="sm:hidden bg-white/85 dark:bg-[#0c182b]/85 backdrop-blur-xl border-b border-sky-100 dark:border-sky-400/20 px-3 py-2 overflow-x-auto flex items-center gap-2 shrink-0">
+        <span className="text-[10px] uppercase font-bold text-sky-700 dark:text-sky-300 whitespace-nowrap">Add:</span>
         {NODE_TEMPLATES.map((tmpl) => (
           <button
             key={tmpl.type}
             type="button"
             onClick={() => addCustomNode(tmpl)}
-            className="shrink-0 text-xs px-2.5 py-1 rounded-md bg-[#0e1529] border border-slate-800 hover:border-slate-700 text-slate-200 flex items-center gap-1.5"
+            className="shrink-0 text-xs px-2.5 py-1 rounded-lg bg-white dark:bg-[#071324] border border-sky-200 dark:border-sky-400/25 hover:border-sky-300 dark:hover:border-sky-400/50 text-slate-700 dark:text-slate-200 flex items-center gap-1.5 shadow-sm"
             style={{ borderLeftColor: tmpl.border, borderLeftWidth: '3px' }}
           >
             <span>{tmpl.label}</span>
-            <Plus className="w-2.5 h-2.5 text-slate-400" />
+            <Plus className="w-2.5 h-2.5 text-sky-500" />
           </button>
         ))}
       </div>
@@ -221,9 +248,9 @@ export const WorkflowBuilderPage: React.FC = () => {
       {/* Main Canvas & Left Node Palette */}
       <div className="flex-1 flex relative overflow-hidden">
         {/* Node Palette (Desktop) */}
-        <div className="hidden sm:block w-56 bg-[#0a0f1e] border-r border-slate-800/80 p-3.5 space-y-2.5 overflow-y-auto shrink-0 z-10">
-          <h3 className="text-[11px] uppercase font-bold text-slate-400 tracking-wider">Node Palette</h3>
-          <p className="text-[10px] text-slate-500">Click a node to add to canvas:</p>
+        <div className="hidden sm:block w-60 bg-white/70 dark:bg-[#071324]/80 backdrop-blur-xl border-r border-sky-100 dark:border-sky-400/20 p-4 space-y-3 overflow-y-auto shrink-0 z-10 shadow-sm">
+          <h3 className="text-[11px] uppercase font-bold text-sky-800 dark:text-sky-300 tracking-wider">Node Palette</h3>
+          <p className="text-[10px] text-slate-500 dark:text-slate-400">Click a node to add to canvas:</p>
 
           <div className="space-y-1.5">
             {NODE_TEMPLATES.map((tmpl) => (
@@ -231,18 +258,18 @@ export const WorkflowBuilderPage: React.FC = () => {
                 key={tmpl.type}
                 type="button"
                 onClick={() => addCustomNode(tmpl)}
-                className="w-full text-left px-2.5 py-2 rounded-lg text-xs font-medium flex items-center justify-between bg-[#0e1529] border border-slate-800/80 hover:border-slate-700 hover:bg-[#131e38] transition-colors"
-                style={{ borderLeftColor: tmpl.border, borderLeftWidth: '3px' }}
+                className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between bg-white/90 dark:bg-[#0c182b]/80 border border-sky-200/80 dark:border-sky-400/25 hover:border-sky-400 dark:hover:border-sky-400/60 hover:bg-sky-50/80 dark:hover:bg-[#10223d] text-slate-800 dark:text-slate-200 transition-all shadow-sm group"
+                style={{ borderLeftColor: tmpl.border, borderLeftWidth: '3.5px' }}
               >
-                <span className="text-slate-200">{tmpl.label}</span>
-                <Plus className="w-3 h-3 text-slate-500" />
+                <span>{tmpl.label}</span>
+                <Plus className="w-3.5 h-3.5 text-sky-500 opacity-60 group-hover:opacity-100 transition-opacity" />
               </button>
             ))}
           </div>
         </div>
 
         {/* React Flow Canvas */}
-        <div className="flex-1 h-full bg-[#0a0f1d]">
+        <div className="flex-1 h-full bg-[#f8fafc] dark:bg-[#071120] relative">
           <ReactFlow
             nodes={nodes}
             edges={edges}
@@ -251,13 +278,18 @@ export const WorkflowBuilderPage: React.FC = () => {
             onConnect={onConnect}
             fitView
           >
-            <Controls className="bg-[#0e1529] border border-slate-800/80 text-slate-300 rounded-lg shadow-md" />
+            <Controls className="!bg-white/90 dark:!bg-[#0c182b]/90 !border !border-sky-200 dark:!border-sky-400/25 !text-slate-700 dark:!text-sky-200 !rounded-xl !shadow-lg backdrop-blur-md overflow-hidden" />
             <MiniMap
-              nodeStrokeColor="#334155"
-              nodeColor="#1e293b"
-              className="bg-[#0b0f19] border border-slate-800 rounded-lg overflow-hidden"
+              nodeStrokeColor={isDark ? '#38bdf8' : '#0284c7'}
+              nodeColor={isDark ? '#0c182b' : '#e0f2fe'}
+              className="!bg-white/90 dark:!bg-[#0c182b]/90 !border !border-sky-200 dark:!border-sky-400/25 !rounded-xl !overflow-hidden backdrop-blur-md shadow-md"
             />
-            <Background color="#1e293b" gap={20} size={1} variant={BackgroundVariant.Dots} />
+            <Background
+              color={isDark ? '#0c2444' : '#bae6fd'}
+              gap={20}
+              size={1.5}
+              variant={BackgroundVariant.Dots}
+            />
           </ReactFlow>
         </div>
       </div>

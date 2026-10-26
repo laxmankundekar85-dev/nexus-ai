@@ -17,8 +17,12 @@ export const Card: React.FC<CardProps> = ({
     <div
       {...props}
       className={clsx(
-        'bg-[#0e1529] border border-slate-800/80 rounded-xl p-5 transition-all duration-200 shadow-sm shadow-slate-950/40',
-        hoverable && 'hover:border-slate-700 hover:bg-[#131e38] hover:shadow-md cursor-pointer',
+        'rounded-2xl p-5 transition-all duration-200',
+        // Glassmorphism Light & Dark styles
+        'bg-white/75 backdrop-blur-xl border border-white/80 shadow-md shadow-sky-500/5 text-slate-800',
+        'dark:bg-[#0c182b]/75 dark:backdrop-blur-xl dark:border-sky-400/20 dark:shadow-xl dark:shadow-black/30 dark:text-slate-100',
+        hoverable &&
+          'hover:bg-white/90 dark:hover:bg-[#11233f]/85 hover:border-sky-300 dark:hover:border-sky-400/40 hover:shadow-lg hover:shadow-sky-500/10 dark:hover:shadow-sky-500/10 cursor-pointer',
         className
       )}
     >

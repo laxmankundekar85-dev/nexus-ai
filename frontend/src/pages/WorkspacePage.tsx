@@ -640,16 +640,16 @@ export const WorkspacePage: React.FC = () => {
   };
 
   return (
-    <div className="p-4 sm:p-6 md:p-7 max-w-7xl mx-auto w-full space-y-4 sm:space-y-5">
+    <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto w-full space-y-5 sm:space-y-6 font-sans">
       {/* Objective Input Card */}
-      <div className="p-6 bg-gradient-to-br from-[#121c3a] via-[#0e162c] to-[#0a0f1e] border border-indigo-500/30 rounded-2xl shadow-xl">
+      <div className="p-6 bg-white/80 dark:bg-[#0c182b]/80 border border-sky-200/80 dark:border-sky-500/25 rounded-2xl shadow-xl backdrop-blur-xl">
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-600 to-blue-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/30">
-            <Terminal className="w-4 h-4" />
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-blue-600 flex items-center justify-center text-white shadow-md shadow-sky-500/30">
+            <Terminal className="w-4 h-4 text-white" />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-white tracking-wide">Execution Objective</h2>
-            <p className="text-[11px] text-indigo-300/80">Submit an enterprise research goal for autonomous agent coordination</p>
+            <h2 className="text-sm font-bold text-slate-900 dark:text-white tracking-wide">Execution Objective</h2>
+            <p className="text-[11px] text-sky-700/80 dark:text-sky-300/80">Submit an enterprise research goal for autonomous agent coordination</p>
           </div>
         </div>
 
@@ -659,12 +659,12 @@ export const WorkspacePage: React.FC = () => {
             placeholder="Specify target objective (e.g. Compare NVIDIA and AMD AI GPU market share and price benchmarks in 2024 to 2026)."
             value={objective}
             onChange={(e) => setObjective(e.target.value)}
-            className="w-full bg-[#080d1a] border border-slate-700/80 rounded-xl p-3.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/50 transition-all font-mono leading-relaxed"
+            className="w-full bg-white/80 dark:bg-[#071324]/80 border border-sky-200 dark:border-sky-500/30 rounded-xl p-3.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-sky-300/40 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-400/30 transition-all font-mono leading-relaxed"
           />
 
           {documents && documents.length > 0 && (
             <div>
-              <span className="text-[11px] font-semibold text-indigo-300/80 block mb-1.5 uppercase tracking-wider">
+              <span className="text-[11px] font-bold text-sky-800/80 dark:text-sky-300/80 block mb-1.5 uppercase tracking-wider">
                 Attach Knowledge Grounding (Optional)
               </span>
               <div className="flex flex-wrap gap-2">
@@ -679,13 +679,13 @@ export const WorkspacePage: React.FC = () => {
                           isSelected ? prev.filter((id) => id !== doc.id) : [...prev, doc.id]
                         );
                       }}
-                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all border ${
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border ${
                         isSelected
-                          ? 'bg-indigo-600/20 border-indigo-500 text-indigo-300 shadow-xs'
-                          : 'bg-[#090e1f] border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                          ? 'bg-sky-500/15 border-sky-500 text-sky-700 dark:text-sky-300 shadow-xs'
+                          : 'bg-white/60 dark:bg-[#091526] border-sky-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:text-sky-900 dark:hover:text-white hover:border-sky-300'
                       }`}
                     >
-                      <FileText className="w-3.5 h-3.5 text-indigo-400" />
+                      <FileText className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
                       {doc.filename}
                     </button>
                   );
@@ -694,8 +694,8 @@ export const WorkspacePage: React.FC = () => {
             </div>
           )}
 
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2 border-t border-slate-800/80">
-            <span className="text-[11px] text-slate-400 font-mono">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2 border-t border-sky-100 dark:border-sky-500/20">
+            <span className="text-[11px] text-slate-500 dark:text-sky-300/70 font-mono">
               {currentExecutionId ? `ID: ${currentExecutionId}` : '● Ready for autonomous execution'}
             </span>
 
@@ -715,7 +715,6 @@ export const WorkspacePage: React.FC = () => {
                 size="xs"
                 onClick={handleStart}
                 disabled={isSubmitting || !objective.trim()}
-                className="bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-semibold shadow-md shadow-indigo-600/30 border border-indigo-400/40 px-4 py-2"
               >
                 {isSubmitting ? (
                   <Loader2 className="w-3.5 h-3.5 animate-spin mr-1" />
@@ -731,20 +730,20 @@ export const WorkspacePage: React.FC = () => {
 
       {/* Approvals Banner */}
       {approvals && approvals.length > 0 && (
-        <Card className="p-4 border-amber-800/40 bg-amber-950/10">
-          <div className="flex items-center gap-2 text-amber-400 mb-2">
+        <Card className="p-4 border-amber-500/30 bg-amber-500/10">
+          <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 mb-2">
             <AlertCircle className="w-4 h-4" />
-            <h3 className="text-xs font-semibold uppercase tracking-wider">Human In The Loop Approval Required</h3>
+            <h3 className="text-xs font-bold uppercase tracking-wider">Human In The Loop Approval Required</h3>
           </div>
           <div className="space-y-2">
             {approvals.map((req: any) => (
               <div
                 key={req.id}
-                className="flex items-center justify-between p-2.5 bg-[#0b0f19] border border-slate-800 rounded-lg text-xs"
+                className="flex items-center justify-between p-3 bg-white/80 dark:bg-[#071324]/80 border border-sky-200 dark:border-sky-500/20 rounded-xl text-xs"
               >
                 <div>
-                  <span className="text-white font-medium block">{req.action_type}</span>
-                  <span className="text-slate-400 text-[11px]">Execution: {req.execution_id}</span>
+                  <span className="text-slate-900 dark:text-white font-bold block">{req.action_type}</span>
+                  <span className="text-slate-500 dark:text-sky-300/60 text-[11px]">Execution: {req.execution_id}</span>
                 </div>
                 <div className="flex gap-2">
                   <Button size="xs" variant="primary" onClick={() => resolveApproval(req.id, 'approved')}>
@@ -763,52 +762,52 @@ export const WorkspacePage: React.FC = () => {
       {/* Progress & Live Telemetry Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Task Pipeline */}
-        <div className="p-5 rounded-2xl bg-[#0e162c]/90 border border-indigo-500/30 flex flex-col h-[420px] shadow-xl backdrop-blur-md">
-          <div className="flex items-center justify-between pb-3.5 border-b border-slate-700/80 mb-3.5">
-            <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-xs shadow-cyan-400/50" />
+        <div className="p-6 rounded-2xl bg-white/80 dark:bg-[#0c182b]/80 border border-sky-200/80 dark:border-sky-500/25 flex flex-col h-[430px] shadow-xl backdrop-blur-xl">
+          <div className="flex items-center justify-between pb-3.5 border-b border-sky-100 dark:border-sky-500/20 mb-3.5">
+            <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-sky-500 shadow-xs shadow-sky-500/50" />
               Subtasks Pipeline
             </h3>
-            <span className="text-[11px] font-mono px-2 py-0.5 rounded-md bg-indigo-500/15 text-indigo-300 font-semibold border border-indigo-500/30">
+            <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-lg bg-sky-500/15 text-sky-700 dark:text-sky-300 font-bold border border-sky-500/30">
               {tasks.length} tasks
             </span>
           </div>
 
           <div className="space-y-2.5 overflow-y-auto pr-1 flex-1">
             {tasks.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full text-slate-400 text-xs gap-2">
-                <Clock className="w-8 h-8 text-slate-600 animate-pulse" />
+              <div className="flex flex-col items-center justify-center h-full text-slate-400 dark:text-slate-500 text-xs gap-2">
+                <Clock className="w-8 h-8 text-sky-400/50 animate-pulse" />
                 <span>No active task pipeline. Submit an objective to initiate execution.</span>
               </div>
             ) : (
               tasks.map((task, idx) => (
                 <div
                   key={task.id}
-                  className="p-3.5 rounded-xl bg-[#090e1f] border border-slate-800 hover:border-slate-700 transition-all flex items-start justify-between gap-3 shadow-xs"
+                  className="p-3.5 rounded-xl bg-white/70 dark:bg-[#071324]/80 border border-sky-100 dark:border-sky-500/20 hover:border-sky-300 dark:hover:border-sky-400/40 transition-all flex items-start justify-between gap-3 shadow-xs"
                 >
                   <div className="space-y-1">
-                    <span className="text-xs font-bold text-slate-100 flex items-center gap-1.5">
-                      <span className="w-4 h-4 rounded-full bg-indigo-600/30 border border-indigo-500/40 text-indigo-300 text-[10px] inline-flex items-center justify-center">
+                    <span className="text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                      <span className="w-4 h-4 rounded-full bg-sky-500/15 border border-sky-500/30 text-sky-700 dark:text-sky-300 text-[10px] inline-flex items-center justify-center">
                         {idx + 1}
                       </span>
                       {task.agent_role.toUpperCase()}
                     </span>
-                    <p className="text-[11px] text-slate-400 line-clamp-2 leading-relaxed">{task.description}</p>
+                    <p className="text-[11px] text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed">{task.description}</p>
                   </div>
                   <div className="shrink-0">
                     {task.status === 'completed' && (
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-xs shadow-emerald-500/20">
-                        <CheckCircle2 className="w-3 h-3 text-emerald-400" /> Completed
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400" /> Completed
                       </span>
                     )}
                     {task.status === 'running' && (
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-xs shadow-cyan-500/20">
-                        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
-                        <Loader2 className="w-3 h-3 text-cyan-300 animate-spin" /> In Progress
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-sky-500/15 text-sky-700 dark:text-sky-300 border border-sky-500/30">
+                        <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-ping" />
+                        <Loader2 className="w-3 h-3 text-sky-600 dark:text-sky-300 animate-spin" /> In Progress
                       </span>
                     )}
                     {task.status === 'pending' && (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-800 text-slate-400 border border-slate-700">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
                         <Clock className="w-3 h-3" /> Queued
                       </span>
                     )}
@@ -820,30 +819,30 @@ export const WorkspacePage: React.FC = () => {
         </div>
 
         {/* Telemetry Stream */}
-        <div className="p-5 rounded-2xl bg-[#0e162c]/90 border border-emerald-500/30 flex flex-col h-[420px] shadow-xl backdrop-blur-md">
-          <div className="flex items-center justify-between pb-3.5 border-b border-slate-700/80 mb-3.5">
-            <h3 className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-xs shadow-emerald-400/50" />
+        <div className="p-6 rounded-2xl bg-white/80 dark:bg-[#0c182b]/80 border border-sky-200/80 dark:border-sky-500/25 flex flex-col h-[430px] shadow-xl backdrop-blur-xl">
+          <div className="flex items-center justify-between pb-3.5 border-b border-sky-100 dark:border-sky-500/20 mb-3.5">
+            <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-xs shadow-emerald-500/50" />
               Telemetry Stream (SSE)
             </h3>
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 font-semibold">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live Stream
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 font-bold">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Live Stream
             </span>
           </div>
 
-          <div className="bg-[#050811] border border-slate-800 rounded-xl p-3.5 overflow-y-auto flex-1 font-mono text-[11px] space-y-2">
+          <div className="bg-sky-50/70 dark:bg-[#050c18] border border-sky-200/80 dark:border-sky-500/20 rounded-xl p-3.5 overflow-y-auto flex-1 font-mono text-[11px] space-y-2">
             {displayEvents.length === 0 ? (
-              <div className="text-slate-500 flex items-center justify-center h-full">
+              <div className="text-slate-400 dark:text-slate-500 flex items-center justify-center h-full">
                 Telemetry stream idle. Waiting for events...
               </div>
             ) : (
               displayEvents.map((ev: any, i: number) => (
-                <div key={ev.id || i} className="text-slate-300 leading-relaxed break-all">
-                  <span className="text-indigo-400/70">
+                <div key={ev.id || i} className="text-slate-700 dark:text-slate-300 leading-relaxed break-all">
+                  <span className="text-sky-600 dark:text-sky-400/80">
                     [{ev.timestamp && !isNaN(new Date(ev.timestamp).getTime()) ? new Date(ev.timestamp).toLocaleTimeString() : new Date().toLocaleTimeString()}]
                   </span>{' '}
-                  <span className="text-cyan-400 font-bold">{ev.event_type}:</span>{' '}
-                  <span className="text-slate-300">
+                  <span className="text-blue-600 dark:text-cyan-400 font-bold">{ev.event_type}:</span>{' '}
+                  <span className="text-slate-800 dark:text-slate-200">
                     {JSON.stringify(ev.payload || (ev as any).safe_metadata || {})}
                   </span>
                 </div>
@@ -855,13 +854,13 @@ export const WorkspacePage: React.FC = () => {
 
       {/* Output Artifacts */}
       {artifacts.length > 0 && (
-        <div className="p-6 rounded-2xl bg-gradient-to-br from-[#0e1c38] via-[#0e162c] to-[#0a0f1e] border border-indigo-500/30 shadow-xl space-y-4">
+        <div className="p-6 rounded-2xl bg-white/80 dark:bg-[#0c182b]/80 border border-sky-200/80 dark:border-sky-500/25 shadow-xl space-y-4 backdrop-blur-xl">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
-              <FileCode className="w-4 h-4 text-emerald-400" />
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <FileCode className="w-4 h-4 text-emerald-500" />
               Synthesized Intelligence Output Artifacts
             </h3>
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-semibold">
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 font-bold">
               Ready for Download
             </span>
           </div>
@@ -873,14 +872,14 @@ export const WorkspacePage: React.FC = () => {
               return (
                 <div
                   key={art.id}
-                  className="p-4 bg-[#090e1f] border border-indigo-500/25 hover:border-indigo-400/50 rounded-xl flex items-center justify-between transition-all shadow-md group"
+                  className="p-4 bg-white/70 dark:bg-[#071324]/80 border border-sky-200/80 dark:border-sky-500/25 hover:border-sky-400 dark:hover:border-sky-400/50 rounded-xl flex items-center justify-between transition-all shadow-sm group"
                 >
                   <div className="space-y-1">
-                    <span className="text-xs font-bold text-white block group-hover:text-indigo-300 transition-colors">
+                    <span className="text-xs font-bold text-slate-900 dark:text-white block group-hover:text-sky-600 dark:group-hover:text-sky-300 transition-colors">
                       {artTitle}
                     </span>
-                    <span className="text-[11px] text-indigo-300/80 font-mono flex items-center gap-2">
-                      <span className="px-1.5 py-0.5 rounded bg-indigo-500/15 text-indigo-300">Markdown</span>
+                    <span className="text-[11px] text-sky-700 dark:text-sky-300/80 font-mono flex items-center gap-2">
+                      <span className="px-1.5 py-0.5 rounded bg-sky-500/15 text-sky-700 dark:text-sky-300 font-bold">Markdown</span>
                       <span>{artWordCount} words</span>
                     </span>
                   </div>
@@ -889,7 +888,7 @@ export const WorkspacePage: React.FC = () => {
                       variant="secondary"
                       size="xs"
                       onClick={() => setPreviewArtifact(art)}
-                      className="flex items-center gap-1.5 text-xs text-cyan-300 hover:text-white bg-cyan-500/10 hover:bg-cyan-500/25 border-cyan-500/30 font-semibold"
+                      className="flex items-center gap-1.5 text-xs text-sky-700 dark:text-sky-300 hover:text-sky-900 dark:hover:text-white"
                     >
                       <Eye className="w-3.5 h-3.5" />
                       Preview
@@ -907,7 +906,7 @@ export const WorkspacePage: React.FC = () => {
                         URL.revokeObjectURL(url);
                         toast.success('Report downloaded!');
                       }}
-                      className="flex items-center gap-1.5 text-xs bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-semibold shadow-xs"
+                      className="flex items-center gap-1.5 text-xs"
                     >
                       <Download className="w-3.5 h-3.5" />
                       Download

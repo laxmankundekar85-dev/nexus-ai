@@ -18,20 +18,20 @@ export const LoginPage: React.FC = () => {
 
   return (
     <div>
-      <div className="mb-5 text-center">
-        <h2 className="text-xl font-semibold text-slate-100 tracking-tight">Operator Sign In</h2>
-        <p className="text-xs text-slate-400 mt-1">
+      <div className="mb-6 text-center">
+        <h2 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">Operator Sign In</h2>
+        <p className="text-xs text-slate-500 dark:text-sky-200/70 mt-1">
           Authenticate to manage autonomous agent pipelines
         </p>
       </div>
 
       {error && (
-        <div className="p-3 mb-4 rounded-lg bg-rose-500/10 border border-rose-500/30 text-xs text-rose-300">
+        <div className="p-3 mb-4 rounded-xl bg-rose-500/15 border border-rose-500/30 text-xs text-rose-700 dark:text-rose-300 font-medium">
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-3.5">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <Input
           label="Email Address"
           type="email"
@@ -63,24 +63,24 @@ export const LoginPage: React.FC = () => {
         </Button>
 
         <div className="relative flex py-1 items-center">
-          <div className="flex-grow border-t border-slate-800"></div>
-          <span className="flex-shrink mx-3 text-[11px] text-slate-500 uppercase tracking-wider">or</span>
-          <div className="flex-grow border-t border-slate-800"></div>
+          <div className="flex-grow border-t border-sky-200 dark:border-sky-500/20"></div>
+          <span className="flex-shrink mx-3 text-[11px] text-slate-400 dark:text-sky-300/60 uppercase tracking-wider font-semibold">or</span>
+          <div className="flex-grow border-t border-sky-200 dark:border-sky-500/20"></div>
         </div>
 
         <Button
           type="button"
           variant="secondary"
           onClick={() => login(email || 'operator@nexus.ai', password || 'operator123')}
-          className="w-full text-xs"
+          className="w-full text-xs font-semibold"
         >
           ⚡ Instant One-Click Demo Access
         </Button>
       </form>
 
-      <div className="mt-5 text-center text-xs text-slate-400">
+      <div className="mt-6 text-center text-xs text-slate-500 dark:text-sky-200/70">
         New operator?{' '}
-        <Link to="/register" className="text-blue-400 hover:text-blue-300 font-medium hover:underline">
+        <Link to="/register" className="text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 font-bold hover:underline">
           Create an account
         </Link>
       </div>

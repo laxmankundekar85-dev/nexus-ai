@@ -3,42 +3,105 @@
 @tailwind utilities;
 
 :root {
+  color-scheme: light;
+}
+
+.dark:root,
+.dark {
   color-scheme: dark;
 }
 
 body {
   margin: 0;
-  background-color: #0a0f1d;
-  background-image: 
-    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.05) 0px, transparent 50%);
-  background-attachment: fixed;
-  color: #f1f5f9;
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #f0f7ff;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(186, 230, 253, 0.5) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(224, 242, 254, 0.6) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(255, 255, 255, 0.85) 0px, transparent 50%);
+  background-attachment: fixed;
+  color: #0f172a;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark body {
+  background-color: #071120;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(14, 165, 233, 0.14) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(56, 189, 248, 0.09) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(2, 132, 199, 0.05) 0px, transparent 60%);
+  background-attachment: fixed;
+  color: #f8fafc;
 }
 
 ::selection {
-  background-color: rgba(99, 102, 241, 0.35);
+  background-color: rgba(56, 189, 248, 0.35);
+  color: #0369a1;
+}
+
+.dark ::selection {
+  background-color: rgba(56, 189, 248, 0.4);
   color: #ffffff;
 }
 
-/* Eye-pleasing subtle scrollbars */
+/* Glassmorphic Utility Classes */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 8px 32px 0 rgba(14, 165, 233, 0.06);
+}
+
+.dark .glass-panel {
+  background: rgba(11, 23, 42, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(56, 189, 248, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 20px -2px rgba(14, 165, 233, 0.05);
+}
+
+.dark .glass-card {
+  background: rgba(12, 24, 43, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(56, 189, 248, 0.16);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4);
+}
+
+/* Refined Light Blue & White Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0a0f1d;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1b294c;
+  background: rgba(14, 165, 233, 0.25);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #263a6a;
+  background: rgba(14, 165, 233, 0.45);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(56, 189, 248, 0.2);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(56, 189, 248, 0.4);
 }
