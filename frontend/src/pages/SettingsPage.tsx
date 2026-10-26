@@ -121,21 +121,21 @@ export const SettingsPage: React.FC = () => {
   return (
     <div className="p-4 sm:p-6 md:p-8 max-w-5xl mx-auto w-full space-y-6 sm:space-y-7 font-sans">
       {/* Header */}
-      <div className="border-b border-sky-200/80 dark:border-sky-500/20 pb-6">
+      <div className="border-b border-slate-300 dark:border-white/10 pb-6">
         <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-gradient-to-tr from-sky-500 to-blue-600 text-white shadow-md shadow-sky-500/30">
+          <div className="p-2 rounded-xl bg-gradient-to-tr from-blue-600 to-blue-800 text-white shadow-md">
             <SettingsIcon className="w-5 h-5 text-white" />
           </div>
           System Settings & AI Engine Configuration
         </h1>
-        <p className="text-xs text-slate-500 dark:text-sky-300/70 mt-1">
+        <p className="text-xs text-slate-800 dark:text-zinc-400 font-semibold mt-1">
           Configure real-time web search, LLM providers (Groq, OpenAI, Gemini, Anthropic), and runtime parameters.
         </p>
       </div>
 
       {/* Real-Time AI Engine Configuration Card */}
-      <div className="p-6 rounded-2xl bg-white/80 dark:bg-[#0c182b]/80 border border-sky-200/80 dark:border-sky-500/25 shadow-xl backdrop-blur-xl space-y-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3.5 border-b border-sky-100 dark:border-sky-500/20 gap-2">
+      <div className="p-6 rounded-2xl bg-slate-100/90 dark:bg-[#0c0c0e]/90 border border-slate-300 dark:border-white/12 shadow-xl backdrop-blur-xl space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3.5 border-b border-slate-300 dark:border-white/10 gap-2">
           <div className="flex items-center gap-2.5">
             <Zap className="w-4 h-4 text-amber-500" />
             <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
@@ -150,13 +150,13 @@ export const SettingsPage: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <div>
-            <label className="text-xs font-bold text-slate-700 dark:text-sky-200 block mb-1.5">
+            <label className="text-xs font-bold text-slate-900 dark:text-white block mb-1.5">
               Active Intelligence Provider
             </label>
             <select
               value={selectedProvider}
               onChange={(e) => setSelectedProvider(e.target.value)}
-              className="w-full bg-white/80 dark:bg-[#071324]/80 border border-sky-200 dark:border-sky-500/30 text-slate-800 dark:text-slate-100 text-xs rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-400/30 font-mono"
+              className="w-full bg-slate-200/90 dark:bg-zinc-950 border border-slate-300 dark:border-white/20 text-slate-950 dark:text-white text-xs rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/30 font-mono font-semibold"
             >
               <option value="autonomous">Autonomous Live Crawler (100% Free, Real Web)</option>
               <option value="groq">Groq Cloud (Free Llama 3.3 70B, Ultra-Fast)</option>
@@ -165,7 +165,7 @@ export const SettingsPage: React.FC = () => {
               <option value="anthropic">Anthropic (Claude 3.5 Sonnet)</option>
               <option value="ollama">Local Ollama (Offline / Localhost)</option>
             </select>
-            <p className="text-[11px] text-slate-500 dark:text-sky-300/70 mt-1.5">
+            <p className="text-[11px] text-slate-800 dark:text-zinc-400 font-semibold mt-1.5">
               {selectedProvider === 'autonomous'
                 ? 'Retrieves verified live web data, prices, and specs with 0 API keys.'
                 : `Connects to ${selectedProvider.toUpperCase()} for deep generative synthesis.`}
@@ -173,9 +173,9 @@ export const SettingsPage: React.FC = () => {
           </div>
 
           <div className="md:col-span-2 space-y-1.5">
-            <label className="text-xs font-bold text-slate-700 dark:text-sky-200 flex items-center justify-between">
+            <label className="text-xs font-bold text-slate-900 dark:text-white flex items-center justify-between">
               <span>{selectedProvider === 'autonomous' ? 'Search Provider API Key (Optional)' : `${selectedProvider.toUpperCase()} API Key`}</span>
-              <span className="text-[10px] text-slate-400 dark:text-sky-300/60 font-mono">
+              <span className="text-[10px] text-slate-700 dark:text-zinc-400 font-mono font-semibold">
                 {selectedProvider === 'groq' && config?.has_groq_key && `Saved: ${config.groq_key_masked}`}
                 {selectedProvider === 'openai' && config?.has_openai_key && `Saved: ${config.openai_key_masked}`}
                 {selectedProvider === 'gemini' && config?.has_gemini_key && `Saved: ${config.gemini_key_masked}`}
@@ -192,7 +192,7 @@ export const SettingsPage: React.FC = () => {
                     ? 'Leave empty to use DuckDuckGo Live (Free) or enter Tavily Key'
                     : `Enter your ${selectedProvider.toUpperCase()} API key...`
                 }
-                className="w-full bg-white/80 dark:bg-[#071324]/80 border border-sky-200 dark:border-sky-500/30 text-slate-800 dark:text-slate-100 text-xs rounded-xl pl-3.5 pr-10 py-2.5 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-400/30 font-mono"
+                className="w-full bg-slate-200/90 dark:bg-zinc-950 border border-slate-300 dark:border-white/20 text-slate-950 dark:text-white text-xs rounded-xl pl-3.5 pr-10 py-2.5 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/30 font-mono font-semibold"
               />
               <button
                 type="button"
@@ -206,7 +206,7 @@ export const SettingsPage: React.FC = () => {
         </div>
 
         {/* Action Controls & Ping Test */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-3 border-t border-sky-100 dark:border-sky-500/20">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-3 border-t border-slate-300 dark:border-white/10">
           <div className="flex items-center gap-2">
             <Button
               variant="secondary"
@@ -215,7 +215,7 @@ export const SettingsPage: React.FC = () => {
               disabled={testing}
               className="flex items-center gap-1.5 text-xs"
             >
-              {testing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Globe className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />}
+              {testing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Globe className="w-3.5 h-3.5 text-blue-700 dark:text-white" />}
               Test Live Connection
             </Button>
 
@@ -243,26 +243,26 @@ export const SettingsPage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Profile Card */}
         <Card className="p-6 space-y-4">
-          <div className="flex items-center gap-2 pb-3 border-b border-sky-100 dark:border-sky-500/20">
-            <User className="w-4 h-4 text-sky-600 dark:text-sky-400" />
+          <div className="flex items-center gap-2 pb-3 border-b border-slate-300 dark:border-white/10">
+            <User className="w-4 h-4 text-blue-700 dark:text-white" />
             <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Operator Profile</h3>
           </div>
 
           <div className="space-y-3 text-xs">
             <div>
-              <span className="text-slate-500 dark:text-sky-300/70 block mb-1 font-medium">Email Account</span>
-              <span className="font-mono text-slate-800 dark:text-slate-200 bg-sky-50/70 dark:bg-[#071324] px-3.5 py-2 rounded-xl block border border-sky-200 dark:border-sky-500/20 font-semibold">
+              <span className="text-slate-800 dark:text-zinc-400 font-semibold block mb-1 font-medium">Email Account</span>
+              <span className="font-mono text-slate-800 dark:text-slate-200 bg-slate-200/90 dark:bg-zinc-950 px-3.5 py-2 rounded-xl block border border-slate-300 dark:border-white/15 font-semibold text-slate-950 dark:text-white">
                 {currentUser?.email || 'nexus@nexusai.corp'}
               </span>
             </div>
             <div>
-              <span className="text-slate-500 dark:text-sky-300/70 block mb-1 font-medium">Account Identifier</span>
-              <span className="font-mono text-slate-500 dark:text-slate-400 bg-sky-50/70 dark:bg-[#071324] px-3.5 py-2 rounded-xl block border border-sky-200 dark:border-sky-500/20">
+              <span className="text-slate-800 dark:text-zinc-400 font-semibold block mb-1 font-medium">Account Identifier</span>
+              <span className="font-mono text-slate-500 dark:text-slate-400 bg-slate-200/90 dark:bg-zinc-950 px-3.5 py-2 rounded-xl block border border-slate-300 dark:border-white/15 text-slate-800 dark:text-zinc-300 font-medium">
                 {currentUser?.id || 'sys-local-operator'}
               </span>
             </div>
             <div>
-              <span className="text-slate-500 dark:text-sky-300/70 block mb-1 font-medium">Status</span>
+              <span className="text-slate-800 dark:text-zinc-400 font-semibold block mb-1 font-medium">Status</span>
               <span className="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-bold font-mono text-[11px]">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 Active Authenticated Session
@@ -273,23 +273,23 @@ export const SettingsPage: React.FC = () => {
 
         {/* Security & Isolation */}
         <Card className="p-6 space-y-4">
-          <div className="flex items-center gap-2 pb-3 border-b border-sky-100 dark:border-sky-500/20">
+          <div className="flex items-center gap-2 pb-3 border-b border-slate-300 dark:border-white/10">
             <ShieldCheck className="w-4 h-4 text-emerald-500" />
             <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Security & Isolation</h3>
           </div>
 
           <div className="space-y-3 text-xs">
-            <div className="flex items-center justify-between p-3 rounded-xl bg-sky-50/70 dark:bg-[#071324] border border-sky-200 dark:border-sky-500/20">
-              <span className="text-slate-700 dark:text-slate-300 font-medium">Multi-Tenant Isolation</span>
+            <div className="flex items-center justify-between p-3 rounded-xl bg-slate-200/90 dark:bg-zinc-950 border border-slate-300 dark:border-white/15">
+              <span className="text-slate-900 dark:text-zinc-300 font-bold font-medium">Multi-Tenant Isolation</span>
               <span className="text-emerald-600 dark:text-emerald-400 font-bold font-mono text-[11px]">Enforced (SQL-level)</span>
             </div>
-            <div className="flex items-center justify-between p-3 rounded-xl bg-sky-50/70 dark:bg-[#071324] border border-sky-200 dark:border-sky-500/20">
-              <span className="text-slate-700 dark:text-slate-300 font-medium">Path Traversal Guard</span>
+            <div className="flex items-center justify-between p-3 rounded-xl bg-slate-200/90 dark:bg-zinc-950 border border-slate-300 dark:border-white/15">
+              <span className="text-slate-900 dark:text-zinc-300 font-bold font-medium">Path Traversal Guard</span>
               <span className="text-emerald-600 dark:text-emerald-400 font-bold font-mono text-[11px]">Active</span>
             </div>
-            <div className="flex items-center justify-between p-3 rounded-xl bg-sky-50/70 dark:bg-[#071324] border border-sky-200 dark:border-sky-500/20">
-              <span className="text-slate-700 dark:text-slate-300 font-medium">Approval Gate Controls</span>
-              <span className="text-sky-600 dark:text-sky-400 font-bold font-mono text-[11px]">Configured</span>
+            <div className="flex items-center justify-between p-3 rounded-xl bg-slate-200/90 dark:bg-zinc-950 border border-slate-300 dark:border-white/15">
+              <span className="text-slate-900 dark:text-zinc-300 font-bold font-medium">Approval Gate Controls</span>
+              <span className="text-blue-700 dark:text-white font-bold font-mono text-[11px]">Configured</span>
             </div>
           </div>
         </Card>

@@ -18,11 +18,12 @@ export const Card: React.FC<CardProps> = ({
       {...props}
       className={clsx(
         'rounded-2xl p-5 transition-all duration-200',
-        // Glassmorphism Light & Dark styles
-        'bg-white/75 backdrop-blur-xl border border-white/80 shadow-md shadow-sky-500/5 text-slate-800',
-        'dark:bg-[#0c182b]/75 dark:backdrop-blur-xl dark:border-sky-400/20 dark:shadow-xl dark:shadow-black/30 dark:text-slate-100',
+        // Light: Soothing off-white slate (no glare/pure white), high contrast dark text
+        'bg-slate-100/90 backdrop-blur-xl border border-slate-300/80 shadow-md shadow-blue-900/5 text-slate-900',
+        // Dark: Pure Black & White monochromatic contrast, zero purple
+        'dark:bg-[#0c0c0e]/90 dark:backdrop-blur-xl dark:border-white/12 dark:shadow-2xl dark:shadow-black dark:text-white',
         hoverable &&
-          'hover:bg-white/90 dark:hover:bg-[#11233f]/85 hover:border-sky-300 dark:hover:border-sky-400/40 hover:shadow-lg hover:shadow-sky-500/10 dark:hover:shadow-sky-500/10 cursor-pointer',
+          'hover:bg-slate-200/90 dark:hover:bg-[#18181b]/95 hover:border-blue-500/80 dark:hover:border-white/30 hover:shadow-lg cursor-pointer',
         className
       )}
     >

@@ -104,20 +104,20 @@ export const DocumentsPage: React.FC = () => {
   return (
     <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto w-full space-y-6 sm:space-y-7 font-sans">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-sky-200/80 dark:border-sky-500/20 pb-6">
+      <div className="flex items-center justify-between border-b border-slate-300 dark:border-white/10 pb-6">
         <div>
           <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-gradient-to-tr from-sky-500 to-blue-600 text-white shadow-md shadow-sky-500/30">
+            <div className="p-2 rounded-xl bg-gradient-to-tr from-blue-600 to-blue-800 text-white shadow-md">
               <FolderArchive className="w-5 h-5 text-white" />
             </div>
             Document Store & Knowledge Context
           </h1>
-          <p className="text-xs text-slate-500 dark:text-sky-300/70 mt-1">
+          <p className="text-xs text-slate-800 dark:text-zinc-400 font-semibold mt-1">
             Indexed documents (PDF, DOCX, XLSX, CSV, TXT) parsed for grounded agent retrieval and citation.
           </p>
         </div>
 
-        <Button variant="ghost" size="xs" onClick={() => refetch()} icon={<RefreshCw className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />}>
+        <Button variant="ghost" size="xs" onClick={() => refetch()} icon={<RefreshCw className="w-3.5 h-3.5 text-blue-700 dark:text-white" />}>
           Refresh
         </Button>
       </div>
@@ -130,7 +130,7 @@ export const DocumentsPage: React.FC = () => {
         {documents.length === 0 && !loading ? (
           <div className="p-8">
             <EmptyState
-              icon={<FileText className="w-6 h-6 text-sky-500" />}
+              icon={<FileText className="w-6 h-6 text-blue-600 dark:text-white" />}
               title="No documents uploaded"
               description="Drop PDF or office documents above to parse and enable semantic agent grounding."
             />
@@ -138,7 +138,7 @@ export const DocumentsPage: React.FC = () => {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-sky-50/80 dark:bg-[#091526]/80 border-b border-sky-200 dark:border-sky-500/20 text-sky-900 dark:text-sky-200 uppercase tracking-wider">
+              <thead className="bg-slate-200/80 dark:bg-zinc-950/90 border-b border-slate-300 dark:border-white/15 text-slate-950 dark:text-white uppercase tracking-wider font-extrabold">
                 <tr>
                   <th className="py-3.5 px-5 font-bold">Document Name</th>
                   <th className="py-3.5 px-5 font-bold">Size</th>
@@ -147,20 +147,20 @@ export const DocumentsPage: React.FC = () => {
                   <th className="py-3.5 px-5 font-bold text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-sky-100 dark:divide-sky-500/15">
+              <tbody className="divide-y divide-slate-200 dark:divide-white/10">
                 {documents.map((doc) => (
-                  <tr key={doc.id} className="hover:bg-sky-50/60 dark:hover:bg-sky-950/40 transition-colors">
+                  <tr key={doc.id} className="hover:bg-slate-200/50 dark:hover:bg-zinc-900/50 transition-colors">
                     <td className="py-3.5 px-5 font-semibold text-slate-800 dark:text-slate-100 flex items-center gap-2.5">
-                      <FileText className="w-4 h-4 text-sky-500 shrink-0" />
+                      <FileText className="w-4 h-4 text-blue-600 dark:text-white shrink-0" />
                       <span className="truncate max-w-sm">{doc.filename}</span>
                     </td>
-                    <td className="py-3.5 px-5 text-slate-500 dark:text-sky-300/70 font-mono">
+                    <td className="py-3.5 px-5 text-slate-800 dark:text-zinc-400 font-semibold font-mono">
                       {formatBytes(doc.size_bytes)}
                     </td>
                     <td className="py-3.5 px-5">
                       <StatusBadge status={doc.processing_status} />
                     </td>
-                    <td className="py-3.5 px-5 text-slate-500 dark:text-sky-300/70 font-mono">
+                    <td className="py-3.5 px-5 text-slate-800 dark:text-zinc-400 font-semibold font-mono">
                       {new Date(doc.created_at).toLocaleDateString()}
                     </td>
                     <td className="py-3.5 px-5 text-right space-x-2">
@@ -168,7 +168,7 @@ export const DocumentsPage: React.FC = () => {
                         variant="ghost"
                         size="xs"
                         onClick={() => handleViewText(doc)}
-                        icon={<Eye className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />}
+                        icon={<Eye className="w-3.5 h-3.5 text-blue-700 dark:text-white" />}
                       >
                         Preview Text
                       </Button>
@@ -197,7 +197,7 @@ export const DocumentsPage: React.FC = () => {
         {loadingText ? (
           <div className="py-10 text-center text-xs text-slate-400">Loading content...</div>
         ) : (
-          <pre className="p-4 bg-sky-50/80 dark:bg-[#071324] rounded-xl text-xs font-mono text-slate-800 dark:text-sky-200 max-h-96 overflow-y-auto whitespace-pre-wrap border border-sky-200 dark:border-sky-500/20 leading-relaxed">
+          <pre className="p-4 bg-slate-200/90 dark:bg-zinc-950 rounded-xl text-xs font-mono text-slate-950 dark:text-zinc-200 font-medium max-h-96 overflow-y-auto whitespace-pre-wrap border border-slate-300 dark:border-white/15 leading-relaxed">
             {formatDocumentPreview(extractedText, selectedDoc?.filename || '')}
           </pre>
         )}

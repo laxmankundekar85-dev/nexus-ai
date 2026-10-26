@@ -48,19 +48,26 @@ export const Modal: React.FC<ModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-slate-900/40 dark:bg-black/65 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
 
       {/* Modal Dialog */}
       <div
-        className={`relative w-full ${maxWidthClasses[maxWidth]} bg-white/95 dark:bg-[#0c182b]/95 backdrop-blur-2xl border border-white/90 dark:border-sky-400/25 rounded-2xl shadow-2xl overflow-hidden z-10 transition-all`}
+        className={`relative w-full ${maxWidthClasses[maxWidth]} bg-slate-100/98 dark:bg-[#0c0c0e]/98 backdrop-blur-2xl border border-slate-300 dark:border-white/15 rounded-2xl shadow-2xl overflow-hidden z-10 transition-all`}
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-sky-100 dark:border-sky-500/20 bg-sky-50/60 dark:bg-sky-950/40">
-          <h3 className="text-sm font-bold text-slate-900 dark:text-white tracking-wide">{title}</h3>
-          <Button variant="ghost" size="xs" onClick={onClose} icon={<X className="w-4 h-4 text-slate-500 dark:text-sky-300" />} />
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-300 dark:border-white/12 bg-slate-200/80 dark:bg-zinc-950/80">
+          <h3 className="text-sm font-extrabold text-slate-900 dark:text-white tracking-wide">{title}</h3>
+          <Button
+            variant="ghost"
+            size="xs"
+            onClick={onClose}
+            aria-label="Close modal"
+            icon={<X className="w-4 h-4 text-slate-700 dark:text-zinc-400" />}
+          />
         </div>
-        <div className="p-6 max-h-[80vh] overflow-y-auto text-slate-800 dark:text-slate-100">{children}</div>
+
+        <div className="p-6 text-slate-900 dark:text-white">{children}</div>
       </div>
     </div>
   );

@@ -4,7 +4,6 @@ import toast from 'react-hot-toast';
 import Modal from './Modal';
 import Button from './Button';
 import type { Artifact } from '../types';
-import { artifactsApi } from '../services/api';
 
 interface ReportPreviewModalProps {
   isOpen: boolean;
@@ -39,11 +38,24 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const handleDownload = () => {
+    const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${title.replace(/[^a-zA-Z0-9_-]/g, '_')}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast.success('Report downloaded as Markdown');
+  };
+
   // ─── Inline Markdown Formatter ───────────────────────────────────────────────
   const formatInlineText = (text: string): React.ReactNode => {
     if (!text) return '';
 
-    const tokenRegex = /(\[[^\]]+\]\([^\)]+\)|\*\*[^\*]+\*\*|`[^`]+`|\*[^\s\*][^\*]*\*)/g;
+    const tokenRegex = /(\[[^\]]+\\]\([^\)]+\)|\*\*[^\*]+\*\*|`[^`]+`|\*[^\s\*][^\*]*\*)/g;
     const parts = text.split(tokenRegex);
 
     return parts.map((part, i) => {
@@ -56,74 +68,74 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
             href={linkMatch[2]}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-sky-600 dark:text-sky-400 hover:text-sky-500 underline underline-offset-2 font-medium transition-colors"
+            className="inline-flex items-center gap-1 text-blue-700 dark:text-white hover:underline font-bold transition-colors"
           >
-            {linkMatch[1]}
-            <ExternalLink className="w-2.5 h-2.5 opacity-80 shrink-0" />
+            <span>{linkMatch[1]}</span>
+            <ExternalLink className="w-3 h-3 opacity-80" />
           </a>
         );
       }
 
       // 2. Bold
-      if (part.startsWith('**') && part.endsWith('**') && part.length >= 4) {
-        const inner = part.slice(2, -2);
+      const boldMatch = part.match(/^\*\*([^\*]+)\*\*$/);
+      if (boldMatch) {
         return (
-          <strong key={i} className="font-bold text-slate-900 dark:text-white">
-            {formatInlineText(inner)}
+          <strong key={i} className="font-extrabold text-slate-950 dark:text-white">
+            {boldMatch[1]}
           </strong>
         );
       }
 
       // 3. Inline code
-      if (part.startsWith('`') && part.endsWith('`') && part.length >= 2) {
+      const codeMatch = part.match(/^`([^`]+)`$/);
+      if (codeMatch) {
         return (
-          <code key={i} className="px-1.5 py-0.5 rounded-md bg-sky-100/80 dark:bg-sky-950/60 border border-sky-200 dark:border-sky-500/30 text-sky-800 dark:text-sky-200 font-mono text-[11px]">
-            {part.slice(1, -1)}
+          <code
+            key={i}
+            className="font-mono text-xs px-1.5 py-0.5 rounded bg-slate-200 dark:bg-zinc-800 text-slate-950 dark:text-white font-bold border border-slate-300 dark:border-white/15"
+          >
+            {codeMatch[1]}
           </code>
         );
       }
 
       // 4. Italic
-      if (part.startsWith('*') && part.endsWith('*') && part.length >= 2) {
-        return (
-          <em key={i} className="text-slate-700 dark:text-slate-300 italic">
-            {part.slice(1, -1)}
-          </em>
-        );
+      const italicMatch = part.match(/^\*([^\s\*][^\*]*)\*$/);
+      if (italicMatch) {
+        return <em key={i} className="italic text-slate-800 dark:text-zinc-300">{italicMatch[1]}</em>;
       }
 
       return part;
     });
   };
 
-  // ─── Full Block Markdown Renderer ──────────────────────────────────────────
-  const renderFormattedMarkdown = (text: string) => {
-    const lines = text.split('\n');
+  // ─── Block Parser ────────────────────────────────────────────────────────────
+  const renderFormattedMarkdown = (raw: string) => {
+    const lines = raw.split('\n');
     const elements: React.ReactNode[] = [];
     let inTable = false;
     let tableRows: string[][] = [];
 
     const flushTable = (key: number) => {
       if (tableRows.length === 0) return null;
-      const headers = tableRows[0];
-      const rows = tableRows.slice(2);
+      const [headerRow, separatorRow, ...rows] = tableRows;
       const el = (
-        <div key={`table-${key}`} className="my-5 overflow-x-auto rounded-xl border border-sky-200 dark:border-sky-500/20 bg-white/60 dark:bg-[#071324]/70 shadow-sm backdrop-blur-sm">
+        <div key={`table-${key}`} className="my-5 overflow-x-auto rounded-xl border border-slate-300 dark:border-white/15 shadow-sm">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-sky-100/60 dark:bg-sky-950/60 border-b border-sky-200 dark:border-sky-500/20 text-sky-900 dark:text-sky-200 font-bold uppercase tracking-wider text-[11px]">
-                {headers.map((h, i) => (
-                  <th key={i} className="py-3 px-3.5 whitespace-nowrap">
-                    {formatInlineText(h.trim())}
+              <tr className="bg-slate-200/90 dark:bg-zinc-900 border-b border-slate-300 dark:border-white/15">
+                {headerRow.map((cell, ci) => (
+                  <th key={ci} className="py-2.5 px-3.5 font-extrabold text-slate-950 dark:text-white uppercase tracking-wider text-[11px]">
+                    {cell.trim()}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-sky-100 dark:divide-sky-500/15 font-sans">
+            <tbody className="divide-y divide-slate-200 dark:divide-white/10 font-sans">
               {rows.map((row, ri) => (
-                <tr key={ri} className="hover:bg-sky-50/50 dark:hover:bg-sky-950/30 transition-colors">
+                <tr key={ri} className="hover:bg-slate-200/50 dark:hover:bg-zinc-900/60 transition-colors">
                   {row.map((cell, ci) => (
-                    <td key={ci} className="py-2.5 px-3.5 text-slate-700 dark:text-slate-200 leading-relaxed align-top">
+                    <td key={ci} className="py-2.5 px-3.5 text-slate-950 dark:text-zinc-200 leading-relaxed align-top font-medium">
                       {formatInlineText(cell.trim())}
                     </td>
                   ))}
@@ -153,45 +165,51 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
 
       if (trimmed.startsWith('# ')) {
         elements.push(
-          <div key={idx} className="mt-2 mb-4 pb-3 border-b border-sky-200/80 dark:border-sky-500/20">
-            <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          <div key={idx} className="mt-2 mb-4 pb-3 border-b border-slate-300 dark:border-white/15">
+            <h1 className="text-xl sm:text-2xl font-black text-slate-950 dark:text-white tracking-tight">
               {formatInlineText(trimmed.slice(2))}
             </h1>
           </div>
         );
       } else if (trimmed.startsWith('## ')) {
         elements.push(
-          <div key={idx} className="flex items-center gap-2 mt-6 mb-3 pt-3 border-t border-sky-200/60 dark:border-sky-500/20">
-            <span className="w-1.5 h-4 bg-sky-500 rounded-full shrink-0" />
-            <h2 className="text-sm sm:text-base font-bold text-sky-700 dark:text-sky-300 uppercase tracking-wide">
+          <div key={idx} className="flex items-center gap-2 mt-6 mb-3 pt-3 border-t border-slate-300/80 dark:border-white/15">
+            <span className="w-1.5 h-4 bg-blue-600 dark:bg-white rounded-full shrink-0" />
+            <h2 className="text-sm sm:text-base font-extrabold text-blue-900 dark:text-white uppercase tracking-wide">
               {formatInlineText(trimmed.slice(3))}
             </h2>
           </div>
         );
       } else if (trimmed.startsWith('### ')) {
         elements.push(
-          <h3 key={idx} className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 mt-4 mb-2 flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 bg-sky-400 rounded-full" />
+          <h3 key={idx} className="text-xs sm:text-sm font-bold text-slate-950 dark:text-zinc-200 mt-4 mb-2 flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 bg-blue-600 dark:bg-white rounded-full" />
             {formatInlineText(trimmed.slice(4))}
           </h3>
         );
       } else if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
         elements.push(
-          <li key={idx} className="text-xs text-slate-700 dark:text-slate-300 ml-4 list-disc my-1.5 leading-relaxed">
+          <li key={idx} className="text-xs text-slate-900 dark:text-zinc-200 ml-4 list-disc my-1.5 leading-relaxed font-medium">
             {formatInlineText(trimmed.slice(2))}
           </li>
         );
       } else if (/^\d+\.\s/.test(trimmed)) {
         elements.push(
-          <li key={idx} className="text-xs text-slate-700 dark:text-slate-300 ml-4 list-decimal my-1.5 leading-relaxed">
-            {formatInlineText(trimmed.replace(/^\d+\.\s/, ''))}
-          </li>
+          <div key={idx} className="text-xs text-slate-900 dark:text-zinc-200 my-2 pl-3 border-l-2 border-blue-500 dark:border-white leading-relaxed font-medium">
+            {formatInlineText(trimmed)}
+          </div>
         );
-      } else if (trimmed === '---') {
-        elements.push(<hr key={idx} className="my-5 border-sky-200/80 dark:border-sky-500/20" />);
+      } else if (trimmed.startsWith('> ')) {
+        elements.push(
+          <blockquote key={idx} className="my-3 pl-3.5 py-1.5 border-l-3 border-blue-600 dark:border-white bg-slate-200/80 dark:bg-zinc-900/80 text-xs italic text-slate-950 dark:text-zinc-200 rounded-r-lg font-medium">
+            {formatInlineText(trimmed.slice(2))}
+          </blockquote>
+        );
+      } else if (trimmed === '---' || trimmed === '***') {
+        elements.push(<hr key={idx} className="my-5 border-slate-300 dark:border-white/15" />);
       } else if (trimmed.length > 0) {
         elements.push(
-          <p key={idx} className="text-xs text-slate-700 dark:text-slate-300 my-2 leading-relaxed">
+          <p key={idx} className="text-xs sm:text-sm text-slate-950 dark:text-zinc-200 my-2 leading-relaxed font-normal">
             {formatInlineText(trimmed)}
           </p>
         );
@@ -206,89 +224,69 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
     return elements;
   };
 
-  const downloadHref = metadata.content
-    ? `data:text/markdown;charset=utf-8,${encodeURIComponent(metadata.content)}`
-    : artifactsApi.downloadUrl(artifact.id);
-
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={title} maxWidth="5xl">
-      <div className="space-y-4">
-        {/* Header Ribbon */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-sky-100 dark:border-sky-500/20">
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 px-3 py-1 rounded-full font-bold">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-              Verified Multi-Agent Artifact
-            </span>
-            <span className="text-[11px] text-slate-500 dark:text-sky-300/70 font-mono">
-              {new Date(artifact.created_at).toLocaleString()}
-            </span>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={title}
+      maxWidth="4xl"
+    >
+      <div className="flex flex-col h-[75vh]">
+        {/* Top Control Bar */}
+        <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-300 dark:border-white/15 shrink-0">
+          <div className="flex items-center gap-1.5 bg-slate-200/90 dark:bg-zinc-900 p-1 rounded-xl border border-slate-300 dark:border-white/15">
+            <button
+              onClick={() => setViewMode('formatted')}
+              className={`flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-lg transition-all ${
+                viewMode === 'formatted'
+                  ? 'bg-blue-600 text-white shadow-sm dark:bg-white dark:text-black'
+                  : 'text-slate-800 dark:text-zinc-400 hover:text-black dark:hover:text-white'
+              }`}
+            >
+              <Eye className="w-3.5 h-3.5" />
+              <span>Formatted</span>
+            </button>
+            <button
+              onClick={() => setViewMode('raw')}
+              className={`flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-lg transition-all ${
+                viewMode === 'raw'
+                  ? 'bg-blue-600 text-white shadow-sm dark:bg-white dark:text-black'
+                  : 'text-slate-800 dark:text-zinc-400 hover:text-black dark:hover:text-white'
+              }`}
+            >
+              <Code2 className="w-3.5 h-3.5" />
+              <span>Raw Markdown</span>
+            </button>
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="bg-sky-100/70 dark:bg-sky-950/70 border border-sky-200 dark:border-sky-500/30 rounded-xl p-1 flex items-center gap-1">
-              <button
-                type="button"
-                onClick={() => setViewMode('formatted')}
-                className={`px-3 py-1 rounded-lg text-xs flex items-center gap-1.5 transition-all ${
-                  viewMode === 'formatted'
-                    ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white font-bold shadow-xs'
-                    : 'text-slate-600 dark:text-sky-200 hover:text-slate-900 dark:hover:text-white'
-                }`}
-              >
-                <Eye className="w-3.5 h-3.5" />
-                Formatted
-              </button>
-              <button
-                type="button"
-                onClick={() => setViewMode('raw')}
-                className={`px-3 py-1 rounded-lg text-xs flex items-center gap-1.5 transition-all ${
-                  viewMode === 'raw'
-                    ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white font-bold shadow-xs'
-                    : 'text-slate-600 dark:text-sky-200 hover:text-slate-900 dark:hover:text-white'
-                }`}
-              >
-                <Code2 className="w-3.5 h-3.5" />
-                Raw Markdown
-              </button>
-            </div>
-
             <Button
               variant="secondary"
               size="xs"
               onClick={handleCopy}
-              className="flex items-center gap-1.5 text-xs"
+              icon={copied ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
             >
-              {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
               {copied ? 'Copied' : 'Copy'}
             </Button>
-
-            <a
-              href={downloadHref}
-              download={`${title.toLowerCase().replace(/[^a-z0-9]+/g, '_')}.md`}
-              target="_blank"
-              rel="noreferrer"
+            <Button
+              variant="primary"
+              size="xs"
+              onClick={handleDownload}
+              icon={<Download className="w-3 h-3" />}
             >
-              <Button
-                variant="primary"
-                size="xs"
-                className="flex items-center gap-1.5 text-xs text-white"
-              >
-                <Download className="w-3.5 h-3.5" />
-                Download .md
-              </Button>
-            </a>
+              Download .md
+            </Button>
           </div>
         </div>
 
-        {/* Modal Body */}
-        <div className="max-h-[70vh] overflow-y-auto pr-2 rounded-2xl">
+        {/* Content Body */}
+        <div className="flex-1 overflow-y-auto mt-4 pr-1">
           {viewMode === 'formatted' ? (
-            <div className="p-6 bg-white/70 dark:bg-[#071324]/80 rounded-2xl border border-sky-200/80 dark:border-sky-500/20 font-sans leading-relaxed backdrop-blur-md">
+            <div className="space-y-1 font-sans text-slate-950 dark:text-zinc-200">
               {renderFormattedMarkdown(content)}
             </div>
           ) : (
-            <pre className="p-5 bg-sky-50/80 dark:bg-[#050c18] rounded-2xl border border-sky-200/80 dark:border-sky-500/25 text-slate-800 dark:text-sky-200 font-mono text-xs overflow-x-auto whitespace-pre-wrap leading-relaxed">
+            <pre className="p-4 rounded-xl bg-slate-200/90 dark:bg-zinc-950 font-mono text-xs text-slate-950 dark:text-zinc-200 border border-slate-300 dark:border-white/15 whitespace-pre-wrap max-h-full overflow-y-auto leading-relaxed">
               {content}
             </pre>
           )}

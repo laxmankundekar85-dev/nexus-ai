@@ -34,7 +34,7 @@ export const RegisterPage: React.FC = () => {
     <div>
       <div className="mb-6 text-center">
         <h2 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">Create Operator Account</h2>
-        <p className="text-xs text-slate-500 dark:text-sky-200/70 mt-1">
+        <p className="text-xs text-slate-800 dark:text-zinc-400 font-semibold mt-1">
           Deploy and monitor autonomous multi-agent pipelines
         </p>
       </div>
@@ -87,9 +87,9 @@ export const RegisterPage: React.FC = () => {
         </Button>
 
         <div className="relative flex py-1 items-center">
-          <div className="flex-grow border-t border-sky-200 dark:border-sky-500/20"></div>
-          <span className="flex-shrink mx-3 text-[11px] text-slate-400 dark:text-sky-300/60 uppercase tracking-wider font-semibold">or</span>
-          <div className="flex-grow border-t border-sky-200 dark:border-sky-500/20"></div>
+          <div className="flex-grow border-t border-slate-300 dark:border-white/15"></div>
+          <span className="flex-shrink mx-3 text-[11px] text-slate-700 dark:text-zinc-400 uppercase tracking-wider font-bold">or</span>
+          <div className="flex-grow border-t border-slate-300 dark:border-white/15"></div>
         </div>
 
         <Button
@@ -102,9 +102,9 @@ export const RegisterPage: React.FC = () => {
         </Button>
       </form>
 
-      <div className="mt-6 text-center text-xs text-slate-500 dark:text-sky-200/70">
+      <div className="mt-6 text-center text-xs text-slate-800 dark:text-zinc-400 font-medium">
         Already registered?{' '}
-        <Link to="/login" className="text-sky-600 dark:text-sky-400 hover:text-sky-700 dark:hover:text-sky-300 font-bold hover:underline">
+        <Link to="/login" className="text-blue-700 dark:text-white hover:text-blue-800 dark:hover:text-zinc-200 font-extrabold hover:underline">
           Sign In
         </Link>
       </div>

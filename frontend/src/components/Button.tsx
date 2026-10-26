@@ -16,13 +16,13 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    'bg-gradient-to-r from-sky-500 via-sky-600 to-blue-600 hover:from-sky-400 hover:via-sky-500 hover:to-blue-500 active:from-sky-700 active:to-blue-700 text-white border border-sky-300/40 shadow-md shadow-sky-500/25 dark:shadow-sky-500/20 backdrop-blur-md',
+    'bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white border border-blue-500 shadow-md shadow-blue-600/25 dark:bg-white dark:hover:bg-zinc-200 dark:active:bg-zinc-300 dark:text-black dark:border-white dark:shadow-white/10 font-bold transition-all',
   secondary:
-    'bg-white/80 hover:bg-white active:bg-sky-50 text-sky-900 border border-sky-200/80 shadow-xs backdrop-blur-md dark:bg-sky-950/40 dark:hover:bg-sky-900/60 dark:active:bg-sky-950/80 dark:text-sky-100 dark:border-sky-500/30',
+    'bg-slate-200/90 hover:bg-slate-300 active:bg-slate-300 text-slate-900 font-semibold border border-slate-300/90 shadow-xs dark:bg-zinc-900/90 dark:hover:bg-zinc-800 dark:text-white dark:border-white/15',
   danger:
-    'bg-rose-500/10 hover:bg-rose-500/20 active:bg-rose-500/30 text-rose-600 dark:text-rose-300 border border-rose-400/30 backdrop-blur-sm',
+    'bg-rose-100 hover:bg-rose-200 active:bg-rose-300 text-rose-900 font-semibold border border-rose-300 dark:bg-rose-950/60 dark:hover:bg-rose-900/80 dark:text-rose-200 dark:border-rose-800/60',
   ghost:
-    'bg-transparent hover:bg-sky-100/60 dark:hover:bg-sky-900/40 text-slate-600 dark:text-slate-300 hover:text-sky-900 dark:hover:text-white border border-transparent',
+    'bg-transparent hover:bg-slate-200/80 text-slate-900 font-semibold hover:text-blue-700 dark:text-zinc-300 dark:hover:bg-zinc-900 dark:hover:text-white border border-transparent',
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
@@ -48,7 +48,7 @@ export const Button: React.FC<ButtonProps> = ({
       {...props}
       disabled={disabled || loading}
       className={clsx(
-        'inline-flex items-center justify-center font-medium transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-sky-400/50 disabled:opacity-50 disabled:cursor-not-allowed select-none',
+        'inline-flex items-center justify-center font-medium transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-blue-500/40 disabled:opacity-50 disabled:cursor-not-allowed select-none',
         variantClasses[variant],
         sizeClasses[size],
         className
@@ -59,8 +59,8 @@ export const Button: React.FC<ButtonProps> = ({
       ) : (
         icon && <span className="shrink-0">{icon}</span>
       )}
-      {children && <span>{children}</span>}
-      {iconRight && !loading && <span className="shrink-0">{iconRight}</span>}
+      {children}
+      {iconRight && <span className="shrink-0">{iconRight}</span>}
     </button>
   );
 };

@@ -44,10 +44,10 @@ export const WorkflowBuilderPage: React.FC = () => {
 
   const nodeBaseStyle = useMemo(
     () => ({
-      background: isDark ? 'rgba(12, 24, 43, 0.88)' : 'rgba(255, 255, 255, 0.92)',
+      background: isDark ? '#09090b' : '#f1f5f9',
       color: isDark ? '#f8fafc' : '#0f172a',
       borderRadius: '10px',
-      border: isDark ? '1px solid rgba(56, 189, 248, 0.25)' : '1px solid rgba(186, 230, 253, 0.9)',
+      border: isDark ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid #cbd5e1',
       padding: '10px 14px',
       fontSize: '12px',
       fontWeight: '600' as const,
@@ -197,16 +197,16 @@ export const WorkflowBuilderPage: React.FC = () => {
   return (
     <div className="flex flex-col h-full bg-slate-50 dark:bg-[#071120] transition-colors duration-200">
       {/* Top Action Bar */}
-      <div className="h-14 border-b border-sky-100 dark:border-sky-400/20 px-5 flex items-center justify-between bg-white/80 dark:bg-[#0c182b]/85 backdrop-blur-xl shadow-sm z-20">
+      <div className="h-14 border-b border-slate-300 dark:border-white/10 px-5 flex items-center justify-between bg-slate-100/95 dark:bg-[#09090b] backdrop-blur-xl shadow-sm z-20">
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-sky-100 dark:bg-sky-950/60 border border-sky-200 dark:border-sky-400/30 flex items-center justify-center text-sky-600 dark:text-sky-400">
+          <div className="w-7 h-7 rounded-lg bg-blue-100 dark:bg-zinc-900 border border-blue-300 dark:border-white/15 flex items-center justify-center text-blue-700 dark:text-white">
             <GitFork className="w-4 h-4" />
           </div>
           <input
             type="text"
             value={workflowName}
             onChange={(e) => setWorkflowName(e.target.value)}
-            className="bg-transparent font-semibold text-slate-800 dark:text-slate-100 text-sm focus:outline-none border-b border-transparent hover:border-sky-300 dark:hover:border-sky-500/50 focus:border-sky-500 transition-colors px-1"
+            className="bg-transparent font-semibold text-slate-950 dark:text-white font-extrabold text-sm focus:outline-none border-b border-transparent hover:border-blue-500 dark:hover:border-white focus:border-blue-600 transition-colors px-1"
           />
         </div>
 
@@ -229,18 +229,18 @@ export const WorkflowBuilderPage: React.FC = () => {
       )}
 
       {/* Mobile Node Palette Strip */}
-      <div className="sm:hidden bg-white/85 dark:bg-[#0c182b]/85 backdrop-blur-xl border-b border-sky-100 dark:border-sky-400/20 px-3 py-2 overflow-x-auto flex items-center gap-2 shrink-0">
-        <span className="text-[10px] uppercase font-bold text-sky-700 dark:text-sky-300 whitespace-nowrap">Add:</span>
+      <div className="sm:hidden bg-slate-100/90 dark:bg-[#0c0c0e]/90 backdrop-blur-xl border-b border-slate-300 dark:border-white/12 dark:border-white/10 px-3 py-2 overflow-x-auto flex items-center gap-2 shrink-0">
+        <span className="text-[10px] uppercase font-bold text-slate-800 dark:text-zinc-400 whitespace-nowrap">Add:</span>
         {NODE_TEMPLATES.map((tmpl) => (
           <button
             key={tmpl.type}
             type="button"
             onClick={() => addCustomNode(tmpl)}
-            className="shrink-0 text-xs px-2.5 py-1 rounded-lg bg-white dark:bg-[#071324] border border-sky-200 dark:border-sky-400/25 hover:border-sky-300 dark:hover:border-sky-400/50 text-slate-700 dark:text-slate-200 flex items-center gap-1.5 shadow-sm"
+            className="shrink-0 text-xs px-2.5 py-1 rounded-lg bg-slate-200/90 dark:bg-zinc-950 border border-slate-300 dark:border-white/15 hover:border-blue-500 dark:hover:border-white text-slate-950 dark:text-white font-bold flex items-center gap-1.5 shadow-sm"
             style={{ borderLeftColor: tmpl.border, borderLeftWidth: '3px' }}
           >
             <span>{tmpl.label}</span>
-            <Plus className="w-2.5 h-2.5 text-sky-500" />
+            <Plus className="w-2.5 h-2.5 text-blue-600 dark:text-white" />
           </button>
         ))}
       </div>
@@ -248,9 +248,9 @@ export const WorkflowBuilderPage: React.FC = () => {
       {/* Main Canvas & Left Node Palette */}
       <div className="flex-1 flex relative overflow-hidden">
         {/* Node Palette (Desktop) */}
-        <div className="hidden sm:block w-60 bg-white/70 dark:bg-[#071324]/80 backdrop-blur-xl border-r border-sky-100 dark:border-sky-400/20 p-4 space-y-3 overflow-y-auto shrink-0 z-10 shadow-sm">
-          <h3 className="text-[11px] uppercase font-bold text-sky-800 dark:text-sky-300 tracking-wider">Node Palette</h3>
-          <p className="text-[10px] text-slate-500 dark:text-slate-400">Click a node to add to canvas:</p>
+        <div className="hidden sm:block w-60 bg-slate-100/90 dark:bg-[#09090b] backdrop-blur-xl border-r border-slate-300 dark:border-white/10 p-4 space-y-3 overflow-y-auto shrink-0 z-10 shadow-sm">
+          <h3 className="text-[11px] uppercase font-bold text-slate-950 dark:text-white font-black tracking-wider">Node Palette</h3>
+          <p className="text-[10px] text-slate-800 dark:text-zinc-400 font-semibold">Click a node to add to canvas:</p>
 
           <div className="space-y-1.5">
             {NODE_TEMPLATES.map((tmpl) => (
@@ -258,18 +258,18 @@ export const WorkflowBuilderPage: React.FC = () => {
                 key={tmpl.type}
                 type="button"
                 onClick={() => addCustomNode(tmpl)}
-                className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between bg-white/90 dark:bg-[#0c182b]/80 border border-sky-200/80 dark:border-sky-400/25 hover:border-sky-400 dark:hover:border-sky-400/60 hover:bg-sky-50/80 dark:hover:bg-[#10223d] text-slate-800 dark:text-slate-200 transition-all shadow-sm group"
+                className="w-full text-left px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between bg-slate-200/90 dark:bg-zinc-900 border border-slate-300 dark:border-white/15 hover:border-blue-500 hover:bg-slate-300 dark:hover:bg-zinc-800 text-slate-950 dark:text-white font-bold transition-all shadow-sm group"
                 style={{ borderLeftColor: tmpl.border, borderLeftWidth: '3.5px' }}
               >
                 <span>{tmpl.label}</span>
-                <Plus className="w-3.5 h-3.5 text-sky-500 opacity-60 group-hover:opacity-100 transition-opacity" />
+                <Plus className="w-3.5 h-3.5 text-blue-600 dark:text-white opacity-60 group-hover:opacity-100 transition-opacity" />
               </button>
             ))}
           </div>
         </div>
 
         {/* React Flow Canvas */}
-        <div className="flex-1 h-full bg-[#f8fafc] dark:bg-[#071120] relative">
+        <div className="flex-1 h-full bg-[#eaeff6] dark:bg-black relative">
           <ReactFlow
             nodes={nodes}
             edges={edges}
@@ -278,14 +278,14 @@ export const WorkflowBuilderPage: React.FC = () => {
             onConnect={onConnect}
             fitView
           >
-            <Controls className="!bg-white/90 dark:!bg-[#0c182b]/90 !border !border-sky-200 dark:!border-sky-400/25 !text-slate-700 dark:!text-sky-200 !rounded-xl !shadow-lg backdrop-blur-md overflow-hidden" />
+            <Controls className="!bg-slate-100 dark:!bg-zinc-900 !border !border-slate-300 dark:!border-white/15 !text-slate-950 dark:!text-white !rounded-xl !shadow-lg backdrop-blur-md overflow-hidden" />
             <MiniMap
-              nodeStrokeColor={isDark ? '#38bdf8' : '#0284c7'}
-              nodeColor={isDark ? '#0c182b' : '#e0f2fe'}
-              className="!bg-white/90 dark:!bg-[#0c182b]/90 !border !border-sky-200 dark:!border-sky-400/25 !rounded-xl !overflow-hidden backdrop-blur-md shadow-md"
+              nodeStrokeColor={isDark ? '#ffffff' : '#2563eb'}
+              nodeColor={isDark ? '#18181b' : '#cbd5e1'}
+              className="!bg-slate-100/95 dark:!bg-[#0c0c0e]/95 !border !border-slate-300 dark:!border-white/15 !rounded-xl !overflow-hidden backdrop-blur-md shadow-md"
             />
             <Background
-              color={isDark ? '#0c2444' : '#bae6fd'}
+              color={isDark ? '#27272a' : '#94a3b8'}
               gap={20}
               size={1.5}
               variant={BackgroundVariant.Dots}

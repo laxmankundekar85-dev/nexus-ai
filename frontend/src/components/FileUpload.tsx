@@ -48,10 +48,13 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         onClick={() => inputRef.current?.click()}
         className={clsx(
           'flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-2xl cursor-pointer transition-all duration-200',
-          'bg-white/60 dark:bg-[#071324]/60 backdrop-blur-md',
+          // Light: Soft off-white slate (no glare), dark text, medium blue drag
+          'bg-slate-100/90 backdrop-blur-md border-slate-300',
           isDragOver
-            ? 'border-sky-500 bg-sky-50/80 dark:bg-sky-950/50 scale-[1.01]'
-            : 'border-sky-200 dark:border-sky-500/30 hover:border-sky-400 dark:hover:border-sky-400 hover:bg-white/80 dark:hover:bg-[#0b1b33]/80',
+            ? 'border-blue-600 bg-blue-50/80 scale-[1.01]'
+            : 'hover:border-blue-500 hover:bg-slate-200/80',
+          // Dark: Pure Black & White
+          'dark:bg-zinc-950/80 dark:border-white/15 dark:hover:border-white/40 dark:hover:bg-zinc-900',
           loading && 'opacity-50 pointer-events-none'
         )}
       >
@@ -67,20 +70,20 @@ export const FileUpload: React.FC<FileUploadProps> = ({
           }}
         />
 
-        <div className="p-3.5 rounded-2xl bg-gradient-to-tr from-sky-500 to-blue-600 text-white mb-3 shadow-md shadow-sky-500/25">
-          <UploadCloud className="w-6 h-6 text-white" />
+        <div className="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center mb-3 shadow-md shadow-blue-600/30 dark:bg-white dark:text-black">
+          <UploadCloud className="w-6 h-6" />
         </div>
 
-        <p className="text-sm font-bold text-slate-800 dark:text-sky-100 mb-1">
-          Click to upload or drag & drop documents
+        <p className="text-sm font-bold text-slate-900 dark:text-white mb-1">
+          {loading ? 'Uploading & parsing document...' : 'Click to upload or drag & drop documents'}
         </p>
-        <p className="text-xs text-slate-500 dark:text-sky-300/70">
+        <p className="text-xs text-slate-700 dark:text-zinc-400 font-medium">
           PDF, DOCX, TXT, CSV, XLSX (max {maxSizeMB}MB)
         </p>
       </div>
 
       {error && (
-        <div className="flex items-center gap-1.5 mt-2.5 text-xs text-rose-500 dark:text-rose-400 font-medium">
+        <div className="mt-2 text-xs text-rose-700 dark:text-rose-400 font-bold flex items-center gap-1.5">
           <AlertCircle className="w-3.5 h-3.5 shrink-0" />
           <span>{error}</span>
         </div>
