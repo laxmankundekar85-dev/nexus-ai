@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import {
   FileText,
@@ -7,6 +8,7 @@ import {
   Layers,
   Eye,
   Sparkles,
+  ArrowRight,
 } from 'lucide-react';
 import { artifactsApi } from '../services/api';
 import Button from '../components/Button';
@@ -16,13 +18,46 @@ import ReportPreviewModal from '../components/ReportPreviewModal';
 import type { Artifact } from '../types';
 
 export const ReportsPage: React.FC = () => {
+  const navigate = useNavigate();
   const [previewArtifact, setPreviewArtifact] = useState<Artifact | null>(null);
   const { data, isLoading } = useQuery({
     queryKey: ['artifacts', 1],
     queryFn: () => artifactsApi.list(1, 50),
+    retry: 1,
   });
 
-  const reports = (data?.items || []).filter((a) => a.artifact_type.includes('report'));
+  const localReports: Artifact[] = (() => {
+    try {
+      return JSON.parse(localStorage.getItem('nexus_generated_reports') || '[]');
+    } catch {
+      return [];
+    }
+  })();
+
+  const serverReports = (data?.items || []).filter((a) => a.artifact_type.includes('report'));
+  const reports = [...localReports];
+  for (const sr of serverReports) {
+    if (!reports.some((r) => r.id === sr.id)) {
+      reports.push(sr);
+    }
+  }
+
+  const handleDownload = (rep: Artifact) => {
+    const meta = rep.metadata as { title?: string; content?: string };
+    if (meta?.content) {
+      const blob = new Blob([meta.content], { type: 'text/markdown;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${(meta?.title || 'Report').replace(/[^a-zA-Z0-9_-]/g, '_')}.md`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } else {
+      window.open(artifactsApi.downloadUrl(rep.id), '_blank');
+    }
+  };
 
   return (
     <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto w-full space-y-6 sm:space-y-7 font-sans">
@@ -40,11 +75,23 @@ export const ReportsPage: React.FC = () => {
       </div>
 
       {reports.length === 0 && !isLoading ? (
-        <EmptyState
-          icon={<Layers className="w-6 h-6 text-sky-500" />}
-          title="No intelligence reports generated yet"
-          description="Submit an objective in the AI Workspace. The Report Generator Agent will compile verified findings into downloadable artifacts."
-        />
+        <div className="space-y-4">
+          <EmptyState
+            icon={<Layers className="w-6 h-6 text-sky-500" />}
+            title="No intelligence reports generated yet"
+            description="Submit an objective in the AI Workspace. The Report Generator Agent will compile verified findings into downloadable artifacts."
+          />
+          <div className="flex justify-center">
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={() => navigate('/workspace')}
+              iconRight={<ArrowRight className="w-4 h-4" />}
+            >
+              Launch AI Workspace to Generate a Report
+            </Button>
+          </div>
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {reports.map((rep) => {
@@ -84,15 +131,14 @@ export const ReportsPage: React.FC = () => {
                     >
                       Preview
                     </Button>
-                    <a
-                      href={artifactsApi.downloadUrl(rep.id)}
-                      target="_blank"
-                      rel="noreferrer"
+                    <Button
+                      variant="secondary"
+                      size="xs"
+                      onClick={() => handleDownload(rep)}
+                      icon={<Download className="w-3 h-3" />}
                     >
-                      <Button variant="secondary" size="xs" icon={<Download className="w-3 h-3" />}>
-                        .md
-                      </Button>
-                    </a>
+                      .md
+                    </Button>
                   </div>
                 </div>
               </Card>

@@ -580,6 +580,12 @@ export const WorkspacePage: React.FC = () => {
           },
         };
         setArtifacts([newArt]);
+        try {
+          const prev = JSON.parse(localStorage.getItem('nexus_generated_reports') || '[]');
+          localStorage.setItem('nexus_generated_reports', JSON.stringify([newArt, ...prev]));
+        } catch (e) {
+          console.error('Failed to cache report:', e);
+        }
         toast.success('Agent execution completed! Report generated.');
       }
     }, 1100);
