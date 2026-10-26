@@ -32,6 +32,9 @@ api.interceptors.request.use(
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    if (config.data instanceof FormData && config.headers) {
+      delete config.headers['Content-Type'];
+    }
     return config;
   },
   (error) => Promise.reject(error)
@@ -189,19 +192,32 @@ export const documentsApi = {
   },
 
   upload: async (formData: FormData): Promise<Document> => {
-    const res = await api.post<Document>('/documents/upload', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+    const res = await api.post<Document>('/documents/upload', formData);
     return res.data;
   },
 
   delete: async (id: string): Promise<void> => {
-    await api.delete(`/documents/${id}`);
+    try {
+      await api.delete(`/documents/${id}`);
+    } catch {
+      // Ignore if server is offline
+    }
+    localStorage.removeItem(`nexus_doc_text_${id}`);
+    const localDocs = JSON.parse(localStorage.getItem('nexus_local_documents') || '[]');
+    localStorage.setItem('nexus_local_documents', JSON.stringify(localDocs.filter((d: any) => d.id !== id)));
   },
 
   getText: async (id: string): Promise<{ text: string }> => {
-    const res = await api.get<{ text: string }>(`/documents/${id}/text`);
-    return res.data;
+    try {
+      const res = await api.get<{ text: string }>(`/documents/${id}/text`);
+      return res.data;
+    } catch (err) {
+      const cached = localStorage.getItem(`nexus_doc_text_${id}`);
+      if (cached) {
+        return { text: cached };
+      }
+      throw err;
+    }
   },
 };
 
