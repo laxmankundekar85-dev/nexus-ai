@@ -7,7 +7,7 @@ interface ModalProps {
   onClose: () => void;
   title: string;
   children: React.ReactNode;
-  maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl';
 }
 
 const maxWidthClasses = {
@@ -16,6 +16,9 @@ const maxWidthClasses = {
   lg: 'max-w-lg',
   xl: 'max-w-xl',
   '2xl': 'max-w-2xl',
+  '3xl': 'max-w-3xl',
+  '4xl': 'max-w-4xl',
+  '5xl': 'max-w-5xl',
 };
 
 export const Modal: React.FC<ModalProps> = ({
@@ -51,10 +54,10 @@ export const Modal: React.FC<ModalProps> = ({
 
       {/* Modal Dialog */}
       <div
-        className={`relative w-full ${maxWidthClasses[maxWidth]} bg-[#0f172a] border border-slate-800 rounded-xl shadow-xl overflow-hidden z-10`}
+        className={`relative w-full ${maxWidthClasses[maxWidth]} bg-[#0e1529] border border-slate-800/90 rounded-2xl shadow-2xl overflow-hidden z-10`}
       >
-        <div className="flex items-center justify-between px-5 py-3.5 border-b border-slate-800">
-          <h3 className="text-sm font-semibold text-slate-100">{title}</h3>
+        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-800/80 bg-[#0a0f1e]/60">
+          <h3 className="text-sm font-semibold text-white tracking-wide">{title}</h3>
           <Button variant="ghost" size="xs" onClick={onClose} icon={<X className="w-4 h-4" />} />
         </div>
         <div className="p-5 max-h-[80vh] overflow-y-auto">{children}</div>

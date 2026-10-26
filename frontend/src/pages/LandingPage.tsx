@@ -17,16 +17,16 @@ export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[#090d16] text-slate-200 font-sans selection:bg-blue-600 selection:text-white">
+    <div className="min-h-screen bg-[#0a0f1d] text-slate-100 font-sans selection:bg-indigo-600/40 selection:text-white">
       {/* Top Navbar */}
-      <header className="border-b border-slate-800/80 sticky top-0 z-40 bg-[#090d16]/90 backdrop-blur-md">
+      <header className="border-b border-slate-800/80 sticky top-0 z-40 bg-[#0a0f1e]/90 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-slate-800 border border-slate-700/80 flex items-center justify-center text-slate-200">
-              <Layers className="w-4 h-4 text-blue-400" />
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500/20 to-blue-500/20 border border-indigo-500/40 flex items-center justify-center text-indigo-400">
+              <Layers className="w-4 h-4 text-indigo-400" />
             </div>
             <span className="text-sm font-semibold tracking-wide text-white flex items-center gap-1.5">
-              NEXUS <span className="text-blue-400 text-xs font-mono">OS</span>
+              NEXUS <span className="text-indigo-400 text-xs font-mono font-medium">OS</span>
             </span>
           </div>
 

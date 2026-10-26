@@ -61,6 +61,21 @@ export const LoginPage: React.FC = () => {
         >
           Sign In
         </Button>
+
+        <div className="relative flex py-1 items-center">
+          <div className="flex-grow border-t border-slate-800"></div>
+          <span className="flex-shrink mx-3 text-[11px] text-slate-500 uppercase tracking-wider">or</span>
+          <div className="flex-grow border-t border-slate-800"></div>
+        </div>
+
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => login(email || 'operator@nexus.ai', password || 'operator123')}
+          className="w-full text-xs"
+        >
+          ⚡ Instant One-Click Demo Access
+        </Button>
       </form>
 
       <div className="mt-5 text-center text-xs text-slate-400">

@@ -170,16 +170,16 @@ export const WorkflowBuilderPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#090d16]">
+    <div className="flex flex-col h-full bg-[#0a0f1d]">
       {/* Top Action Bar */}
-      <div className="h-14 border-b border-slate-800 px-5 flex items-center justify-between bg-[#0b0f19]">
+      <div className="h-14 border-b border-slate-800/80 px-5 flex items-center justify-between bg-[#0a0f1e]">
         <div className="flex items-center gap-2.5">
           <GitFork className="w-4 h-4 text-slate-400" />
           <input
             type="text"
             value={workflowName}
             onChange={(e) => setWorkflowName(e.target.value)}
-            className="bg-transparent font-semibold text-slate-100 text-sm focus:outline-none border-b border-transparent hover:border-slate-700 focus:border-blue-500 transition-colors px-1"
+            className="bg-transparent font-semibold text-slate-100 text-sm focus:outline-none border-b border-transparent hover:border-slate-700 focus:border-indigo-500 transition-colors px-1"
           />
         </div>
 
@@ -201,10 +201,27 @@ export const WorkflowBuilderPage: React.FC = () => {
         </div>
       )}
 
+      {/* Mobile Node Palette Strip */}
+      <div className="sm:hidden bg-[#0a0f1e] border-b border-slate-800/80 px-3 py-2 overflow-x-auto flex items-center gap-2 shrink-0">
+        <span className="text-[10px] uppercase font-bold text-slate-500 whitespace-nowrap">Add:</span>
+        {NODE_TEMPLATES.map((tmpl) => (
+          <button
+            key={tmpl.type}
+            type="button"
+            onClick={() => addCustomNode(tmpl)}
+            className="shrink-0 text-xs px-2.5 py-1 rounded-md bg-[#0e1529] border border-slate-800 hover:border-slate-700 text-slate-200 flex items-center gap-1.5"
+            style={{ borderLeftColor: tmpl.border, borderLeftWidth: '3px' }}
+          >
+            <span>{tmpl.label}</span>
+            <Plus className="w-2.5 h-2.5 text-slate-400" />
+          </button>
+        ))}
+      </div>
+
       {/* Main Canvas & Left Node Palette */}
       <div className="flex-1 flex relative overflow-hidden">
-        {/* Node Palette */}
-        <div className="w-56 bg-[#0b0f19] border-r border-slate-800 p-3.5 space-y-2.5 overflow-y-auto shrink-0 z-10">
+        {/* Node Palette (Desktop) */}
+        <div className="hidden sm:block w-56 bg-[#0a0f1e] border-r border-slate-800/80 p-3.5 space-y-2.5 overflow-y-auto shrink-0 z-10">
           <h3 className="text-[11px] uppercase font-bold text-slate-400 tracking-wider">Node Palette</h3>
           <p className="text-[10px] text-slate-500">Click a node to add to canvas:</p>
 
@@ -214,7 +231,7 @@ export const WorkflowBuilderPage: React.FC = () => {
                 key={tmpl.type}
                 type="button"
                 onClick={() => addCustomNode(tmpl)}
-                className="w-full text-left px-2.5 py-2 rounded-lg text-xs font-medium flex items-center justify-between bg-[#0f172a] border border-slate-800 hover:border-slate-700 hover:bg-slate-800/60 transition-colors"
+                className="w-full text-left px-2.5 py-2 rounded-lg text-xs font-medium flex items-center justify-between bg-[#0e1529] border border-slate-800/80 hover:border-slate-700 hover:bg-[#131e38] transition-colors"
                 style={{ borderLeftColor: tmpl.border, borderLeftWidth: '3px' }}
               >
                 <span className="text-slate-200">{tmpl.label}</span>
@@ -225,7 +242,7 @@ export const WorkflowBuilderPage: React.FC = () => {
         </div>
 
         {/* React Flow Canvas */}
-        <div className="flex-1 h-full bg-[#090d16]">
+        <div className="flex-1 h-full bg-[#0a0f1d]">
           <ReactFlow
             nodes={nodes}
             edges={edges}
@@ -234,7 +251,7 @@ export const WorkflowBuilderPage: React.FC = () => {
             onConnect={onConnect}
             fitView
           >
-            <Controls className="bg-[#0f172a] border border-slate-800 text-slate-300 rounded-lg shadow-md" />
+            <Controls className="bg-[#0e1529] border border-slate-800/80 text-slate-300 rounded-lg shadow-md" />
             <MiniMap
               nodeStrokeColor="#334155"
               nodeColor="#1e293b"

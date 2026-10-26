@@ -16,11 +16,11 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    'bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white border border-blue-500/80 shadow-sm shadow-blue-900/20',
+    'bg-gradient-to-r from-blue-600 via-indigo-600 to-indigo-700 hover:from-blue-500 hover:via-indigo-500 hover:to-indigo-600 active:from-blue-700 active:to-indigo-800 text-white border border-indigo-400/30 shadow-sm shadow-indigo-950/40',
   secondary:
-    'bg-[#131c31] hover:bg-[#1a2540] active:bg-[#0f172a] text-slate-200 border border-slate-700/70',
+    'bg-[#131e38] hover:bg-[#1b294c] active:bg-[#0e1529] text-slate-200 border border-slate-700/70 hover:border-slate-600',
   danger:
-    'bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30',
+    'bg-rose-500/10 hover:bg-rose-500/20 active:bg-rose-500/30 text-rose-300 border border-rose-500/30',
   ghost:
     'bg-transparent hover:bg-slate-800/60 text-slate-400 hover:text-slate-100 border border-transparent',
 };
@@ -48,7 +48,7 @@ export const Button: React.FC<ButtonProps> = ({
       {...props}
       disabled={disabled || loading}
       className={clsx(
-        'inline-flex items-center justify-center font-medium transition-colors duration-150 focus:outline-none focus:ring-1 focus:ring-blue-400/50 disabled:opacity-50 disabled:cursor-not-allowed select-none',
+        'inline-flex items-center justify-center font-medium transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 disabled:opacity-50 disabled:cursor-not-allowed select-none',
         variantClasses[variant],
         sizeClasses[size],
         className

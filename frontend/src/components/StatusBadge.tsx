@@ -11,45 +11,47 @@ interface StatusBadgeProps {
 export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, showIcon = true }) => {
   const normalized = status.toLowerCase();
 
-  let colorClasses = 'bg-slate-800/80 text-slate-300 border-slate-700';
-  let icon = <Clock className="w-3 h-3 text-slate-400" />;
+  let colorClasses = 'bg-slate-800 text-slate-300 border-slate-700';
+  let icon = <Clock className="w-3.5 h-3.5 text-slate-400" />;
 
   switch (normalized) {
     case 'completed':
     case 'ready':
     case 'approved':
-      colorClasses = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25';
-      icon = <CheckCircle2 className="w-3 h-3 text-emerald-400" />;
+      colorClasses = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-xs shadow-emerald-500/20';
+      icon = <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />;
       break;
     case 'failed':
     case 'rejected':
-      colorClasses = 'bg-rose-500/10 text-rose-400 border-rose-500/25';
-      icon = <XCircle className="w-3 h-3 text-rose-400" />;
+      colorClasses = 'bg-rose-500/20 text-rose-300 border-rose-500/40 shadow-xs shadow-rose-500/20';
+      icon = <XCircle className="w-3.5 h-3.5 text-rose-400 shrink-0" />;
       break;
     case 'running':
     case 'processing':
-      colorClasses = 'bg-blue-500/10 text-blue-400 border-blue-500/25';
-      icon = <Loader2 className="w-3 h-3 text-blue-400 animate-spin" />;
+      colorClasses = 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 shadow-xs shadow-cyan-500/20';
+      icon = (
+        <span className="flex items-center gap-1.5 shrink-0">
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+          <Loader2 className="w-3 h-3 text-cyan-300 animate-spin" />
+        </span>
+      );
       break;
     case 'planning':
-      colorClasses = 'bg-indigo-500/10 text-indigo-400 border-indigo-500/25';
-      icon = <Loader2 className="w-3 h-3 text-indigo-400 animate-spin" />;
+      colorClasses = 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40 shadow-xs shadow-indigo-500/20';
+      icon = <Loader2 className="w-3.5 h-3.5 text-indigo-300 animate-spin shrink-0" />;
       break;
     case 'reviewing':
-      colorClasses = 'bg-amber-500/10 text-amber-400 border-amber-500/25';
-      icon = <AlertCircle className="w-3 h-3 text-amber-400" />;
-      break;
     case 'awaiting_approval':
-      colorClasses = 'bg-amber-500/10 text-amber-400 border-amber-500/25';
-      icon = <AlertCircle className="w-3 h-3 text-amber-400" />;
+      colorClasses = 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-xs shadow-amber-500/20';
+      icon = <AlertCircle className="w-3.5 h-3.5 text-amber-300 shrink-0" />;
       break;
     case 'cancelled':
-      colorClasses = 'bg-slate-800 text-slate-400 border-slate-700';
-      icon = <Ban className="w-3 h-3 text-slate-500" />;
+      colorClasses = 'bg-slate-800/90 text-slate-400 border-slate-700';
+      icon = <Ban className="w-3.5 h-3.5 text-slate-400 shrink-0" />;
       break;
     default:
-      colorClasses = 'bg-slate-800/80 text-slate-400 border-slate-700';
-      icon = <Clock className="w-3 h-3 text-slate-400" />;
+      colorClasses = 'bg-slate-800 text-slate-300 border-slate-700';
+      icon = <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />;
   }
 
   const label = normalized.replace('_', ' ');
@@ -57,7 +59,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, showIcon = tru
   return (
     <span
       className={clsx(
-        'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-medium border capitalize tracking-wide',
+        'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border capitalize tracking-wide select-none',
         colorClasses
       )}
     >

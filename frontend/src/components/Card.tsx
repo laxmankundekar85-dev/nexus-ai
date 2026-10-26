@@ -17,8 +17,8 @@ export const Card: React.FC<CardProps> = ({
     <div
       {...props}
       className={clsx(
-        'bg-[#0f172a] border border-slate-800 rounded-xl p-5 transition-colors duration-150',
-        hoverable && 'hover:border-slate-700 hover:bg-[#131c31] cursor-pointer',
+        'bg-[#0e1529] border border-slate-800/80 rounded-xl p-5 transition-all duration-200 shadow-sm shadow-slate-950/40',
+        hoverable && 'hover:border-slate-700 hover:bg-[#131e38] hover:shadow-md cursor-pointer',
         className
       )}
     >

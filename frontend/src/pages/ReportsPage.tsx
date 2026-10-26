@@ -1,17 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   FileText,
   Download,
   Calendar,
   Layers,
+  Eye,
 } from 'lucide-react';
 import { artifactsApi } from '../services/api';
 import Button from '../components/Button';
 import Card from '../components/Card';
 import EmptyState from '../components/EmptyState';
+import ReportPreviewModal from '../components/ReportPreviewModal';
+import type { Artifact } from '../types';
 
 export const ReportsPage: React.FC = () => {
+  const [previewArtifact, setPreviewArtifact] = useState<Artifact | null>(null);
   const { data, isLoading } = useQuery({
     queryKey: ['artifacts', 1],
     queryFn: () => artifactsApi.list(1, 50),
@@ -20,7 +24,7 @@ export const ReportsPage: React.FC = () => {
   const reports = (data?.items || []).filter((a) => a.artifact_type.includes('report'));
 
   return (
-    <div className="p-7 max-w-7xl mx-auto w-full space-y-5">
+    <div className="p-4 sm:p-6 md:p-7 max-w-7xl mx-auto w-full space-y-4 sm:space-y-5">
       {/* Header */}
       <div className="border-b border-slate-800 pb-5">
         <h1 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
@@ -66,21 +70,38 @@ export const ReportsPage: React.FC = () => {
                   <span className="text-[11px] text-slate-500 font-mono">
                     {meta?.citations_count || 4} verified citations
                   </span>
-                  <a
-                    href={artifactsApi.downloadUrl(rep.id)}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <Button variant="secondary" size="xs" icon={<Download className="w-3 h-3" />}>
-                      Download .md
+                  <div className="flex items-center gap-1.5">
+                    <Button
+                      variant="secondary"
+                      size="xs"
+                      onClick={() => setPreviewArtifact(rep)}
+                      icon={<Eye className="w-3 h-3 text-blue-400" />}
+                    >
+                      Preview
                     </Button>
-                  </a>
+                    <a
+                      href={artifactsApi.downloadUrl(rep.id)}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <Button variant="secondary" size="xs" icon={<Download className="w-3 h-3" />}>
+                        Download .md
+                      </Button>
+                    </a>
+                  </div>
                 </div>
               </Card>
             );
           })}
         </div>
       )}
+
+      {/* Report Preview Modal */}
+      <ReportPreviewModal
+        isOpen={Boolean(previewArtifact)}
+        onClose={() => setPreviewArtifact(null)}
+        artifact={previewArtifact}
+      />
     </div>
   );
 };

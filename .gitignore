@@ -35,6 +35,10 @@ npm-debug.log*
 
 # Storage uploads (local dev files)
 storage/uploads/
+backend/storage/uploads/
+**/storage/uploads/
+.vercel/
+frontend/.vercel/
 *.pdf
 *.docx
 
