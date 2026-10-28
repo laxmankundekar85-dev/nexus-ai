@@ -13,6 +13,8 @@ import {
   FileCode,
   Download,
   Eye,
+  Sparkles,
+  Lightbulb,
 } from 'lucide-react';
 import { useExecutions } from '../hooks/useExecutions';
 import { useExecutionEvents } from '../hooks/useExecutionEvents';
@@ -718,7 +720,18 @@ export const WorkspacePage: React.FC = () => {
   }, [currentExecutionId, events.length]);
 
   const handleStart = async () => {
-    if (!objective.trim()) return;
+    const trimmed = objective.trim();
+    if (!trimmed) {
+      toast.error('Please enter a research or analysis objective.');
+      return;
+    }
+
+    // Guard against random gibberish or overly brief prompts when no documents are attached
+    if (trimmed.length < 8 && selectedDocIds.length === 0) {
+      toast.error('Objective is too brief or unclear ("' + trimmed + '"). Please specify a clear research goal or click one of the quick suggestions below.');
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       clearEvents();
@@ -776,6 +789,39 @@ export const WorkspacePage: React.FC = () => {
             onChange={(e) => setObjective(e.target.value)}
             className="w-full bg-slate-200/90 dark:bg-zinc-950 border border-slate-300 dark:border-white/20 rounded-xl p-3.5 text-xs text-slate-950 dark:text-white placeholder-slate-500 dark:placeholder-zinc-500 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/30 transition-all font-mono leading-relaxed font-semibold"
           />
+
+          {/* Quick Inspiration & Prompt Templates */}
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-[10px] font-bold text-slate-700 dark:text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
+                <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
+                Prompt Inspiration & Examples (Click to Auto-Fill):
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {[
+                { label: '🔬 Analyze Attached Lab Experiments', prompt: 'Analyze experimental methodology, apparatus parameters, and data observations from the attached lab documents.' },
+                { label: '⚡ NVIDIA vs AMD AI GPUs', prompt: 'Compare NVIDIA Blackwell B200 and Hopper H100 vs AMD Instinct MI300X market share, silicon architecture, and pricing benchmarks.' },
+                { label: '📱 Flagship Smartphones', prompt: 'Compare iPhone 16 Pro Max vs Samsung Galaxy S24 Ultra vs Google Pixel 9 Pro XL hardware specs and AI features.' },
+                { label: '☁️ Cloud Cost Benchmarks', prompt: 'Analyze enterprise hyperscaler cost benchmarks: AWS vs Microsoft Azure vs Google Cloud Platform for AI workloads.' },
+                { label: '📈 Crypto Market Dynamics', prompt: 'Analyze Bitcoin vs Ethereum institutional ETF inflows, market dominance, and monetary policy dynamics.' },
+              ].map((ex, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => {
+                    setObjective(ex.prompt);
+                    if (ex.label.includes('Attached') && documents.length > 0) {
+                      setSelectedDocIds(documents.slice(0, 2).map((d: any) => d.id));
+                    }
+                  }}
+                  className="px-2.5 py-1 text-[11px] rounded-lg bg-blue-50 dark:bg-zinc-900 border border-blue-200 dark:border-white/10 text-blue-900 dark:text-zinc-200 hover:bg-blue-100 dark:hover:bg-zinc-800 transition-all font-semibold"
+                >
+                  {ex.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
           {documents && documents.length > 0 && (
             <div>
