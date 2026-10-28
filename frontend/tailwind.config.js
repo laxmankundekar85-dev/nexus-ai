@@ -8,8 +8,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['"JetBrains Mono"', 'monospace'],
         mono: ['"JetBrains Mono"', 'monospace'],
+        inter: ['"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
       },
       colors: {
         // Medium Blue & Eye-friendly soft glass palette

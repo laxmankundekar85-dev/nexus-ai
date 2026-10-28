@@ -122,27 +122,27 @@ export const SettingsPage: React.FC = () => {
     <div className="p-4 sm:p-6 md:p-8 max-w-5xl mx-auto w-full space-y-6 sm:space-y-7 font-sans">
       {/* Header */}
       <div className="border-b border-slate-300 dark:border-white/10 pb-6">
-        <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-gradient-to-tr from-blue-600 to-blue-800 text-white shadow-md">
+        <h1 className="text-xl sm:text-2xl font-bold font-title text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
+          <div className="p-2 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/30">
             <SettingsIcon className="w-5 h-5 text-white" />
           </div>
           System Settings & AI Engine Configuration
         </h1>
-        <p className="text-xs text-slate-800 dark:text-zinc-400 font-semibold mt-1">
+        <p className="text-xs text-slate-600 dark:text-zinc-400 font-body mt-1">
           Configure real-time web search, LLM providers (Groq, OpenAI, Gemini, Anthropic), and runtime parameters.
         </p>
       </div>
 
       {/* Real-Time AI Engine Configuration Card */}
-      <div className="p-6 rounded-2xl bg-slate-100/90 dark:bg-[#0c0c0e]/90 border border-slate-300 dark:border-white/12 shadow-xl backdrop-blur-xl space-y-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3.5 border-b border-slate-300 dark:border-white/10 gap-2">
+      <div className="p-6 rounded-2xl bg-white/75 dark:bg-[#0c0c0e]/80 border border-white/80 dark:border-white/12 shadow-xl backdrop-blur-xl space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3.5 border-b border-slate-200/80 dark:border-white/10 gap-2">
           <div className="flex items-center gap-2.5">
             <Zap className="w-4 h-4 text-amber-500" />
-            <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+            <h3 className="text-xs font-semibold font-heading text-slate-950 dark:text-white uppercase tracking-wider">
               AI Engine & Real-Time Intelligence
             </h3>
           </div>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 w-fit">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-medium bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 w-fit">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
             Live Search Active (DuckDuckGo Real-Time)
           </span>

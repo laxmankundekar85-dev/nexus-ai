@@ -67,3 +67,5 @@ backend/alembic.ini.local
 *.key
 *.crt
 secrets/
+
+.vercel

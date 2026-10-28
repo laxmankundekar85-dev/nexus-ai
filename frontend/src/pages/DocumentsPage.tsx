@@ -106,13 +106,13 @@ export const DocumentsPage: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-slate-300 dark:border-white/10 pb-6">
         <div>
-          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-gradient-to-tr from-blue-600 to-blue-800 text-white shadow-md">
+          <h1 className="text-xl sm:text-2xl font-bold font-title text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/30">
               <FolderArchive className="w-5 h-5 text-white" />
             </div>
             Document Store & Knowledge Context
           </h1>
-          <p className="text-xs text-slate-800 dark:text-zinc-400 font-semibold mt-1">
+          <p className="text-xs text-slate-600 dark:text-zinc-400 font-body mt-1">
             Indexed documents (PDF, DOCX, XLSX, CSV, TXT) parsed for grounded agent retrieval and citation.
           </p>
         </div>
@@ -138,23 +138,23 @@ export const DocumentsPage: React.FC = () => {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-200/80 dark:bg-zinc-950/90 border-b border-slate-300 dark:border-white/15 text-slate-950 dark:text-white uppercase tracking-wider font-extrabold">
+              <thead className="bg-slate-100/80 dark:bg-zinc-950/90 border-b border-slate-200/80 dark:border-white/10 text-slate-700 dark:text-zinc-300 uppercase tracking-wider font-heading">
                 <tr>
-                  <th className="py-3.5 px-5 font-bold">Document Name</th>
-                  <th className="py-3.5 px-5 font-bold">Size</th>
-                  <th className="py-3.5 px-5 font-bold">Status</th>
-                  <th className="py-3.5 px-5 font-bold">Uploaded</th>
-                  <th className="py-3.5 px-5 font-bold text-right">Actions</th>
+                  <th className="py-3.5 px-5 font-semibold">Document Name</th>
+                  <th className="py-3.5 px-5 font-semibold">Size</th>
+                  <th className="py-3.5 px-5 font-semibold">Status</th>
+                  <th className="py-3.5 px-5 font-semibold">Uploaded</th>
+                  <th className="py-3.5 px-5 font-semibold text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200 dark:divide-white/10">
+              <tbody className="divide-y divide-slate-100 dark:divide-white/10">
                 {documents.map((doc) => (
-                  <tr key={doc.id} className="hover:bg-slate-200/50 dark:hover:bg-zinc-900/50 transition-colors">
-                    <td className="py-3.5 px-5 font-semibold text-slate-800 dark:text-slate-100 flex items-center gap-2.5">
+                  <tr key={doc.id} className="hover:bg-slate-50/80 dark:hover:bg-zinc-900/50 transition-colors">
+                    <td className="py-3.5 px-5 text-slate-800 dark:text-slate-100 flex items-center gap-2.5 font-body">
                       <FileText className="w-4 h-4 text-blue-600 dark:text-white shrink-0" />
                       <span className="truncate max-w-sm">{doc.filename}</span>
                     </td>
-                    <td className="py-3.5 px-5 text-slate-800 dark:text-zinc-400 font-semibold font-mono">
+                    <td className="py-3.5 px-5 text-slate-500 dark:text-zinc-400 font-mono">
                       {formatBytes(doc.size_bytes)}
                     </td>
                     <td className="py-3.5 px-5">

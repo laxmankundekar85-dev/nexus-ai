@@ -64,13 +64,13 @@ export const ReportsPage: React.FC = () => {
     <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto w-full space-y-6 sm:space-y-7 font-sans">
       {/* Header */}
       <div className="border-b border-slate-300 dark:border-white/10 pb-6">
-        <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-gradient-to-tr from-blue-600 to-blue-800 text-white shadow-md">
+        <h1 className="text-xl sm:text-2xl font-bold font-title text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
+          <div className="p-2 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/30">
             <FileText className="w-5 h-5 text-white" />
           </div>
           Intelligence Reports & Synthesized Artifacts
         </h1>
-        <p className="text-xs text-slate-800 dark:text-zinc-400 font-semibold mt-1">
+        <p className="text-xs text-slate-600 dark:text-zinc-400 font-body mt-1">
           Executive summaries, empirical findings, and verified citations generated across all agent executions.
         </p>
       </div>
@@ -101,26 +101,26 @@ export const ReportsPage: React.FC = () => {
             return (
               <Card key={rep.id} className="flex flex-col justify-between hoverable group">
                 <div>
-                  <div className="flex items-center justify-between text-[11px] text-slate-800 dark:text-zinc-400 font-semibold mb-3">
-                    <span className="inline-flex items-center gap-1 font-mono uppercase bg-blue-100 text-blue-900 border border-blue-300 dark:bg-zinc-900 dark:text-white dark:border-white/15 px-2 py-0.5 rounded-md font-bold tracking-wider text-[10px]">
+                  <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-zinc-400 font-medium mb-3">
+                    <span className="inline-flex items-center gap-1 font-mono uppercase bg-blue-50 text-blue-700 border border-blue-200/80 dark:bg-zinc-900 dark:text-blue-300 dark:border-white/15 px-2 py-0.5 rounded-md font-medium tracking-wider text-[10px]">
                       <Sparkles className="w-2.5 h-2.5" /> Verified
                     </span>
-                    <span className="flex items-center gap-1 font-mono text-slate-700 dark:text-zinc-400 font-medium">
+                    <span className="flex items-center gap-1 font-mono text-slate-500 dark:text-zinc-400 font-medium">
                       <Calendar className="w-3 h-3" />
                       {new Date(rep.created_at).toLocaleDateString()}
                     </span>
                   </div>
 
-                  <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-2 line-clamp-2 group-hover:text-blue-700 dark:group-hover:text-white transition-colors">
+                  <h3 className="text-sm font-semibold font-heading text-slate-900 dark:text-white mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-white transition-colors">
                     {title}
                   </h3>
-                  <p className="text-xs text-slate-800 dark:text-zinc-300 font-medium line-clamp-2 mb-4 leading-relaxed">
+                  <p className="text-xs text-slate-600 dark:text-zinc-400 font-body line-clamp-2 mb-4 leading-relaxed">
                     Autonomous multi-agent synthesis with empirical references, quantitative metrics, and quality review checks.
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between pt-3 border-t border-slate-300 dark:border-white/10">
-                  <span className="text-[11px] text-slate-800 dark:text-zinc-400 font-bold font-mono font-medium">
+                <div className="flex items-center justify-between pt-3 border-t border-slate-200/80 dark:border-white/10">
+                  <span className="text-[11px] text-slate-500 dark:text-zinc-400 font-mono font-medium">
                     {meta?.citations_count || 4} verified citations
                   </span>
                   <div className="flex items-center gap-2">

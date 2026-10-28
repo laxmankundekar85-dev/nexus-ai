@@ -996,8 +996,8 @@ export const WorkspacePage: React.FC = () => {
             <Terminal className="w-4 h-4 text-white" />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-slate-950 dark:text-white tracking-wide">Execution Objective</h2>
-            <p className="text-[11px] text-slate-600 dark:text-zinc-400 font-semibold">Submit an enterprise research goal for autonomous agent coordination</p>
+            <h2 className="text-sm font-semibold font-heading text-slate-950 dark:text-white tracking-wide">Execution Objective</h2>
+            <p className="text-[11px] text-slate-500 dark:text-zinc-400 font-body">Submit an enterprise research goal for autonomous agent coordination</p>
           </div>
         </div>
 
@@ -1010,7 +1010,7 @@ export const WorkspacePage: React.FC = () => {
               setObjective(e.target.value);
               if (validationError) setValidationError(null);
             }}
-            className="w-full bg-white/80 dark:bg-zinc-950/80 border border-slate-200/90 dark:border-white/15 rounded-xl p-3.5 text-xs text-slate-950 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/25 focus:bg-white dark:focus:bg-zinc-950 transition-all font-mono leading-relaxed font-semibold shadow-inner"
+            className="w-full bg-white/80 dark:bg-zinc-950/80 border border-slate-200/90 dark:border-white/15 rounded-xl p-3.5 text-xs text-slate-950 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/25 focus:bg-white dark:focus:bg-zinc-950 transition-all font-mono leading-relaxed font-normal shadow-inner"
           />
 
           {/* Validation Notice Banner */}
@@ -1018,8 +1018,8 @@ export const WorkspacePage: React.FC = () => {
             <div className="flex items-start gap-2.5 p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-700 dark:text-red-400 text-xs animate-in fade-in duration-200">
               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-red-600 dark:text-red-400" />
               <div className="space-y-1">
-                <p className="font-bold">{validationError}</p>
-                <p className="text-[11px] text-slate-700 dark:text-zinc-400 font-medium">
+                <p className="font-heading font-semibold">{validationError}</p>
+                <p className="text-[11px] text-slate-600 dark:text-zinc-400 font-body">
                   Nexus AI operates under a Zero-Hallucination Policy. To maintain factual integrity, arbitrary keyboard keystrokes or ungrounded queries cannot be synthesized. Please select a template below or specify a real research topic.
                 </p>
               </div>
@@ -1029,7 +1029,7 @@ export const WorkspacePage: React.FC = () => {
           {/* Quick Inspiration & Prompt Templates */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[10px] font-bold text-slate-600 dark:text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
+              <span className="text-[10px] font-heading font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
                 <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
                 Prompt Inspiration & Examples (Click to Auto-Fill):
               </span>
@@ -1162,18 +1162,18 @@ export const WorkspacePage: React.FC = () => {
         {/* Task Pipeline */}
         <div className="p-6 rounded-2xl bg-white/75 dark:bg-[#0c0c0e]/80 border border-white/80 dark:border-white/10 flex flex-col h-[430px] shadow-[0_8px_32px_0_rgba(31,38,135,0.06)] backdrop-blur-2xl">
           <div className="flex items-center justify-between pb-3.5 border-b border-slate-200/80 dark:border-white/10 mb-3.5">
-            <h3 className="text-xs font-bold text-slate-950 dark:text-white uppercase tracking-wider flex items-center gap-2">
+            <h3 className="text-xs font-semibold font-heading text-slate-950 dark:text-white uppercase tracking-wider flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-blue-600 shadow-xs shadow-blue-500/50" />
               Subtasks Pipeline
             </h3>
-            <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 font-bold border border-blue-200/80 dark:border-blue-900/40">
+            <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 font-medium border border-blue-200/80 dark:border-blue-900/40">
               {tasks.length} tasks
             </span>
           </div>
 
           <div className="space-y-2.5 overflow-y-auto pr-1 flex-1">
             {tasks.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full text-slate-400 dark:text-slate-500 text-xs gap-2">
+              <div className="flex flex-col items-center justify-center h-full text-slate-400 dark:text-slate-500 text-xs gap-2 font-body">
                 <Clock className="w-8 h-8 text-blue-500/60 dark:text-white/60 animate-pulse" />
                 <span>No active task pipeline. Submit an objective to initiate execution.</span>
               </div>
@@ -1184,28 +1184,28 @@ export const WorkspacePage: React.FC = () => {
                   className="p-3.5 rounded-xl bg-white/65 dark:bg-zinc-950/70 border border-white/70 dark:border-white/10 hover:border-blue-500/50 dark:hover:border-white/30 hover:bg-white/90 dark:hover:bg-zinc-900/90 transition-all flex items-start justify-between gap-3 shadow-xs hover:shadow-md"
                 >
                   <div className="space-y-1">
-                    <span className="text-xs font-bold text-slate-950 dark:text-slate-100 flex items-center gap-1.5">
-                      <span className="w-4 h-4 rounded-full bg-blue-600/10 border border-blue-600/30 text-blue-700 dark:text-white font-bold text-[10px] inline-flex items-center justify-center">
+                    <span className="text-xs font-medium font-mono text-slate-950 dark:text-slate-100 flex items-center gap-1.5">
+                      <span className="w-4 h-4 rounded-full bg-blue-600/10 border border-blue-600/30 text-blue-700 dark:text-white font-medium text-[10px] inline-flex items-center justify-center">
                         {idx + 1}
                       </span>
                       {task.agent_role.toUpperCase()}
                     </span>
-                    <p className="text-[11px] text-slate-600 dark:text-zinc-400 font-medium line-clamp-2 leading-relaxed">{task.description}</p>
+                    <p className="text-[11px] text-slate-600 dark:text-zinc-400 font-body line-clamp-2 leading-relaxed">{task.description}</p>
                   </div>
-                  <div className="shrink-0">
+                  <div className="shrink-0 font-mono">
                     {task.status === 'completed' && (
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
                         <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400" /> Completed
                       </span>
                     )}
                     {task.status === 'running' && (
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-600/15 text-blue-700 dark:text-white border border-blue-600/30">
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-medium bg-blue-600/15 text-blue-700 dark:text-white border border-blue-600/30">
                         <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-white animate-ping" />
                         <Loader2 className="w-3 h-3 text-blue-600 dark:text-white animate-spin" /> In Progress
                       </span>
                     )}
                     {task.status === 'pending' && (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-zinc-400 font-medium border border-slate-200 dark:border-slate-700">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-zinc-400 border border-slate-200 dark:border-slate-700">
                         <Clock className="w-3 h-3" /> Queued
                       </span>
                     )}
@@ -1219,28 +1219,28 @@ export const WorkspacePage: React.FC = () => {
         {/* Telemetry Stream */}
         <div className="p-6 rounded-2xl bg-white/75 dark:bg-[#0c0c0e]/80 border border-white/80 dark:border-white/10 flex flex-col h-[430px] shadow-[0_8px_32px_0_rgba(31,38,135,0.06)] backdrop-blur-2xl">
           <div className="flex items-center justify-between pb-3.5 border-b border-slate-200/80 dark:border-white/10 mb-3.5">
-            <h3 className="text-xs font-bold text-slate-950 dark:text-white uppercase tracking-wider flex items-center gap-2">
+            <h3 className="text-xs font-semibold font-heading text-slate-950 dark:text-white uppercase tracking-wider flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-xs shadow-emerald-500/50" />
               Telemetry Stream (SSE)
             </h3>
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 font-bold">
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 font-medium">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Live Stream
             </span>
           </div>
 
           <div className="bg-white/60 dark:bg-zinc-950/70 border border-slate-200/80 dark:border-white/10 rounded-xl p-3.5 overflow-y-auto flex-1 font-mono text-[11px] space-y-2 shadow-inner">
             {displayEvents.length === 0 ? (
-              <div className="text-slate-400 dark:text-slate-500 flex items-center justify-center h-full">
+              <div className="text-slate-400 dark:text-slate-500 flex items-center justify-center h-full font-body text-xs">
                 Telemetry stream idle. Waiting for events...
               </div>
             ) : (
               displayEvents.map((ev: any, i: number) => (
-                <div key={ev.id || i} className="text-slate-700 dark:text-slate-300 leading-relaxed break-all">
-                  <span className="text-blue-600 dark:text-white font-semibold">
+                <div key={ev.id || i} className="text-slate-700 dark:text-slate-300 leading-relaxed break-all font-mono">
+                  <span className="text-blue-600 dark:text-white font-medium">
                     [{ev.timestamp && !isNaN(new Date(ev.timestamp).getTime()) ? new Date(ev.timestamp).toLocaleTimeString() : new Date().toLocaleTimeString()}]
                   </span>{' '}
-                  <span className="text-indigo-600 dark:text-cyan-400 font-bold">{ev.event_type}:</span>{' '}
-                  <span className="text-slate-800 dark:text-slate-200 font-medium">
+                  <span className="text-indigo-600 dark:text-cyan-400 font-medium">{ev.event_type}:</span>{' '}
+                  <span className="text-slate-800 dark:text-slate-200 font-normal">
                     {JSON.stringify(ev.payload || (ev as any).safe_metadata || {})}
                   </span>
                 </div>
@@ -1254,11 +1254,11 @@ export const WorkspacePage: React.FC = () => {
       {artifacts.length > 0 && (
         <div className="p-6 rounded-2xl bg-white/75 dark:bg-[#0c0c0e]/80 border border-white/80 dark:border-white/10 shadow-[0_8px_32px_0_rgba(31,38,135,0.06)] space-y-4 backdrop-blur-2xl animate-section stagger-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-slate-950 dark:text-white uppercase tracking-wider flex items-center gap-2">
+            <h3 className="text-sm font-semibold font-heading text-slate-950 dark:text-white uppercase tracking-wider flex items-center gap-2">
               <FileCode className="w-4 h-4 text-emerald-500" />
               Synthesized Intelligence Output Artifacts
             </h3>
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 font-bold">
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 font-medium font-mono">
               Ready for Download
             </span>
           </div>
@@ -1273,11 +1273,11 @@ export const WorkspacePage: React.FC = () => {
                   className="p-4 bg-white/70 dark:bg-zinc-950/70 border border-white/80 dark:border-white/15 hover:border-blue-500/50 dark:hover:border-white/30 rounded-xl flex items-center justify-between transition-all shadow-xs hover:shadow-md group"
                 >
                   <div className="space-y-1">
-                    <span className="text-xs font-bold text-slate-950 dark:text-white block group-hover:text-blue-600 dark:group-hover:text-white transition-colors">
+                    <span className="text-xs font-semibold font-heading text-slate-950 dark:text-white block group-hover:text-blue-600 dark:group-hover:text-white transition-colors">
                       {artTitle}
                     </span>
-                    <span className="text-[11px] text-slate-600 dark:text-zinc-400 font-mono flex items-center gap-2">
-                      <span className="px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 font-bold border border-blue-200/80 dark:border-blue-900/40">Markdown</span>
+                    <span className="text-[11px] text-slate-500 dark:text-zinc-400 font-mono flex items-center gap-2">
+                      <span className="px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 font-medium border border-blue-200/80 dark:border-blue-900/40">Markdown</span>
                       <span>{artWordCount} words</span>
                     </span>
                   </div>
@@ -1286,7 +1286,7 @@ export const WorkspacePage: React.FC = () => {
                       variant="secondary"
                       size="xs"
                       onClick={() => setPreviewArtifact(art)}
-                      className="flex items-center gap-1.5 text-xs text-blue-700 dark:text-white hover:text-blue-800 dark:hover:text-zinc-200 font-bold"
+                      className="flex items-center gap-1.5 text-xs text-blue-700 dark:text-white hover:text-blue-800 dark:hover:text-zinc-200 font-mono font-medium"
                     >
                       <Eye className="w-3.5 h-3.5" />
                       Preview
@@ -1304,7 +1304,7 @@ export const WorkspacePage: React.FC = () => {
                         URL.revokeObjectURL(url);
                         toast.success('Report downloaded as Markdown');
                       }}
-                      className="flex items-center gap-1 text-xs"
+                      className="flex items-center gap-1 text-xs font-mono font-medium"
                     >
                       <Download className="w-3.5 h-3.5" />
                       .md
@@ -1313,7 +1313,7 @@ export const WorkspacePage: React.FC = () => {
                       variant="primary"
                       size="xs"
                       onClick={() => exportReportToPdf(artTitle, artContent)}
-                      className="flex items-center gap-1.5 text-xs bg-blue-600 hover:bg-blue-700 font-bold shadow-xs shadow-blue-600/30"
+                      className="flex items-center gap-1.5 text-xs bg-blue-600 hover:bg-blue-700 font-mono font-medium shadow-xs shadow-blue-600/30"
                     >
                       <FileText className="w-3.5 h-3.5 text-white" />
                       Download PDF

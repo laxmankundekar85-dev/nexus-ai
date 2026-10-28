@@ -65,7 +65,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, showIcon = tru
   return (
     <span
       className={clsx(
-        'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border backdrop-blur-sm transition-all',
+        'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium font-mono border backdrop-blur-sm transition-all',
         colorClasses
       )}
     >

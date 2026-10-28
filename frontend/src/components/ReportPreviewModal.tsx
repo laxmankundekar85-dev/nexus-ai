@@ -167,7 +167,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
       if (trimmed.startsWith('# ')) {
         elements.push(
           <div key={idx} className="mt-2 mb-4 pb-3 border-b border-slate-200/80 dark:border-white/12">
-            <h1 className="text-xl sm:text-2xl font-black text-slate-950 dark:text-white tracking-tight leading-snug">
+            <h1 className="text-xl sm:text-2xl font-bold font-title text-slate-950 dark:text-white tracking-tight leading-snug">
               {formatInlineText(trimmed.slice(2))}
             </h1>
           </div>
@@ -176,33 +176,33 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
         elements.push(
           <div key={idx} className="flex items-center gap-2 mt-6 mb-3 pt-3 border-t border-slate-200/80 dark:border-white/12">
             <span className="w-1.5 h-4.5 bg-blue-600 dark:bg-white rounded-full shrink-0 shadow-xs" />
-            <h2 className="text-sm sm:text-base font-extrabold text-blue-700 dark:text-white uppercase tracking-wide">
+            <h2 className="text-sm sm:text-base font-semibold font-heading text-blue-700 dark:text-white uppercase tracking-wide">
               {formatInlineText(trimmed.slice(3))}
             </h2>
           </div>
         );
       } else if (trimmed.startsWith('### ')) {
         elements.push(
-          <h3 key={idx} className="text-xs sm:text-sm font-bold text-slate-900 dark:text-zinc-100 mt-4 mb-2 flex items-center gap-1.5">
+          <h3 key={idx} className="text-xs sm:text-sm font-semibold font-heading text-slate-900 dark:text-zinc-100 mt-4 mb-2 flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 bg-blue-600 dark:bg-white rounded-full" />
             {formatInlineText(trimmed.slice(4))}
           </h3>
         );
       } else if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
         elements.push(
-          <li key={idx} className="text-xs sm:text-sm text-slate-800 dark:text-zinc-200 ml-4 list-disc my-1.5 leading-relaxed font-normal">
+          <li key={idx} className="text-xs sm:text-sm text-slate-700 dark:text-zinc-200 ml-4 list-disc my-1.5 leading-relaxed font-body">
             {formatInlineText(trimmed.slice(2))}
           </li>
         );
       } else if (/^\d+\.\s/.test(trimmed)) {
         elements.push(
-          <div key={idx} className="text-xs sm:text-sm text-slate-800 dark:text-zinc-200 my-2 pl-3 border-l-2 border-blue-600 dark:border-white leading-relaxed font-normal">
+          <div key={idx} className="text-xs sm:text-sm text-slate-700 dark:text-zinc-200 my-2 pl-3 border-l-2 border-blue-600 dark:border-white leading-relaxed font-body">
             {formatInlineText(trimmed)}
           </div>
         );
       } else if (trimmed.startsWith('> ')) {
         elements.push(
-          <blockquote key={idx} className="my-3 pl-3.5 py-2 border-l-4 border-blue-600 dark:border-white bg-blue-50/70 dark:bg-zinc-900/70 text-xs italic text-slate-800 dark:text-zinc-200 rounded-r-xl font-medium shadow-xs">
+          <blockquote key={idx} className="my-3 pl-3.5 py-2 border-l-4 border-blue-600 dark:border-white bg-blue-50/70 dark:bg-zinc-900/70 text-xs italic text-slate-700 dark:text-zinc-200 rounded-r-xl font-body shadow-xs">
             {formatInlineText(trimmed.slice(2))}
           </blockquote>
         );
@@ -210,7 +210,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
         elements.push(<hr key={idx} className="my-5 border-slate-200/80 dark:border-white/12" />);
       } else if (trimmed.length > 0) {
         elements.push(
-          <p key={idx} className="text-xs sm:text-sm text-slate-800 dark:text-zinc-200 my-2 leading-relaxed font-normal">
+          <p key={idx} className="text-xs sm:text-sm text-slate-700 dark:text-zinc-200 my-2 leading-relaxed font-body">
             {formatInlineText(trimmed)}
           </p>
         );
