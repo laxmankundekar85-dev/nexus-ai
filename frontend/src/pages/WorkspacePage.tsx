@@ -33,7 +33,125 @@ interface AttachedDocInfo {
   text?: string;
 }
 
+export interface ObjectiveValidationResult {
+  isValid: boolean;
+  reason?: string;
+}
+
+const ALLOWED_EXCEPTIONS = new Set(['strengths', 'latchstring', 'catchphrase', 'lengths', 'postgresql', 'mysql']);
+const KEYBOARD_MASH_REGEX = /^(?:asdfgh|qwerty|zxcvbn|poiuyt|lkjhgf|mnbvcx)/i;
+const LONG_CONSONANT_CLUSTER_REGEX = /[bcdfghjklmnpqrstvwxz]{5,}/i;
+const ALLOWED_SINGLE_WORDS = new Set([
+  'nvidia', 'amd', 'intel', 'apple', 'google', 'microsoft', 'amazon', 'meta', 'tesla',
+  'bitcoin', 'ethereum', 'crypto', 'blockchain', 'solana',
+  'kubernetes', 'docker', 'linux', 'python', 'react', 'fastapi', 'postgresql', 'mysql',
+  'ai', 'llm', 'rag', 'genai', 'semiconductor', 'cloud', 'aws', 'azure', 'gcp',
+  'smartphone', 'smartphones', 'headphones', 'hardware'
+]);
+
+export function validateObjective(rawObjective: string, hasAttachedDocs: boolean = false): ObjectiveValidationResult {
+  const text = rawObjective.trim();
+  if (!text) {
+    return { isValid: false, reason: 'Please enter a research or analysis objective.' };
+  }
+  if (text.length < 6 && !hasAttachedDocs) {
+    return { isValid: false, reason: 'Objective is too brief. Please enter a descriptive research goal (minimum 6 characters).' };
+  }
+  if (/(.)\1{4,}/i.test(text)) {
+    return { isValid: false, reason: 'Objective contains repeating characters and appears invalid.' };
+  }
+  if (/(.{2,4})\1{3,}/i.test(text)) {
+    return { isValid: false, reason: 'Objective contains repeating character patterns and appears invalid.' };
+  }
+
+  const words = text.split(/[\s,.;:!?/\-_+=(){}[\]"']+/).filter(Boolean);
+  if (words.length === 0) {
+    return { isValid: false, reason: 'Please enter valid words or a research question.' };
+  }
+  if (!/[a-zA-Z]/.test(text)) {
+    return { isValid: false, reason: 'Objective must contain descriptive text, not just numbers or symbols.' };
+  }
+
+  for (const word of words) {
+    const cleanWord = word.replace(/[^a-zA-Z]/g, '');
+    if (!cleanWord) continue;
+
+    if (KEYBOARD_MASH_REGEX.test(cleanWord)) {
+      return { isValid: false, reason: `Word "${word}" appears to be keyboard mashing. Please enter a real research topic.` };
+    }
+    if (cleanWord.length >= 5 && !/[aeiouy]/i.test(cleanWord)) {
+      return { isValid: false, reason: `Word "${word}" contains no vowels and appears to be unrecognized or gibberish.` };
+    }
+    if (LONG_CONSONANT_CLUSTER_REGEX.test(cleanWord)) {
+      if (!ALLOWED_EXCEPTIONS.has(cleanWord.toLowerCase())) {
+        return { isValid: false, reason: `Word "${word}" contains an invalid consonant sequence ("${cleanWord}") and appears to be gibberish.` };
+      }
+    }
+    if (cleanWord.length >= 7) {
+      const vowels = (cleanWord.match(/[aeiouy]/gi) || []).length;
+      if (vowels / cleanWord.length < 0.15) {
+        return { isValid: false, reason: `Word "${word}" does not resemble a valid word or technical entity.` };
+      }
+    }
+  }
+
+  if (words.length === 1 && !hasAttachedDocs) {
+    if (!ALLOWED_SINGLE_WORDS.has(words[0].toLowerCase())) {
+      return { isValid: false, reason: `Single-word query "${words[0]}" is too ambiguous or unrecognized. Please provide a clear goal (e.g. "Analyze ${words[0]} market trends") or select a template.` };
+    }
+  }
+
+  if (words.length >= 3 && !hasAttachedDocs) {
+    const avgLen = words.reduce((acc, w) => acc + w.length, 0) / words.length;
+    if (avgLen <= 2.2) {
+      return { isValid: false, reason: 'The prompt does not contain enough descriptive words. Please enter a complete research objective.' };
+    }
+  }
+
+  return { isValid: true };
+}
+
 function generateDynamicReport(targetObj: string, attachedDocs: AttachedDocInfo[] = []): { title: string; content: string } {
+  // Guard against ungrounded gibberish or invalid input
+  const validation = validateObjective(targetObj, attachedDocs && attachedDocs.length > 0);
+  if (!validation.isValid) {
+    const content = `# ⚠️ Execution Grounding Audit: Objective Rejected
+
+**Submitted Objective**: \`${targetObj}\`  
+**Classification**: UNGROUNDED OR INVALID INPUT NOTICE  
+**Pipeline Audit**: **FAILED AT INTAKE VALIDATION**  
+**Date of Synthesis**: ${new Date().toUTCString()}  
+
+---
+
+## 1. Quality & Hallucination Prevention Protocol
+
+The Nexus AI Autonomous Multi-Agent Platform has **halted synthesis** for the submitted prompt:
+> **"${targetObj}"**
+
+### Rejection Reason:
+- **${validation.reason || 'The objective could not be grounded in factual domain knowledge or attached documents.'}**
+- Nexus AI agents operate under a strict **Zero-Hallucination Policy**. The platform programmatically refuses to fabricate hypothetical dossiers, benchmarks, or statistics for unrecognized, ungrounded, or keyboard-mash inputs.
+
+---
+
+## 2. Recommended Next Steps
+
+1. **Submit a Concrete Research Goal**:
+   - Compare hardware architectures (e.g. *"Compare NVIDIA Blackwell vs AMD Instinct MI300X"*).
+   - Benchmark cloud infrastructure (e.g. *"Compare AWS vs Azure vs GCP pricing models"*).
+   - Evaluate consumer hardware (e.g. *"Compare iPhone 16 Pro Max vs Samsung Galaxy S24 Ultra"*).
+2. **Attach Grounded Documents**:
+   - If this objective corresponds to a proprietary internal dataset or lab experiment, attach the file in the **Documents** section.
+3. **Select a Quick Template**:
+   - Use one of the verified prompt templates in the Workspace header.
+
+---
+*Verified Quality Assurance Guardrail — Nexus AI Operating Platform*`;
+
+    return { title: `Objective Rejected: ${targetObj.slice(0, 30)}`, content };
+  }
+
   const q = targetObj.toLowerCase();
   // 0. Attached Document Grounding Mode (When user attaches knowledge files)
   if (attachedDocs && attachedDocs.length > 0) {
@@ -585,6 +703,7 @@ export const WorkspacePage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [localEvents, setLocalEvents] = useState<ExecutionEvent[]>([]);
   const [previewArtifact, setPreviewArtifact] = useState<Artifact | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   const { createExecution, cancelExecution, retryExecution } = useExecutions();
   const { documents } = useDocuments(1, 50);
@@ -594,6 +713,41 @@ export const WorkspacePage: React.FC = () => {
   const displayEvents = events.length > 0 ? events : localEvents;
 
   const runClientAgentSimulation = (execId: string, targetObj: string, attachedDocs: AttachedDocInfo[] = []) => {
+    const validation = validateObjective(targetObj, attachedDocs.length > 0);
+    if (!validation.isValid) {
+      setLocalEvents([
+        {
+          id: `ev-${Date.now()}-0`,
+          execution_id: execId,
+          event_type: 'status_changed',
+          payload: { status: 'failed', objective: targetObj },
+          timestamp: new Date().toISOString(),
+        },
+        {
+          id: `ev-${Date.now()}-1`,
+          execution_id: execId,
+          event_type: 'execution_failed',
+          payload: {
+            status: 'failed',
+            error: validation.reason || 'Objective validation rejected.',
+          },
+          timestamp: new Date().toISOString(),
+        },
+      ]);
+      setTasks([
+        {
+          id: `${execId}-task-1`,
+          agent_role: 'Planner Agent',
+          description: `Validate objective grounding for "${targetObj.slice(0, 40)}"`,
+          status: 'failed',
+          attempt_count: 1,
+          error_summary: validation.reason,
+        },
+      ]);
+      toast.error(`Pipeline halted: ${validation.reason}`);
+      return;
+    }
+
     const roles = [
       { role: 'Planner Agent', desc: `Deconstruct objective: "${targetObj.slice(0, 50)}..." into sequential tasks` },
       { role: 'Research Agent', desc: `Gather real-time data and verified market sources for: ${targetObj.slice(0, 45)}` },
@@ -604,12 +758,9 @@ export const WorkspacePage: React.FC = () => {
 
     const initialTasks: Task[] = roles.map((r, idx) => ({
       id: `${execId}-task-${idx + 1}`,
-      execution_id: execId,
       agent_role: r.role,
       description: r.desc,
-      status: (idx === 0 ? 'running' : 'pending') as 'running' | 'pending',
-      input_data: {},
-      dependency_data: {},
+      status: idx === 0 ? 'running' : 'pending',
       attempt_count: 1,
     }));
 
@@ -721,16 +872,14 @@ export const WorkspacePage: React.FC = () => {
 
   const handleStart = async () => {
     const trimmed = objective.trim();
-    if (!trimmed) {
-      toast.error('Please enter a research or analysis objective.');
+    const validation = validateObjective(trimmed, selectedDocIds.length > 0);
+    if (!validation.isValid) {
+      const err = validation.reason || 'Invalid objective. Please enter a meaningful research goal.';
+      setValidationError(err);
+      toast.error(err);
       return;
     }
-
-    // Guard against random gibberish or overly brief prompts when no documents are attached
-    if (trimmed.length < 8 && selectedDocIds.length === 0) {
-      toast.error('Objective is too brief or unclear ("' + trimmed + '"). Please specify a clear research goal or click one of the quick suggestions below.');
-      return;
-    }
+    setValidationError(null);
 
     setIsSubmitting(true);
     try {
@@ -786,9 +935,25 @@ export const WorkspacePage: React.FC = () => {
             rows={3}
             placeholder="Specify target objective (e.g. Compare NVIDIA and AMD AI GPU market share and price benchmarks in 2024 to 2026)."
             value={objective}
-            onChange={(e) => setObjective(e.target.value)}
+            onChange={(e) => {
+              setObjective(e.target.value);
+              if (validationError) setValidationError(null);
+            }}
             className="w-full bg-slate-200/90 dark:bg-zinc-950 border border-slate-300 dark:border-white/20 rounded-xl p-3.5 text-xs text-slate-950 dark:text-white placeholder-slate-500 dark:placeholder-zinc-500 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/30 transition-all font-mono leading-relaxed font-semibold"
           />
+
+          {/* Validation Notice Banner */}
+          {validationError && (
+            <div className="flex items-start gap-2.5 p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-700 dark:text-red-400 text-xs animate-in fade-in duration-200">
+              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-red-600 dark:text-red-400" />
+              <div className="space-y-1">
+                <p className="font-bold">{validationError}</p>
+                <p className="text-[11px] text-slate-700 dark:text-zinc-400 font-medium">
+                  Nexus AI operates under a Zero-Hallucination Policy. To maintain factual integrity, arbitrary keyboard keystrokes or ungrounded queries cannot be synthesized. Please select a template below or specify a real research topic.
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Quick Inspiration & Prompt Templates */}
           <div>
@@ -811,6 +976,7 @@ export const WorkspacePage: React.FC = () => {
                   type="button"
                   onClick={() => {
                     setObjective(ex.prompt);
+                    if (validationError) setValidationError(null);
                     if (ex.label.includes('Attached') && documents.length > 0) {
                       setSelectedDocIds(documents.slice(0, 2).map((d: any) => d.id));
                     }

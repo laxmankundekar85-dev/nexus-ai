@@ -17,6 +17,31 @@ from app.schemas.common import PaginatedResponse
 from app.api.v1.auth import get_current_user, get_current_user_from_query
 from app.agents.orchestrator import orchestrator
 
+import re
+
+ALLOWED_EXCEPTIONS = {'strengths', 'latchstring', 'catchphrase', 'lengths', 'postgresql', 'mysql'}
+KEYBOARD_MASH_REGEX = re.compile(r'^(?:asdfgh|qwerty|zxcvbn|poiuyt|lkjhgf|mnbvcx)', re.IGNORECASE)
+LONG_CONSONANT_CLUSTER_REGEX = re.compile(r'[bcdfghjklmnpqrstvwxz]{5,}', re.IGNORECASE)
+
+def validate_objective(objective: str, has_docs: bool = False) -> Optional[str]:
+    clean = objective.strip()
+    if not clean:
+        return "Objective cannot be empty"
+    if len(clean) < 6 and not has_docs:
+        return "Objective is too brief (minimum 6 characters)"
+    if re.search(r'(.)\1{4,}', clean):
+        return "Objective contains repeating characters and appears invalid"
+    words = [w for w in re.split(r'[\s,.;:!?/\-_+=(){}\[\]"\']+', clean) if w]
+    for w in words:
+        cw = re.sub(r'[^a-zA-Z]', '', w)
+        if KEYBOARD_MASH_REGEX.search(cw):
+            return f'Word "{w}" appears to be keyboard mashing'
+        if len(cw) >= 5 and not re.search(r'[aeiouy]', cw, re.IGNORECASE):
+            return f'Word "{w}" contains no vowels and appears to be gibberish'
+        if LONG_CONSONANT_CLUSTER_REGEX.search(cw) and cw.lower() not in ALLOWED_EXCEPTIONS:
+            return f'Word "{w}" contains invalid consonant clusters and appears to be gibberish'
+    return None
+
 router = APIRouter(prefix="/executions", tags=["executions"])
 
 @router.get("", response_model=PaginatedResponse[ExecutionResponse])
@@ -53,6 +78,10 @@ async def create_execution(
     user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
+    validation_err = validate_objective(req.objective, bool(req.document_ids and len(req.document_ids) > 0))
+    if validation_err:
+        raise HTTPException(status_code=400, detail=validation_err)
+
     execution = Execution(
         owner_id=user.id,
         workflow_id=req.workflow_id,
