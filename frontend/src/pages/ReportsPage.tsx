@@ -16,6 +16,7 @@ import Card from '../components/Card';
 import EmptyState from '../components/EmptyState';
 import ReportPreviewModal from '../components/ReportPreviewModal';
 import type { Artifact } from '../types';
+import { exportReportToPdf } from '../utils/pdfExport';
 
 export const ReportsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -138,6 +139,22 @@ export const ReportsPage: React.FC = () => {
                       icon={<Download className="w-3 h-3" />}
                     >
                       .md
+                    </Button>
+                    <Button
+                      variant="primary"
+                      size="xs"
+                      onClick={() => {
+                        const meta = rep.metadata as { title?: string; content?: string };
+                        if (meta?.content) {
+                          exportReportToPdf(meta.title || title, meta.content);
+                        } else {
+                          handleDownload(rep);
+                        }
+                      }}
+                      icon={<FileText className="w-3 h-3 text-white" />}
+                      className="bg-blue-600 hover:bg-blue-700 font-bold"
+                    >
+                      PDF
                     </Button>
                   </div>
                 </div>

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Download, Copy, Check, Eye, Code2, ExternalLink, ShieldCheck } from 'lucide-react';
+import { Download, Copy, Check, Eye, Code2, ExternalLink, ShieldCheck, Printer, FileText } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Modal from './Modal';
 import Button from './Button';
 import type { Artifact } from '../types';
+import { exportReportToPdf, exportReportViaPrint } from '../utils/pdfExport';
 
 interface ReportPreviewModalProps {
   isOpen: boolean;
@@ -269,12 +270,29 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
               {copied ? 'Copied' : 'Copy'}
             </Button>
             <Button
-              variant="primary"
+              variant="secondary"
+              size="xs"
+              onClick={() => exportReportViaPrint(title, content)}
+              icon={<Printer className="w-3 h-3" />}
+            >
+              Print
+            </Button>
+            <Button
+              variant="secondary"
               size="xs"
               onClick={handleDownload}
               icon={<Download className="w-3 h-3" />}
             >
-              Download .md
+              .md
+            </Button>
+            <Button
+              variant="primary"
+              size="xs"
+              onClick={() => exportReportToPdf(title, content)}
+              icon={<FileText className="w-3.5 h-3.5" />}
+              className="bg-blue-600 hover:bg-blue-700 font-bold"
+            >
+              Download PDF
             </Button>
           </div>
         </div>
