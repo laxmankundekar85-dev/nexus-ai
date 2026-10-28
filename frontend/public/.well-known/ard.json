@@ -1,0 +1,57 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "Nexus AI",
+    "documentationUrl": "https://nexus-ai-cloud.vercel.app",
+    "logoUrl": "https://nexus-ai-cloud.vercel.app/favicon.svg"
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:nexus-ai:agent:research-pipeline",
+      "displayName": "Autonomous Agent Research Pipeline",
+      "type": "application/json",
+      "url": "https://nexus-ai-cloud.vercel.app/api/v1/executions",
+      "description": "Orchestrates planner, web researcher, document analyzer, and report synthesis agents.",
+      "tags": [
+        "agents",
+        "autonomous",
+        "research",
+        "reports"
+      ],
+      "capabilities": [
+        "WebSearch",
+        "DocumentGrounding",
+        "ReportSynthesis"
+      ],
+      "representativeQueries": [
+        "Plan and execute deep enterprise research",
+        "Generate a verified intelligence report"
+      ],
+      "version": "1.0.0",
+      "updatedAt": "2026-10-28T12:00:00Z"
+    },
+    {
+      "identifier": "urn:air:nexus-ai:tool:document-grounding",
+      "displayName": "Document Semantic Grounding",
+      "type": "application/json",
+      "url": "https://nexus-ai-cloud.vercel.app/api/v1/documents",
+      "description": "Indexes PDF, DOCX, XLSX, and CSV documents for cited agentic grounding.",
+      "tags": [
+        "documents",
+        "vector-store",
+        "grounding",
+        "citations"
+      ],
+      "capabilities": [
+        "DocumentParsing",
+        "VectorRetrieval"
+      ],
+      "representativeQueries": [
+        "Upload and index research documents",
+        "Ground agent outputs in cited enterprise documents"
+      ],
+      "version": "1.0.0",
+      "updatedAt": "2026-10-28T12:00:00Z"
+    }
+  ]
+}

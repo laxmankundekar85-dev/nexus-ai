@@ -66,7 +66,7 @@ export const LandingPage: React.FC = () => {
         {/* Hero Section */}
         <section className="px-6 pt-16 pb-20 max-w-5xl mx-auto text-center relative z-10">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-blue-300 dark:border-white/15 bg-blue-100/90 dark:bg-zinc-900 text-blue-900 dark:text-white text-xs font-bold mb-6 shadow-xs">
-          <Sparkles className="w-3.5 h-3.5 text-blue-700 dark:text-white animate-pulse" />
+          <Sparkles className="w-3.5 h-3.5 text-blue-700 dark:text-white motion-safe:animate-pulse will-change-[opacity]" />
           Autonomous Multi-Agent Operating System
         </div>
 
@@ -125,7 +125,7 @@ export const LandingPage: React.FC = () => {
                   <span>2. Research: 4 sources cited</span>
                 </li>
                 <li className="flex items-center gap-2 text-blue-700 dark:text-white text-[11px] font-bold">
-                  <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-white animate-ping shrink-0" />
+                  <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-white motion-safe:animate-ping will-change-[transform,opacity] shrink-0" />
                   <span>3. Analysis: Computing velocity</span>
                 </li>
                 <li className="flex items-center gap-2 text-slate-600 dark:text-zinc-500 text-[11px]">
