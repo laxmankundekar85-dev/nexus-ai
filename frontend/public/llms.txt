@@ -1,0 +1,9 @@
+# Nexus AI
+
+> Nexus AI is an enterprise autonomous multi-agent operating system that orchestrates specialized AI agents to plan, execute, verify, and deliver deep research and intelligence reports.
+
+## Documentation and APIs
+
+- [Overview](https://nexus-ai-cloud.vercel.app/): Main landing page describing multi-agent orchestration architecture.
+- [AI Catalog](https://nexus-ai-cloud.vercel.app/ai-catalog.json): Machine-readable catalog of agent capabilities and tools.
+- [Agent Workspace](https://nexus-ai-cloud.vercel.app/workspace): Interactive environment for executing autonomous pipelines.

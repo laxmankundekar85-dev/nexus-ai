@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "Nexus AI",
+  "version": "1.0.0",
+  "description": "Enterprise Autonomous Multi-Agent Operating System",
+  "url": "https://nexus-ai-cloud.vercel.app",
+  "provider": {
+    "name": "Nexus AI",
+    "url": "https://nexus-ai-cloud.vercel.app"
+  },
+  "capabilities": [
+    {
+      "id": "agentic-research",
+      "name": "Autonomous Agent Research",
+      "description": "Coordinates planner, web researcher, document analyzer, and report synthesis agents.",
+      "type": "agent",
+      "endpoint": "/api/v1/executions"
+    },
+    {
+      "id": "document-grounding",
+      "name": "Document Semantic Grounding",
+      "description": "Indexes PDF, DOCX, XLSX documents for cited intelligence retrieval.",
+      "type": "tool",
+      "endpoint": "/api/v1/documents"
+    }
+  ],
+  "agents": [
+    {
+      "name": "Planner Agent",
+      "role": "Deconstructs high-level objectives into sequential execution DAG tasks."
+    },
+    {
+      "name": "Web Research Agent",
+      "role": "Executes live web searches and crawler queries."
+    },
+    {
+      "name": "Document Grounding Agent",
+      "role": "Cross-references internal documents to ensure factual citation."
+    },
+    {
+      "name": "Report Synthesizer Agent",
+      "role": "Generates verified markdown reports with empirical references."
+    }
+  ]
+}

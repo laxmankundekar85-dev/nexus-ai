@@ -22,6 +22,29 @@ export default defineConfig({
       '@': '/src',
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/pdfjs-dist')) {
+            return 'vendor-pdf';
+          }
+          if (id.includes('node_modules/@xyflow') || id.includes('node_modules/reactflow')) {
+            return 'vendor-flow';
+          }
+          if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/') || id.includes('node_modules/react-router-dom/')) {
+            return 'vendor-react';
+          }
+          if (id.includes('node_modules/@tanstack') || id.includes('node_modules/axios')) {
+            return 'vendor-query';
+          }
+          if (id.includes('node_modules/lucide-react')) {
+            return 'vendor-lucide';
+          }
+        },
+      },
+    },
+  },
   test: {
     environment: 'happy-dom',
     globals: true,

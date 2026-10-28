@@ -1,0 +1,17 @@
+{
+  "schema_version": "v1",
+  "name_for_model": "nexus_ai",
+  "name_for_human": "Nexus AI Agent Platform",
+  "description_for_model": "Plugin for coordinating multi-agent research pipelines, document grounding, and intelligence report generation.",
+  "description_for_human": "Autonomous multi-agent operating system for research and reporting.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://nexus-ai-cloud.vercel.app/openapi.json"
+  },
+  "logo_url": "https://nexus-ai-cloud.vercel.app/favicon.svg",
+  "contact_email": "support@nexus.ai",
+  "legal_info_url": "https://nexus-ai-cloud.vercel.app"
+}

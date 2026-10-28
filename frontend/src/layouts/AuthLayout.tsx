@@ -34,9 +34,9 @@ export const AuthLayout: React.FC = () => {
         </div>
       </div>
 
-      <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-4">
+      <main role="main" className="mt-2 sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-4">
         <Outlet />
-      </div>
+      </main>
     </div>
   );
 };

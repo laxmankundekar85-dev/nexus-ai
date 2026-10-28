@@ -61,8 +61,10 @@ export const LandingPage: React.FC = () => {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="px-6 pt-16 pb-20 max-w-5xl mx-auto text-center relative z-10">
+      {/* Main Content Landmark */}
+      <main role="main">
+        {/* Hero Section */}
+        <section className="px-6 pt-16 pb-20 max-w-5xl mx-auto text-center relative z-10">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-blue-300 dark:border-white/15 bg-blue-100/90 dark:bg-zinc-900 text-blue-900 dark:text-white text-xs font-bold mb-6 shadow-xs">
           <Sparkles className="w-3.5 h-3.5 text-blue-700 dark:text-white animate-pulse" />
           Autonomous Multi-Agent Operating System
@@ -219,6 +221,7 @@ export const LandingPage: React.FC = () => {
           </Card>
         </div>
       </section>
+      </main>
 
       {/* Footer */}
       <footer className="border-t border-slate-300/80 dark:border-white/10 py-8 px-6 text-center text-xs text-slate-700 dark:text-zinc-400 bg-slate-200/50 dark:bg-black">
