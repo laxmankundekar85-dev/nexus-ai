@@ -18,11 +18,22 @@
       }
     },
     {
-      "source": "/(.*)",
+      "source": "/assets/(.*)",
       "destination": {
         "type": "service",
         "service": "frontend"
       }
+    },
+    {
+      "source": "/(robots\\.txt|sitemap\\.xml|llms\\.txt|ai-catalog\\.json|favicon\\.svg)",
+      "destination": {
+        "type": "service",
+        "service": "frontend"
+      }
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
