@@ -71,7 +71,7 @@ export const LoginPage: React.FC = () => {
         <Button
           type="button"
           variant="secondary"
-          onClick={() => login(email || 'operator@nexus.ai', password || 'operator123')}
+          onClick={() => login('operator@nexus.ai', 'operator123')}
           className="w-full text-xs font-semibold"
         >
           ⚡ Instant One-Click Demo Access

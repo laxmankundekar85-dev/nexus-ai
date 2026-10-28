@@ -6,7 +6,7 @@ import Button from '../components/Button';
 import Input from '../components/Input';
 
 export const RegisterPage: React.FC = () => {
-  const { register, loading, error } = useAuth();
+  const { register, login, loading, error } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -95,7 +95,7 @@ export const RegisterPage: React.FC = () => {
         <Button
           type="button"
           variant="secondary"
-          onClick={() => register(email || 'operator@nexus.ai', password || 'operator123')}
+          onClick={() => login('operator@nexus.ai', 'operator123')}
           className="w-full text-xs font-semibold"
         >
           ⚡ Instant One-Click Demo Access
