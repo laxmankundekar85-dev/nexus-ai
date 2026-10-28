@@ -16,20 +16,23 @@ body {
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #eaeff6;
+  background-color: #f1f5f9;
   background-image: 
-    radial-gradient(at 0% 0%, rgba(191, 219, 254, 0.5) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(219, 234, 254, 0.6) 0px, transparent 50%),
-    radial-gradient(at 50% 100%, rgba(226, 232, 240, 0.7) 0px, transparent 50%);
+    radial-gradient(at 10% 10%, rgba(191, 219, 254, 0.55) 0px, transparent 50%),
+    radial-gradient(at 90% 15%, rgba(224, 231, 255, 0.5) 0px, transparent 45%),
+    radial-gradient(at 40% 85%, rgba(207, 250, 254, 0.4) 0px, transparent 55%),
+    radial-gradient(at 85% 85%, rgba(238, 242, 255, 0.5) 0px, transparent 50%);
+  background-attachment: fixed;
   color: #0f172a;
 }
 
 .dark body {
-  background-color: #000000;
+  background-color: #050507;
   background-image: 
     radial-gradient(at 0% 0%, rgba(255, 255, 255, 0.05) 0px, transparent 40%),
-    radial-gradient(at 100% 100%, rgba(39, 39, 42, 0.25) 0px, transparent 50%),
-    radial-gradient(at 50% 50%, rgba(18, 18, 20, 0.8) 0px, transparent 70%);
+    radial-gradient(at 100% 100%, rgba(30, 41, 59, 0.3) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(12, 12, 15, 0.85) 0px, transparent 70%);
+  background-attachment: fixed;
   color: #ffffff;
 }
 
@@ -43,38 +46,88 @@ body {
   color: #ffffff;
 }
 
-/* Eye-Friendly Glassmorphic Utility Classes */
+/* Luminous Ultra-Glass Utility Classes */
 .glass-panel {
-  background: rgba(241, 245, 249, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(203, 213, 225, 0.85);
-  box-shadow: 0 4px 20px 0 rgba(37, 99, 235, 0.05);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08), inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
 }
 
 .dark .glass-panel {
-  background: rgba(12, 12, 14, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(12, 12, 15, 0.78);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.85);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.65), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
 }
 
 .glass-card {
-  background: rgba(241, 245, 249, 0.82);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(203, 213, 225, 0.8);
-  box-shadow: 0 4px 16px -2px rgba(37, 99, 235, 0.04);
+  background: rgba(255, 255, 255, 0.68);
+  backdrop-filter: blur(20px) saturate(175%);
+  -webkit-backdrop-filter: blur(20px) saturate(175%);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8px 24px -4px rgba(31, 38, 135, 0.06), inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
 }
 
 .dark .glass-card {
-  background: rgba(15, 15, 18, 0.85);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: rgba(15, 15, 19, 0.75);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.55), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
 }
+
+/* Section & Micro-Interactions Animations */
+@keyframes sectionSlideFade {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.99);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes modalZoomFade {
+  0% {
+    opacity: 0;
+    transform: scale(0.95) translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes subtleFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.animate-section {
+  animation: sectionSlideFade 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-modal-pop {
+  animation: modalZoomFade 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-float {
+  animation: subtleFloat 4s ease-in-out infinite;
+}
+
+.stagger-1 { animation-delay: 50ms; }
+.stagger-2 { animation-delay: 100ms; }
+.stagger-3 { animation-delay: 160ms; }
+.stagger-4 { animation-delay: 220ms; }
+.stagger-5 { animation-delay: 280ms; }
 
 /* Medium Blue & Monochromatic Dark Scrollbars */
 ::-webkit-scrollbar {

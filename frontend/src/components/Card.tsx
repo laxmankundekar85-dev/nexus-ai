@@ -17,13 +17,13 @@ export const Card: React.FC<CardProps> = ({
     <div
       {...props}
       className={clsx(
-        'rounded-2xl p-5 transition-all duration-200',
-        // Light: Soothing off-white slate (no glare/pure white), high contrast dark text
-        'bg-slate-100/90 backdrop-blur-xl border border-slate-300/80 shadow-md shadow-blue-900/5 text-slate-900',
-        // Dark: Pure Black & White monochromatic contrast, zero purple
-        'dark:bg-[#0c0c0e]/90 dark:backdrop-blur-xl dark:border-white/12 dark:shadow-2xl dark:shadow-black dark:text-white',
+        'rounded-2xl p-5 transition-all duration-300 ease-out',
+        // Light: Luminous frosted glass with subtle specular border and soft shadow
+        'bg-white/70 backdrop-blur-2xl border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.06)] text-slate-900 ring-1 ring-black/[0.02]',
+        // Dark: Pure Monochromatic dark glass
+        'dark:bg-[#0c0c0e]/80 dark:backdrop-blur-2xl dark:border-white/10 dark:shadow-[0_8px_30px_rgb(0,0,0,0.5)] dark:text-white dark:ring-white/[0.04]',
         hoverable &&
-          'hover:bg-slate-200/90 dark:hover:bg-[#18181b]/95 hover:border-blue-500/80 dark:hover:border-white/30 hover:shadow-lg cursor-pointer',
+          'hover:-translate-y-0.5 hover:bg-white/85 dark:hover:bg-[#141417]/90 hover:border-blue-500/40 dark:hover:border-white/25 hover:shadow-xl cursor-pointer',
         className
       )}
     >

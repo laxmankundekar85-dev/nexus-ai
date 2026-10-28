@@ -48,22 +48,23 @@ export const Modal: React.FC<ModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-slate-950/45 dark:bg-black/75 backdrop-blur-md transition-opacity animate-in fade-in duration-200"
         onClick={onClose}
       />
 
       {/* Modal Dialog */}
       <div
-        className={`relative w-full ${maxWidthClasses[maxWidth]} bg-slate-100/98 dark:bg-[#0c0c0e]/98 backdrop-blur-2xl border border-slate-300 dark:border-white/15 rounded-2xl shadow-2xl overflow-hidden z-10 transition-all`}
+        className={`relative w-full ${maxWidthClasses[maxWidth]} bg-white/90 dark:bg-[#0c0c0e]/92 backdrop-blur-2xl border border-white/70 dark:border-white/12 rounded-3xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.25)] ring-1 ring-black/5 dark:ring-white/10 overflow-hidden z-10 transition-all animate-modal-pop`}
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-300 dark:border-white/12 bg-slate-200/80 dark:bg-zinc-950/80">
-          <h3 className="text-sm font-extrabold text-slate-900 dark:text-white tracking-wide">{title}</h3>
+        <div className="flex items-center justify-between px-6 py-4.5 border-b border-slate-200/80 dark:border-white/10 bg-gradient-to-r from-white/95 via-slate-50/90 to-white/95 dark:from-zinc-900/90 dark:via-zinc-950/90 dark:to-zinc-900/90 backdrop-blur-md">
+          <h3 className="text-sm font-extrabold text-slate-950 dark:text-white tracking-wide">{title}</h3>
           <Button
             variant="ghost"
             size="xs"
             onClick={onClose}
             aria-label="Close modal"
-            icon={<X className="w-4 h-4 text-slate-700 dark:text-zinc-400" />}
+            icon={<X className="w-4 h-4 text-slate-600 dark:text-zinc-400" />}
+            className="hover:bg-slate-200/60 dark:hover:bg-white/10 rounded-xl"
           />
         </div>
 

@@ -93,7 +93,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
         return (
           <code
             key={i}
-            className="font-mono text-xs px-1.5 py-0.5 rounded bg-slate-200 dark:bg-zinc-800 text-slate-950 dark:text-white font-bold border border-slate-300 dark:border-white/15"
+            className="font-mono text-xs px-2 py-0.5 rounded-md bg-blue-50/80 dark:bg-zinc-800 text-blue-900 dark:text-blue-200 font-bold border border-blue-200/70 dark:border-white/15 shadow-xs"
           >
             {codeMatch[1]}
           </code>
@@ -103,7 +103,7 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
       // 4. Italic
       const italicMatch = part.match(/^\*([^\s\*][^\*]*)\*$/);
       if (italicMatch) {
-        return <em key={i} className="italic text-slate-800 dark:text-zinc-300">{italicMatch[1]}</em>;
+        return <em key={i} className="italic text-slate-700 dark:text-zinc-300">{italicMatch[1]}</em>;
       }
 
       return part;
@@ -121,22 +121,22 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
       if (tableRows.length === 0) return null;
       const [headerRow, separatorRow, ...rows] = tableRows;
       const el = (
-        <div key={`table-${key}`} className="my-5 overflow-x-auto rounded-xl border border-slate-300 dark:border-white/15 shadow-sm">
+        <div key={`table-${key}`} className="my-5 overflow-x-auto rounded-2xl border border-slate-200/90 dark:border-white/12 shadow-sm bg-white/70 dark:bg-zinc-950/60 backdrop-blur-xl">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-slate-200/90 dark:bg-zinc-900 border-b border-slate-300 dark:border-white/15">
+              <tr className="bg-slate-100/90 dark:bg-zinc-900/90 border-b border-slate-200/90 dark:border-white/12">
                 {headerRow.map((cell, ci) => (
-                  <th key={ci} className="py-2.5 px-3.5 font-extrabold text-slate-950 dark:text-white uppercase tracking-wider text-[11px]">
+                  <th key={ci} className="py-3 px-4 font-black text-slate-950 dark:text-white uppercase tracking-wider text-[11px]">
                     {cell.trim()}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200 dark:divide-white/10 font-sans">
+            <tbody className="divide-y divide-slate-200/80 dark:divide-white/10 font-sans">
               {rows.map((row, ri) => (
-                <tr key={ri} className="hover:bg-slate-200/50 dark:hover:bg-zinc-900/60 transition-colors">
+                <tr key={ri} className="hover:bg-blue-50/40 dark:hover:bg-zinc-900/50 transition-colors">
                   {row.map((cell, ci) => (
-                    <td key={ci} className="py-2.5 px-3.5 text-slate-950 dark:text-zinc-200 leading-relaxed align-top font-medium">
+                    <td key={ci} className="py-3 px-4 text-slate-800 dark:text-zinc-200 leading-relaxed align-top font-medium">
                       {formatInlineText(cell.trim())}
                     </td>
                   ))}
@@ -166,51 +166,51 @@ export const ReportPreviewModal: React.FC<ReportPreviewModalProps> = ({
 
       if (trimmed.startsWith('# ')) {
         elements.push(
-          <div key={idx} className="mt-2 mb-4 pb-3 border-b border-slate-300 dark:border-white/15">
-            <h1 className="text-xl sm:text-2xl font-black text-slate-950 dark:text-white tracking-tight">
+          <div key={idx} className="mt-2 mb-4 pb-3 border-b border-slate-200/80 dark:border-white/12">
+            <h1 className="text-xl sm:text-2xl font-black text-slate-950 dark:text-white tracking-tight leading-snug">
               {formatInlineText(trimmed.slice(2))}
             </h1>
           </div>
         );
       } else if (trimmed.startsWith('## ')) {
         elements.push(
-          <div key={idx} className="flex items-center gap-2 mt-6 mb-3 pt-3 border-t border-slate-300/80 dark:border-white/15">
-            <span className="w-1.5 h-4 bg-blue-600 dark:bg-white rounded-full shrink-0" />
-            <h2 className="text-sm sm:text-base font-extrabold text-blue-900 dark:text-white uppercase tracking-wide">
+          <div key={idx} className="flex items-center gap-2 mt-6 mb-3 pt-3 border-t border-slate-200/80 dark:border-white/12">
+            <span className="w-1.5 h-4.5 bg-blue-600 dark:bg-white rounded-full shrink-0 shadow-xs" />
+            <h2 className="text-sm sm:text-base font-extrabold text-blue-700 dark:text-white uppercase tracking-wide">
               {formatInlineText(trimmed.slice(3))}
             </h2>
           </div>
         );
       } else if (trimmed.startsWith('### ')) {
         elements.push(
-          <h3 key={idx} className="text-xs sm:text-sm font-bold text-slate-950 dark:text-zinc-200 mt-4 mb-2 flex items-center gap-1.5">
+          <h3 key={idx} className="text-xs sm:text-sm font-bold text-slate-900 dark:text-zinc-100 mt-4 mb-2 flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 bg-blue-600 dark:bg-white rounded-full" />
             {formatInlineText(trimmed.slice(4))}
           </h3>
         );
       } else if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
         elements.push(
-          <li key={idx} className="text-xs text-slate-900 dark:text-zinc-200 ml-4 list-disc my-1.5 leading-relaxed font-medium">
+          <li key={idx} className="text-xs sm:text-sm text-slate-800 dark:text-zinc-200 ml-4 list-disc my-1.5 leading-relaxed font-normal">
             {formatInlineText(trimmed.slice(2))}
           </li>
         );
       } else if (/^\d+\.\s/.test(trimmed)) {
         elements.push(
-          <div key={idx} className="text-xs text-slate-900 dark:text-zinc-200 my-2 pl-3 border-l-2 border-blue-500 dark:border-white leading-relaxed font-medium">
+          <div key={idx} className="text-xs sm:text-sm text-slate-800 dark:text-zinc-200 my-2 pl-3 border-l-2 border-blue-600 dark:border-white leading-relaxed font-normal">
             {formatInlineText(trimmed)}
           </div>
         );
       } else if (trimmed.startsWith('> ')) {
         elements.push(
-          <blockquote key={idx} className="my-3 pl-3.5 py-1.5 border-l-3 border-blue-600 dark:border-white bg-slate-200/80 dark:bg-zinc-900/80 text-xs italic text-slate-950 dark:text-zinc-200 rounded-r-lg font-medium">
+          <blockquote key={idx} className="my-3 pl-3.5 py-2 border-l-4 border-blue-600 dark:border-white bg-blue-50/70 dark:bg-zinc-900/70 text-xs italic text-slate-800 dark:text-zinc-200 rounded-r-xl font-medium shadow-xs">
             {formatInlineText(trimmed.slice(2))}
           </blockquote>
         );
       } else if (trimmed === '---' || trimmed === '***') {
-        elements.push(<hr key={idx} className="my-5 border-slate-300 dark:border-white/15" />);
+        elements.push(<hr key={idx} className="my-5 border-slate-200/80 dark:border-white/12" />);
       } else if (trimmed.length > 0) {
         elements.push(
-          <p key={idx} className="text-xs sm:text-sm text-slate-950 dark:text-zinc-200 my-2 leading-relaxed font-normal">
+          <p key={idx} className="text-xs sm:text-sm text-slate-800 dark:text-zinc-200 my-2 leading-relaxed font-normal">
             {formatInlineText(trimmed)}
           </p>
         );
