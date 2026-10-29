@@ -14,9 +14,15 @@ interface StoredAccount {
   created_at: string;
 }
 
+// Default demo account
+const DEMO_ACCOUNTS: Record<string, string> = {
+  'operator@nexus.ai': 'operator123',
+};
+
 function getLocalRegisteredAccounts(): StoredAccount[] {
   try {
-    return JSON.parse(localStorage.getItem(REGISTERED_USERS_KEY) || '[]');
+    const raw = localStorage.getItem(REGISTERED_USERS_KEY);
+    return raw ? JSON.parse(raw) : [];
   } catch {
     return [];
   }
@@ -88,7 +94,7 @@ export function useAuth() {
         let backendSucceeded = false;
         let backendErrorDetail: string | null = null;
 
-        // 1. Attempt Backend API authentication first
+        // 1. Attempt Backend API authentication first (if backend is active)
         try {
           const tokens = await authApi.login({ email: normalizedEmail, password });
           if (tokens?.access_token) {
@@ -122,14 +128,33 @@ export function useAuth() {
           return;
         }
 
-        // 2. Client / Demo / Offline mode:
-        // Automatically save / update password so the operator is NEVER locked out with "wrong password"!
-        saveLocalRegisteredAccount(normalizedEmail, password);
+        // 2. Client / Offline mode: STRICT credential validation
+        const registered = getLocalRegisteredAccounts();
+        const stored = registered.find((a) => a.email.toLowerCase() === normalizedEmail);
+        const demoPassword = DEMO_ACCOUNTS[normalizedEmail];
 
+        // Check if account exists
+        if (!stored && !demoPassword) {
+          const notFoundMsg = 'No account found with this email. Please check your email or click Create an account.';
+          setError(notFoundMsg);
+          toast.error(notFoundMsg);
+          return;
+        }
+
+        // Check password strictly against the stored / registered password
+        const expectedPassword = stored ? stored.password : demoPassword;
+        if (expectedPassword !== password) {
+          const wrongPwMsg = 'Incorrect password. Please verify your credentials.';
+          setError(wrongPwMsg);
+          toast.error(wrongPwMsg);
+          return;
+        }
+
+        // Password matches! Establish authenticated session
         const user: User = {
           id: 'usr_' + Math.random().toString(36).substring(2, 9),
           email: normalizedEmail,
-          created_at: new Date().toISOString(),
+          created_at: stored?.created_at || new Date().toISOString(),
         };
         localStorage.setItem(TOKEN_KEY, 'nexus_operator_token_' + Date.now());
         localStorage.setItem(USER_KEY, JSON.stringify(user));
@@ -172,6 +197,7 @@ export function useAuth() {
           // Backend offline or unreachable
         }
 
+        // Save new registered account with this password
         saveLocalRegisteredAccount(normalizedEmail, password);
 
         const user: User = {
@@ -184,7 +210,7 @@ export function useAuth() {
         }
         localStorage.setItem(USER_KEY, JSON.stringify(user));
         setCurrentUser(user);
-        toast.success('Account created! Welcome to Nexus AI.');
+        toast.success('Account registered! Welcome to Nexus AI.');
         navigate('/dashboard');
       } catch (err: unknown) {
         const detail = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
