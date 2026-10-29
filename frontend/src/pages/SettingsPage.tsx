@@ -16,6 +16,8 @@ import { useAuth } from '../hooks/useAuth';
 import Card from '../components/Card';
 import Button from '../components/Button';
 import { usePWAInstall } from '../hooks/usePWAInstall';
+import { useNotifications } from '../hooks/useNotifications';
+import { Bell, BellRing } from 'lucide-react';
 import { Smartphone, Download, CheckCircle, Shield } from 'lucide-react';
 import { settingsApi, SystemConfig } from '../services/api';
 import toast from 'react-hot-toast';
@@ -23,6 +25,7 @@ import toast from 'react-hot-toast';
 export const SettingsPage: React.FC = () => {
   const { currentUser, logout } = useAuth();
   const { isInstallable, isInstalled, installApp } = usePWAInstall();
+  const { isGranted: notifGranted, requestPermission: reqNotif, notifyTaskCompleted } = useNotifications();
   
   const [config, setConfig] = useState<SystemConfig | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -312,6 +315,43 @@ export const SettingsPage: React.FC = () => {
             <div className="p-3.5 rounded-xl bg-slate-200/90 dark:bg-zinc-950 border border-slate-300 dark:border-white/15">
               <span className="text-slate-600 dark:text-zinc-400 block mb-1">Offline Cache Engine</span>
               <span className="text-emerald-500 font-mono font-bold text-[11px]">v1 Active (Stale-While-Revalidate)</span>
+            </div>
+          </div>
+
+          
+          {/* Notification Alert Controls */}
+          <div className="p-3.5 rounded-xl bg-slate-200/90 dark:bg-zinc-950 border border-slate-300 dark:border-white/15 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0">
+                <BellRing className="w-4 h-4" />
+              </div>
+              <div>
+                <span className="font-bold text-slate-900 dark:text-white block text-xs">Task & Mission Completion Alerts</span>
+                <span className="text-[11px] text-slate-600 dark:text-zinc-400">
+                  {notifGranted ? 'Native notifications active on lockscreen and notification shade' : 'Enable to get alerted when background agent tasks conclude'}
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              {notifGranted ? (
+                <Button
+                  variant="secondary"
+                  size="xs"
+                  onClick={() => notifyTaskCompleted('Market Analysis & Synthesis', 'Reviewer Agent')}
+                  icon={<Bell className="w-3.5 h-3.5" />}
+                >
+                  Send Test Notification
+                </Button>
+              ) : (
+                <Button
+                  variant="primary"
+                  size="xs"
+                  onClick={reqNotif}
+                  icon={<BellRing className="w-3.5 h-3.5" />}
+                >
+                  Enable Notifications
+                </Button>
+              )}
             </div>
           </div>
 

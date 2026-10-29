@@ -1,3 +1,4 @@
+import { notificationService } from '../services/notificationService';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { createEventSource } from '../services/api';
 import type { ExecutionEvent } from '../types';
@@ -69,6 +70,17 @@ export function useExecutionEvents(
             const data = JSON.parse(event.data) as ExecutionEvent;
             setEvents((prev) => [...prev, data]);
             onEvent?.(data);
+
+            if (type === 'task_completed') {
+              notificationService.notifyTaskCompleted(
+                (data.payload as any)?.title || 'Task Step Finished',
+                (data.payload as any)?.agent_role || 'Agent'
+              );
+            } else if (type === 'status_changed' && (data.payload as any)?.status === 'completed') {
+              notificationService.notifyMissionCompleted(
+                (data.payload as any)?.objective || 'Autonomous Intelligence Mission'
+              );
+            }
           } catch {
             // ignore
           }

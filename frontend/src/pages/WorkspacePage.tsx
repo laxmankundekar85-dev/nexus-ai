@@ -1,3 +1,4 @@
+import { notificationService } from '../services/notificationService';
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
@@ -980,6 +981,7 @@ export const WorkspacePage: React.FC = () => {
           console.error('Failed to cache report:', e);
         }
         toast.success('Agent execution completed! Report generated.');
+        notificationService.notifyMissionCompleted(title || targetObj || 'Intelligence Mission');
       }
     }, 1100);
   };
