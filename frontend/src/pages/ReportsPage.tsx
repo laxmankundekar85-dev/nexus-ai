@@ -157,16 +157,17 @@ export const ReportsPage: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between pt-3 border-t border-slate-200/80 dark:border-white/10">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 sm:gap-3 pt-3 border-t border-slate-200/80 dark:border-white/10">
                   <span className="text-[11px] text-slate-500 dark:text-zinc-400 font-mono font-medium">
                     {meta?.citations_count || 4} verified citations
                   </span>
-                  <div className="flex items-center gap-2">
+                  <div className="grid grid-cols-4 sm:flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
                     <Button
                       variant="secondary"
                       size="xs"
                       onClick={() => setPreviewArtifact(rep)}
-                      icon={<Eye className="w-3 h-3 text-blue-700 dark:text-white" />}
+                      icon={<Eye className="w-3 h-3 text-blue-700 dark:text-white shrink-0" />}
+                      className="justify-center px-1.5 sm:px-2.5 py-1.5 text-[11px]"
                     >
                       Preview
                     </Button>
@@ -185,7 +186,8 @@ export const ReportsPage: React.FC = () => {
                         }
                       }}
                       loading={exportingPptxId === rep.id}
-                      icon={<Presentation className="w-3 h-3 text-amber-500" />}
+                      icon={<Presentation className="w-3 h-3 text-amber-500 shrink-0" />}
+                      className="justify-center px-1.5 sm:px-2.5 py-1.5 text-[11px]"
                     >
                       PPTX
                     </Button>
@@ -193,7 +195,8 @@ export const ReportsPage: React.FC = () => {
                       variant="secondary"
                       size="xs"
                       onClick={() => handleDownload(rep)}
-                      icon={<Download className="w-3 h-3" />}
+                      icon={<Download className="w-3 h-3 shrink-0" />}
+                      className="justify-center px-1.5 sm:px-2.5 py-1.5 text-[11px]"
                     >
                       .md
                     </Button>
@@ -208,8 +211,8 @@ export const ReportsPage: React.FC = () => {
                           handleDownload(rep);
                         }
                       }}
-                      icon={<FileText className="w-3 h-3 text-white" />}
-                      className="bg-blue-600 hover:bg-blue-700 font-bold"
+                      icon={<FileText className="w-3 h-3 text-white shrink-0" />}
+                      className="justify-center px-1.5 sm:px-2.5 py-1.5 text-[11px] bg-blue-600 hover:bg-blue-700 font-bold"
                     >
                       PDF
                     </Button>
