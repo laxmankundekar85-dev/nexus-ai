@@ -13,6 +13,13 @@ from app.api.v1.schedules import router as schedules_router
 from app.api.v1.audit_logs import router as audit_logs_router
 from app.api.v1.dashboard import router as dashboard_router
 
+from app.api.v1.supervisor import router as supervisor_router
+from app.api.v1.evidence import router as evidence_router
+from app.api.v1.source_freshness import router as source_freshness_router
+from app.api.v1.recovery import router as recovery_router
+from app.api.v1.evaluation import router as evaluation_router
+from app.api.v1.security import router as security_router
+
 api_router = APIRouter(prefix="/api/v1")
 
 api_router.include_router(auth_router)
@@ -28,3 +35,9 @@ api_router.include_router(knowledge_graph_router)
 api_router.include_router(schedules_router)
 api_router.include_router(audit_logs_router)
 api_router.include_router(dashboard_router)
+api_router.include_router(supervisor_router)
+api_router.include_router(evidence_router)
+api_router.include_router(source_freshness_router)
+api_router.include_router(recovery_router)
+api_router.include_router(evaluation_router)
+api_router.include_router(security_router)

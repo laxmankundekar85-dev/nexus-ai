@@ -11,7 +11,6 @@ import {
   Sparkles,
   TrendingUp,
   ShieldCheck,
-  SplitSquareVertical,
   Calculator,
   Network,
   CalendarClock,
@@ -23,6 +22,9 @@ import {
   Bot,
   Search,
   FileSearch,
+  Compass,
+  Server,
+  Target
 } from 'lucide-react';
 import { useExecutions } from '../hooks/useExecutions';
 import { useDocuments } from '../hooks/useDocuments';
@@ -30,11 +32,6 @@ import { useAuth } from '../hooks/useAuth';
 import Button from '../components/Button';
 import StatusBadge from '../components/StatusBadge';
 import EmptyState from '../components/EmptyState';
-import DocumentComparisonModal from '../components/DocumentComparisonModal';
-import DataAnalysisLabModal from '../components/DataAnalysisLabModal';
-import KnowledgeGraphModal from '../components/KnowledgeGraphModal';
-import ScheduledMissionsModal from '../components/ScheduledMissionsModal';
-import AuditTrailModal from '../components/AuditTrailModal';
 import { dashboardApi } from '../services/api';
 import type { Execution, DashboardMetrics } from '../types';
 
@@ -70,21 +67,12 @@ export const DashboardPage: React.FC = () => {
     agent_performance: [],
   });
 
-  // Modal states
-  const [isCompModalOpen, setIsCompModalOpen] = useState(false);
-  const [isLabModalOpen, setIsLabModalOpen] = useState(false);
-  const [isGraphModalOpen, setIsGraphModalOpen] = useState(false);
-  const [isSchedModalOpen, setIsSchedModalOpen] = useState(false);
-  const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
-
   useEffect(() => {
     dashboardApi.getMetrics()
       .then((data) => {
         if (data) setMetrics(data);
       })
-      .catch(() => {
-        // Fallback to high-fidelity calibrated metrics
-      });
+      .catch(() => {});
   }, []);
 
   const totalRuns = executions.length;
@@ -101,288 +89,238 @@ export const DashboardPage: React.FC = () => {
         <div>
           <div className="flex items-center gap-2.5">
             <h1 className="text-2xl sm:text-3xl font-bold font-title tracking-tight text-slate-950 dark:text-white">
-              Intelligence operations
+              Intelligence Operations Dashboard
             </h1>
             <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-blue-100 border border-blue-300 text-blue-900 dark:bg-zinc-900 dark:border-white/15 dark:text-white text-[11px] font-mono font-medium">
-              <Sparkles className="w-3 h-3 text-blue-600 dark:text-white" /> Enterprise
+              <Sparkles className="w-3 h-3 text-blue-600 dark:text-white" /> Enterprise OS
             </span>
           </div>
           <p className="text-xs text-slate-600 dark:text-zinc-400 font-body mt-1">
-            Monitor mission execution, agent availability, knowledge-base activity, and the status of generated reports.
+            Autonomous multi-agent platform telemetry, supervised execution DAGs, citation grounding, and governance
           </p>
         </div>
 
-        {/* Enterprise Quick-Launch Toolbar */}
+        {/* Executive Action Toolbar - Direct Navigation to Dedicated Pages */}
         <div className="flex flex-wrap items-center gap-2">
           <Button
             variant="secondary"
             size="xs"
-            onClick={() => setIsCompModalOpen(true)}
-            icon={<SplitSquareVertical className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />}
+            onClick={() => navigate('/supervisor')}
+            icon={<Compass className="w-3.5 h-3.5 text-blue-600" />}
           >
-            Compare docs
+            Mission Supervisor
           </Button>
           <Button
             variant="secondary"
             size="xs"
-            onClick={() => setIsLabModalOpen(true)}
-            icon={<Calculator className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />}
+            onClick={() => navigate('/evidence')}
+            icon={<Search className="w-3.5 h-3.5 text-emerald-600" />}
           >
-            Data lab
+            Evidence Explorer
           </Button>
           <Button
             variant="secondary"
             size="xs"
-            onClick={() => setIsGraphModalOpen(true)}
-            icon={<Network className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />}
+            onClick={() => navigate('/analysis-lab')}
+            icon={<Calculator className="w-3.5 h-3.5 text-purple-600" />}
           >
-            Knowledge graph
+            Data Lab
           </Button>
           <Button
             variant="secondary"
             size="xs"
-            onClick={() => setIsSchedModalOpen(true)}
-            icon={<CalendarClock className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />}
+            onClick={() => navigate('/schedules')}
+            icon={<CalendarClock className="w-3.5 h-3.5 text-amber-600" />}
           >
-            Scheduled
+            Schedules
           </Button>
           <Button
-            variant="secondary"
-            size="xs"
-            onClick={() => setIsAuditModalOpen(true)}
-            icon={<ShieldAlert className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />}
-          >
-            Audit trail
-          </Button>
-          <Button
-            variant="primary"
-            size="xs"
             onClick={() => navigate('/workspace')}
-            icon={<Play className="w-3.5 h-3.5 fill-current" />}
+            size="xs"
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+            icon={<Play className="w-3.5 h-3.5 fill-white" />}
           >
-            Create mission
+            New Mission
           </Button>
         </div>
       </div>
 
-      {/* Primary Metrics Row — Frosted Glass Cards */}
+      {/* Top 4 KPI Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-        {/* Card 1: Total missions */}
-        <div className="p-6 rounded-2xl bg-white/75 dark:bg-[#0c0c0e]/80 backdrop-blur-xl border border-white/80 dark:border-white/12 hover:border-blue-500/50 dark:hover:border-white/30 transition-all duration-200 shadow-sm flex items-center justify-between group">
-          <div className="space-y-1">
-            <p className="text-[11px] text-slate-600 dark:text-zinc-400 uppercase tracking-wider font-heading">Total missions</p>
-            <h3 className="text-3xl font-bold font-mono text-slate-900 dark:text-white tracking-tight">{totalRuns}</h3>
-            <p className="text-[11px] text-slate-500 dark:text-zinc-400 font-body">
-              Track the number of missions created in your workspace.
-            </p>
-          </div>
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-600/30 group-hover:scale-105 transition-transform shrink-0">
-            <Cpu className="w-6 h-6 text-white" />
-          </div>
-        </div>
-
-        {/* Card 2: Active missions */}
-        <div className="p-6 rounded-2xl bg-white/75 dark:bg-[#0c0c0e]/80 backdrop-blur-xl border border-white/80 dark:border-white/12 hover:border-blue-500/50 dark:hover:border-white/30 transition-all duration-200 shadow-sm flex items-center justify-between group">
-          <div className="space-y-1">
-            <p className="text-[11px] text-slate-600 dark:text-zinc-400 uppercase tracking-wider font-heading">Active missions</p>
-            <h3 className="text-3xl font-bold font-mono text-blue-600 dark:text-white tracking-tight">{activeRuns}</h3>
-            <p className="text-[11px] text-slate-500 dark:text-zinc-400 font-body">
-              Monitor currently running tasks and workflows.
-            </p>
-          </div>
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-600/30 group-hover:scale-105 transition-transform shrink-0">
-            <Clock className="w-6 h-6 text-white" />
-          </div>
-        </div>
-
-        {/* Card 3: Completed reports */}
-        <div className="p-6 rounded-2xl bg-white/75 dark:bg-[#0c0c0e]/80 backdrop-blur-xl border border-white/80 dark:border-white/12 hover:border-blue-500/50 dark:hover:border-white/30 transition-all duration-200 shadow-sm flex items-center justify-between group">
-          <div className="space-y-1">
-            <p className="text-[11px] text-slate-600 dark:text-zinc-400 uppercase tracking-wider font-heading">Completed reports</p>
-            <h3 className="text-3xl font-bold font-mono text-emerald-600 dark:text-emerald-400 tracking-tight">{completedRuns}</h3>
-            <p className="text-[11px] text-slate-500 dark:text-zinc-400 font-body">
-              Review missions that have completed report generation.
-            </p>
-          </div>
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-500 flex items-center justify-center text-white shadow-md shadow-emerald-500/30 group-hover:scale-105 transition-transform shrink-0">
-            <FileText className="w-6 h-6 text-white" />
-          </div>
-        </div>
-
-        {/* Card 4: Knowledge base */}
-        <div className="p-6 rounded-2xl bg-white/75 dark:bg-[#0c0c0e]/80 backdrop-blur-xl border border-white/80 dark:border-white/12 hover:border-blue-500/50 dark:hover:border-white/30 transition-all duration-200 shadow-sm flex items-center justify-between group">
-          <div className="space-y-1">
-            <p className="text-[11px] text-slate-600 dark:text-zinc-400 uppercase tracking-wider font-heading">Knowledge base</p>
-            <h3 className="text-3xl font-bold font-mono text-slate-900 dark:text-white tracking-tight">{totalDocs}</h3>
-            <p className="text-[11px] text-slate-500 dark:text-zinc-400 font-body">
-              View the number of documents successfully indexed and available for retrieval.
-            </p>
-          </div>
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-600/30 group-hover:scale-105 transition-transform shrink-0">
-            <FolderArchive className="w-6 h-6 text-white" />
-          </div>
-        </div>
-      </div>
-
-      {/* System Health & Agent Availability Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-        {/* System Health */}
-        <div className="p-6 rounded-2xl bg-white/75 dark:bg-[#0c0c0e]/80 backdrop-blur-xl border border-white/80 dark:border-white/12 shadow-sm space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-200/80 dark:border-white/10">
-            <div>
-              <h2 className="text-sm font-semibold font-heading text-slate-950 dark:text-white uppercase tracking-wider flex items-center gap-2">
-                <Activity className="w-4 h-4 text-emerald-500" />
-                System health
-              </h2>
-              <p className="text-[11px] text-slate-500 dark:text-zinc-400 font-body mt-0.5">
-                Monitor configured providers, background workers, data services, and agent execution readiness.
-              </p>
+        <div className="p-5 rounded-2xl bg-white/70 dark:bg-zinc-950/80 border border-slate-200/80 dark:border-white/10 backdrop-blur-xl shadow-xs">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-500 dark:text-zinc-400">
+              Active Missions
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-blue-100 dark:bg-blue-950/50 flex items-center justify-center text-blue-600 dark:text-blue-400">
+              <Cpu className="w-4 h-4" />
             </div>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 font-medium">
-              Operational
+          </div>
+          <div className="mt-3 flex items-baseline gap-2">
+            <span className="text-2xl sm:text-3xl font-bold font-title text-slate-950 dark:text-white">
+              {activeRuns}
+            </span>
+            <span className="text-xs text-slate-500 dark:text-zinc-400 font-mono">
+              of {totalRuns} total runs
             </span>
           </div>
-
-          <div className="space-y-2 text-xs font-mono">
-            {[
-              { service: 'FastAPI Orchestrator', status: 'Operational', desc: 'Agent state machine active' },
-              { service: 'Document Indexing Store', status: 'Operational', desc: 'Semantic retrieval ready' },
-              { service: 'External Research Provider', status: 'Operational', desc: 'DuckDuckGo Live & verified citations' },
-              { service: 'AST Sandboxed Engine', status: 'Operational', desc: 'Restricted computation sandbox active' },
-            ].map((s, idx) => (
-              <div key={idx} className="flex items-center justify-between p-2.5 rounded-xl bg-slate-100/70 dark:bg-zinc-900/60 border border-slate-200/70 dark:border-white/10">
-                <div>
-                  <span className="font-semibold text-slate-900 dark:text-white block font-sans">{s.service}</span>
-                  <span className="text-[11px] text-slate-500 dark:text-zinc-400">{s.desc}</span>
-                </div>
-                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                  {s.status}
-                </span>
-              </div>
-            ))}
-          </div>
         </div>
 
-        {/* Agent Availability */}
-        <div className="p-6 rounded-2xl bg-white/75 dark:bg-[#0c0c0e]/80 backdrop-blur-xl border border-white/80 dark:border-white/12 shadow-sm space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-200/80 dark:border-white/10">
-            <div>
-              <h2 className="text-sm font-semibold font-heading text-slate-950 dark:text-white uppercase tracking-wider flex items-center gap-2">
-                <Bot className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                Agent availability
-              </h2>
-              <p className="text-[11px] text-slate-500 dark:text-zinc-400 font-body mt-0.5">
-                Review the readiness of the agents and services required to execute missions.
-              </p>
+        <div className="p-5 rounded-2xl bg-white/70 dark:bg-zinc-950/80 border border-slate-200/80 dark:border-white/10 backdrop-blur-xl shadow-xs">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-500 dark:text-zinc-400">
+              Citation Grounding
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-950/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+              <ShieldCheck className="w-4 h-4" />
             </div>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900/40 font-medium">
-              6/6 Ready
+          </div>
+          <div className="mt-3 flex items-baseline gap-2">
+            <span className="text-2xl sm:text-3xl font-bold font-title text-slate-950 dark:text-white">
+              {metrics.reliability.citation_coverage_pct}%
+            </span>
+            <span className="text-xs text-emerald-600 dark:text-emerald-400 font-mono font-bold">
+              Calibrated
             </span>
           </div>
+        </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-            {[
-              { role: 'Planner', desc: 'Task decomposition and execution planning' },
-              { role: 'Research', desc: 'External information gathering' },
-              { role: 'Document', desc: 'Document retrieval and evidence extraction' },
-              { role: 'Analysis', desc: 'Data synthesis and calculations' },
-              { role: 'Reviewer', desc: 'Claim validation and quality checks' },
-              { role: 'Report', desc: 'Final report generation and formatting' },
-            ].map((a, idx) => (
-              <div key={idx} className="p-2.5 rounded-xl bg-slate-100/70 dark:bg-zinc-900/60 border border-slate-200/70 dark:border-white/10">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="font-semibold text-slate-900 dark:text-white font-sans">{a.role}</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                </div>
-                <p className="text-[11px] text-slate-500 dark:text-zinc-400 font-body leading-tight">{a.desc}</p>
-              </div>
-            ))}
+        <div className="p-5 rounded-2xl bg-white/70 dark:bg-zinc-950/80 border border-slate-200/80 dark:border-white/10 backdrop-blur-xl shadow-xs">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-500 dark:text-zinc-400">
+              Knowledge Corpus
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-purple-100 dark:bg-purple-950/50 flex items-center justify-center text-purple-600 dark:text-purple-400">
+              <FolderArchive className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="mt-3 flex items-baseline gap-2">
+            <span className="text-2xl sm:text-3xl font-bold font-title text-slate-950 dark:text-white">
+              {totalDocs}
+            </span>
+            <span className="text-xs text-slate-500 dark:text-zinc-400 font-mono">
+              indexed documents
+            </span>
+          </div>
+        </div>
+
+        <div className="p-5 rounded-2xl bg-white/70 dark:bg-zinc-950/80 border border-slate-200/80 dark:border-white/10 backdrop-blur-xl shadow-xs">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-500 dark:text-zinc-400">
+              Total Cost & Tokens
+            </span>
+            <div className="w-8 h-8 rounded-xl bg-amber-100 dark:bg-amber-950/50 flex items-center justify-center text-amber-600 dark:text-amber-400">
+              <Coins className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="mt-3 flex items-baseline gap-2">
+            <span className="text-2xl sm:text-3xl font-bold font-title text-slate-950 dark:text-white">
+              ${metrics.cost_and_usage.estimated_cost_usd.toFixed(2)}
+            </span>
+            <span className="text-xs text-slate-500 dark:text-zinc-400 font-mono">
+              {metrics.cost_and_usage.total_tokens.toLocaleString()} tok
+            </span>
           </div>
         </div>
       </div>
 
-      {/* Claim-Level Reliability Breakdown */}
-      <div className="p-6 rounded-2xl bg-white/75 dark:bg-[#0c0c0e]/80 backdrop-blur-xl border border-white/80 dark:border-white/12 shadow-sm space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-blue-600 dark:bg-white" />
-            <h2 className="text-sm font-semibold font-heading text-slate-950 dark:text-white uppercase tracking-wider">
-              Claim-level verification telemetry
-            </h2>
-          </div>
-          <span className="font-mono text-xs text-slate-500 dark:text-zinc-400">
-            {metrics.reliability.claims_breakdown.total} total claims evaluated
-          </span>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25">
-            <span className="text-[11px] uppercase font-mono text-emerald-700 dark:text-emerald-400 font-bold block">Verified</span>
-            <span className="text-2xl font-bold font-mono text-emerald-800 dark:text-emerald-300">{metrics.reliability.claims_breakdown.verified}</span>
-            <span className="text-[10px] text-emerald-600 dark:text-emerald-500 block font-body">Supported by direct source passages</span>
-          </div>
-
-          <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/25">
-            <span className="text-[11px] uppercase font-mono text-amber-700 dark:text-amber-400 font-bold block">Partially verified</span>
-            <span className="text-2xl font-bold font-mono text-amber-800 dark:text-amber-300">{metrics.reliability.claims_breakdown.partially_verified}</span>
-            <span className="text-[10px] text-amber-600 dark:text-amber-500 block font-body">Secondary corroboration</span>
+      {/* Enterprise Architecture Quick Navigation Cards */}
+      <div className="space-y-3">
+        <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500">
+          Enterprise Operational Workspaces
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div
+            onClick={() => navigate('/supervisor')}
+            className="p-5 rounded-2xl bg-white/80 dark:bg-zinc-900/60 border border-slate-200/80 dark:border-white/10 hover:border-blue-500 cursor-pointer transition-all hover:shadow-md group space-y-2"
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-blue-600 dark:text-blue-400 font-mono uppercase">Autonomous Operations</span>
+              <Compass className="w-4 h-4 text-blue-600 group-hover:scale-110 transition-transform" />
+            </div>
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white">Adaptive Mission Supervisor</h3>
+            <p className="text-xs text-slate-600 dark:text-zinc-400 font-body">
+              Decompose missions into multi-agent DAGs, inspect 10-state lifecycle, and adjust dynamic plan revisions.
+            </p>
+            <div className="pt-2 text-xs font-mono text-blue-600 flex items-center gap-1 group-hover:underline">
+              Open Supervisor <ArrowRight className="w-3 h-3" />
+            </div>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-slate-500/10 border border-slate-500/25">
-            <span className="text-[11px] uppercase font-mono text-slate-700 dark:text-zinc-300 font-bold block">Unsupported</span>
-            <span className="text-2xl font-bold font-mono text-slate-800 dark:text-zinc-200">{metrics.reliability.claims_breakdown.unsupported}</span>
-            <span className="text-[10px] text-slate-500 dark:text-zinc-400 block font-body">Flagged for human review</span>
+          <div
+            onClick={() => navigate('/evidence')}
+            className="p-5 rounded-2xl bg-white/80 dark:bg-zinc-900/60 border border-slate-200/80 dark:border-white/10 hover:border-emerald-500 cursor-pointer transition-all hover:shadow-md group space-y-2"
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 font-mono uppercase">Knowledge & Research</span>
+              <Search className="w-4 h-4 text-emerald-600 group-hover:scale-110 transition-transform" />
+            </div>
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white">Evidence Lineage & Impact</h3>
+            <p className="text-xs text-slate-600 dark:text-zinc-400 font-body">
+              Trace claim provenance to document excerpts, inspect downstream impact, and trigger revalidations.
+            </p>
+            <div className="pt-2 text-xs font-mono text-emerald-600 flex items-center gap-1 group-hover:underline">
+              Inspect Evidence <ArrowRight className="w-3 h-3" />
+            </div>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/25">
-            <span className="text-[11px] uppercase font-mono text-rose-700 dark:text-rose-400 font-bold block">Contradicted</span>
-            <span className="text-2xl font-bold font-mono text-rose-800 dark:text-rose-300">{metrics.reliability.claims_breakdown.contradicted}</span>
-            <span className="text-[10px] text-rose-600 dark:text-rose-500 block font-body">Cross-source discrepancy detected</span>
+          <div
+            onClick={() => navigate('/execution-recovery')}
+            className="p-5 rounded-2xl bg-white/80 dark:bg-zinc-900/60 border border-slate-200/80 dark:border-white/10 hover:border-rose-500 cursor-pointer transition-all hover:shadow-md group space-y-2"
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-rose-600 dark:text-rose-400 font-mono uppercase">Self-Healing Infrastructure</span>
+              <ShieldAlert className="w-4 h-4 text-rose-600 group-hover:scale-110 transition-transform" />
+            </div>
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white">Execution Recovery & Circuit Breakers</h3>
+            <p className="text-xs text-slate-600 dark:text-zinc-400 font-body">
+              Monitor automated failure classification, provider circuit breaker health, and bounded retries.
+            </p>
+            <div className="pt-2 text-xs font-mono text-rose-600 flex items-center gap-1 group-hover:underline">
+              View Recovery Telemetry <ArrowRight className="w-3 h-3" />
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Recent Missions Section */}
+      {/* Recent Executions Section */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-sm font-semibold font-heading text-slate-900 dark:text-slate-100 uppercase tracking-wider flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-blue-600 dark:bg-white shadow-xs" />
-              Recent missions
+          <div className="flex items-center gap-2">
+            <h2 className="text-base font-bold font-title text-slate-950 dark:text-white">
+              Recent Intelligence Missions
             </h2>
-            <p className="text-xs text-slate-500 dark:text-zinc-400 font-body mt-0.5">
-              Review execution history, inspect outcomes, and reopen previous reports.
-            </p>
+            <span className="text-xs font-mono text-slate-500 dark:text-zinc-400 font-medium">
+              ({executions.length})
+            </span>
           </div>
           <Button
             variant="ghost"
             size="xs"
             onClick={() => navigate('/workspace')}
-            iconRight={<ArrowRight className="w-3.5 h-3.5 text-blue-700 dark:text-white" />}
-            className="text-slate-900 dark:text-white font-medium hover:text-blue-700 dark:hover:text-white"
+            icon={<ArrowRight className="w-3.5 h-3.5" />}
           >
-            Open workspace
+            Launch workspace
           </Button>
         </div>
 
-        {executions.length === 0 && !loadingExecs ? (
+        {executions.length === 0 ? (
           <EmptyState
-            icon={<Layers className="w-6 h-6 text-blue-600 dark:text-white" />}
-            title="Your intelligence workspace starts here."
-            description="Launch your first mission to research a topic, analyze documents, or generate an evidence-backed report."
-            actionLabel="Create your first mission"
+            icon={<Cpu className="w-6 h-6" />}
+            title="No intelligence missions dispatched yet"
+            description="Initiate an objective to orchestrate planner, research, and analysis agents."
+            actionLabel="Dispatch mission"
             onAction={() => navigate('/workspace')}
           />
         ) : (
-          <div className="bg-white/75 dark:bg-[#0c0c0e]/80 border border-white/80 dark:border-white/12 rounded-2xl shadow-xl overflow-hidden backdrop-blur-xl">
+          <div className="rounded-2xl border border-slate-200/80 dark:border-white/10 bg-white/70 dark:bg-zinc-950/80 backdrop-blur-xl overflow-hidden shadow-xs">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead className="bg-slate-100/80 dark:bg-zinc-950/90 border-b border-slate-200/80 dark:border-white/10 text-slate-700 dark:text-zinc-300 uppercase tracking-wider font-heading">
                   <tr>
-                    <th className="py-3.5 px-5 font-semibold">Mission</th>
+                    <th className="py-3.5 px-5 font-semibold">Mission Objective</th>
                     <th className="py-3.5 px-5 font-semibold">Status</th>
-                    <th className="py-3.5 px-5 font-semibold">Created</th>
+                    <th className="py-3.5 px-5 font-semibold">Dispatched</th>
                     <th className="py-3.5 px-5 font-semibold text-right">Actions</th>
                   </tr>
                 </thead>
@@ -415,29 +353,6 @@ export const DashboardPage: React.FC = () => {
           </div>
         )}
       </div>
-
-      {/* Enterprise Feature Modals */}
-      <DocumentComparisonModal
-        isOpen={isCompModalOpen}
-        onClose={() => setIsCompModalOpen(false)}
-        documents={documents}
-      />
-      <DataAnalysisLabModal
-        isOpen={isLabModalOpen}
-        onClose={() => setIsLabModalOpen(false)}
-      />
-      <KnowledgeGraphModal
-        isOpen={isGraphModalOpen}
-        onClose={() => setIsGraphModalOpen(false)}
-      />
-      <ScheduledMissionsModal
-        isOpen={isSchedModalOpen}
-        onClose={() => setIsSchedModalOpen(false)}
-      />
-      <AuditTrailModal
-        isOpen={isAuditModalOpen}
-        onClose={() => setIsAuditModalOpen(false)}
-      />
     </div>
   );
 };

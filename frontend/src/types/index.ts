@@ -294,3 +294,239 @@ export interface ContradictionAlert {
   status: string;
   routed_to: string;
 }
+
+
+// ─── Adaptive Mission Supervisor ─────────────────────────────────────────────
+export type SupervisorMissionStatus =
+  | 'draft'
+  | 'planned'
+  | 'queued'
+  | 'running'
+  | 'waiting_for_approval'
+  | 'needs_attention'
+  | 'recovering'
+  | 'completed'
+  | 'failed'
+  | 'cancelled';
+
+export interface SupervisorBudget {
+  max_tokens: number;
+  consumed_tokens: number;
+  max_cost_usd: number;
+  consumed_cost_usd: number;
+  max_time_seconds: number;
+  elapsed_time_seconds: number;
+  max_iterations: number;
+  current_iteration: number;
+}
+
+export interface SupervisorTaskNode {
+  id: string;
+  name: string;
+  agent_role: 'planner' | 'research' | 'document' | 'analysis' | 'reviewer' | 'report';
+  status: 'pending' | 'running' | 'completed' | 'failed' | 'blocked' | 'skipped';
+  dependencies: string[];
+  description: string;
+  output_summary?: string;
+  error?: string;
+  started_at?: string;
+  completed_at?: string;
+  confidence?: number;
+}
+
+export interface SupervisorDecisionEvent {
+  id: string;
+  timestamp: string;
+  decision_type: 'plan_created' | 'replan_triggered' | 'budget_warning' | 'circuit_broken' | 'checkpoint_saved' | 'human_escalation';
+  title: string;
+  detail: string;
+  metadata?: Record<string, any>;
+}
+
+export interface SupervisorMission {
+  id: string;
+  title: string;
+  objective: string;
+  status: SupervisorMissionStatus;
+  current_revision: number;
+  budget: SupervisorBudget;
+  tasks: SupervisorTaskNode[];
+  decision_log: SupervisorDecisionEvent[];
+  created_at: string;
+  updated_at: string;
+}
+
+// ─── Evidence Lineage & Impact Analysis ──────────────────────────────────────
+export interface SourceDocumentReference {
+  id: string;
+  filename: string;
+  version: number;
+  hash: string;
+  ingested_at: string;
+  status: 'active' | 'stale' | 'deprecated' | 'updated';
+}
+
+export interface EvidenceLineageItem {
+  id: string;
+  claim_id: string;
+  claim_text: string;
+  status: ClaimStatus;
+  confidence: number;
+  sources: {
+    document_id: string;
+    document_name: string;
+    version: number;
+    passage: string;
+    page: number;
+    match_score: number;
+  }[];
+  affected_reports: {
+    report_id: string;
+    report_title: string;
+    impact_severity: 'low' | 'medium' | 'high' | 'critical';
+  }[];
+  revalidation_status: 'valid' | 'needs_revalidation' | 'invalidated';
+  last_verified_at: string;
+}
+
+// ─── Source Freshness Monitor ────────────────────────────────────────────────
+export interface SourceFreshnessItem {
+  id: string;
+  name: string;
+  source_type: 'financial_filing' | 'market_feed' | 'regulatory_api' | 'internal_corpus' | 'web_index';
+  version: number;
+  last_ingested_at: string;
+  refresh_interval_hours: number;
+  staleness_status: 'fresh' | 'needs_review' | 'stale' | 'missing';
+  dependent_claims_count: number;
+  dependent_reports_count: number;
+  endpoint_or_file: string;
+  hash: string;
+}
+
+// ─── Self-Healing Mission Execution & Recovery ───────────────────────────────
+export type FailureClassificationType =
+  | 'transient_network'
+  | 'rate_limit'
+  | 'timeout'
+  | 'invalid_output'
+  | 'dependency_failure'
+  | 'non_recoverable';
+
+export interface CircuitBreakerState {
+  provider_id: string;
+  provider_name: string;
+  status: 'closed' | 'open' | 'half_open';
+  failure_count: number;
+  threshold: number;
+  last_failure_at?: string;
+  next_trial_at?: string;
+}
+
+export interface CheckpointRecord {
+  id: string;
+  mission_id: string;
+  task_id: string;
+  checkpoint_name: string;
+  state_snapshot: Record<string, any>;
+  created_at: string;
+}
+
+export interface RecoveryIncident {
+  id: string;
+  mission_id: string;
+  task_id: string;
+  task_name: string;
+  failure_class: FailureClassificationType;
+  error_message: string;
+  attempt_number: number;
+  max_attempts: number;
+  strategy_applied: 'exponential_backoff' | 'model_fallback' | 're_prompt_clarification' | 'branch_replay' | 'human_escalation';
+  status: 'recovering' | 'recovered' | 'exhausted' | 'escalated';
+  timestamp: string;
+}
+
+// ─── AI Evaluation & Benchmarking Lab ────────────────────────────────────────
+export interface BenchmarkTestCase {
+  id: string;
+  name: string;
+  category: 'factual_extraction' | 'numerical_synthesis' | 'adversarial_contradiction' | 'citation_precision';
+  prompt: string;
+  ground_truth_reference: string;
+  expected_facts: string[];
+}
+
+export interface ModelComparisonScore {
+  model_id: string;
+  model_name: string;
+  citation_precision: number;
+  evidence_coverage: number;
+  factual_consistency: number;
+  numerical_accuracy: number;
+  average_latency_ms: number;
+  cost_per_1k_runs_usd: number;
+  overall_score: number;
+}
+
+export interface EvaluationRun {
+  id: string;
+  benchmark_name: string;
+  test_cases_count: number;
+  executed_at: string;
+  status: 'completed' | 'running' | 'failed';
+  models_evaluated: ModelComparisonScore[];
+  regression_detected: boolean;
+  notes: string;
+}
+
+// ─── Mission History, Replay & Branching ──────────────────────────────────────
+export interface MissionReplayStep {
+  step_number: number;
+  task_id: string;
+  agent: string;
+  input_summary: string;
+  output_summary: string;
+  duration_ms: number;
+  state_hash: string;
+  is_checkpoint: boolean;
+}
+
+export interface MissionHistoryItem {
+  id: string;
+  title: string;
+  objective: string;
+  parent_mission_id?: string;
+  branch_name?: string;
+  status: SupervisorMissionStatus;
+  started_at: string;
+  completed_at?: string;
+  duration_seconds: number;
+  total_tokens: number;
+  cost_usd: number;
+  steps_count: number;
+  can_replay: boolean;
+  can_branch: boolean;
+}
+
+// ─── Policy-Aware Tool Gateway & Governance ──────────────────────────────────
+export interface AgentToolPermission {
+  agent_role: 'planner' | 'research' | 'document' | 'analysis' | 'reviewer' | 'report';
+  allowed_tools: string[];
+  denied_tools: string[];
+  requires_approval_tools: string[];
+  max_requests_per_minute: number;
+  max_execution_time_seconds: number;
+}
+
+export interface PendingToolApproval {
+  id: string;
+  mission_id: string;
+  agent_role: string;
+  tool_name: string;
+  target_resource: string;
+  payload: Record<string, any>;
+  risk_level: 'low' | 'medium' | 'high' | 'critical';
+  reason: string;
+  requested_at: string;
+  status: 'pending' | 'approved' | 'rejected' | 'modified';
+}
