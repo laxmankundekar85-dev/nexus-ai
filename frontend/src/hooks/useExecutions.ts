@@ -77,6 +77,8 @@ export function useExecutions(page = 1, size = 20) {
         };
       }
     },
+    retry: false,
+    staleTime: 60 * 1000,
   });
 
   const createMutation = useCreateExecution();

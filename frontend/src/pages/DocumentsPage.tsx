@@ -215,6 +215,13 @@ export const DocumentsPage: React.FC = () => {
           </pre>
         )}
       </Modal>
+
+      {/* Multi-Document Comparison Engine Modal */}
+      <DocumentComparisonModal
+        isOpen={isCompModalOpen}
+        onClose={() => setIsCompModalOpen(false)}
+        documents={documents}
+      />
     </div>
   );
 };

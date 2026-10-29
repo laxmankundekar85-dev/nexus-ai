@@ -57,7 +57,21 @@ export function useDeleteWorkflow() {
 export function useWorkflows(page = 1, size = 20) {
   const query = useQuery({
     queryKey: [WORKFLOWS_KEY, page, size],
-    queryFn: () => workflowsApi.list(page, size),
+    queryFn: async () => {
+      try {
+        return await workflowsApi.list(page, size);
+      } catch {
+        const local = JSON.parse(localStorage.getItem('nexus_local_workflows') || '[]');
+        return {
+          items: local,
+          total: local.length,
+          page,
+          size,
+        };
+      }
+    },
+    retry: false,
+    staleTime: 60 * 1000,
   });
 
   const createMutation = useCreateWorkflow();

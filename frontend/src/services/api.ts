@@ -28,7 +28,7 @@ const api: AxiosInstance = axios.create({
     'Content-Type': 'application/json',
     'Bypass-Tunnel-Reminder': '1',
   },
-  timeout: 30000,
+  timeout: 4000,
 });
 
 // ─── Request Interceptor ──────────────────────────────────────────────────────

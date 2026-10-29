@@ -45,7 +45,8 @@ export function useDocuments(page = 1, size = 20) {
   const query = useQuery({
     queryKey: [DOCUMENTS_KEY, page, size],
     queryFn: () => documentsApi.list(page, size),
-    retry: 1,
+    retry: false,
+    staleTime: 60 * 1000,
   });
 
   const uploadMutation = useUploadDocument();

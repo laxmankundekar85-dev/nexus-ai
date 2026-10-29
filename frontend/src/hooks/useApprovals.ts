@@ -29,8 +29,16 @@ export function useResolveApproval() {
 export function useApprovals(executionId?: string) {
   const query = useQuery({
     queryKey: [APPROVALS_KEY, executionId],
-    queryFn: () => approvalsApi.list(executionId),
+    queryFn: async () => {
+      try {
+        return await approvalsApi.list(executionId);
+      } catch {
+        return [];
+      }
+    },
     refetchInterval: executionId ? 5000 : false,
+    retry: false,
+    staleTime: 30 * 1000,
   });
 
   const resolveMutation = useResolveApproval();
