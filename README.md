@@ -327,7 +327,3 @@ npm run test
   The compiled APK is served directly from the public asset directory at `/NexusAI.apk` for 1-tap mobile installation.
 
 ---
-
-## 📄 License
-
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
