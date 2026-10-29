@@ -9,7 +9,7 @@ import type { AnalysisResult } from '../types';
 import { executeAnalysisQuery, DEFAULT_DATASET } from '../utils/analysisEngine';
 
 export const DataAnalysisLabPage: React.FC = () => {
-  const [query, setQuery] = useState('Calculate the percentage change between Q1 and Q4');
+  const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
 
@@ -23,7 +23,7 @@ export const DataAnalysisLabPage: React.FC = () => {
 
   useEffect(() => {
     if (!result) {
-      const initial = executeAnalysisQuery(query, DEFAULT_DATASET);
+      const initial = executeAnalysisQuery('Calculate the percentage change between Q1 and Q4', DEFAULT_DATASET);
       setResult(initial);
     }
   }, []);

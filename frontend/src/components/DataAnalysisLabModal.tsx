@@ -11,7 +11,7 @@ interface DataAnalysisLabModalProps {
 }
 
 export const DataAnalysisLabModal: React.FC<DataAnalysisLabModalProps> = ({ isOpen, onClose }) => {
-  const [query, setQuery] = useState('Calculate the percentage change between Q1 and Q4');
+  const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
 
@@ -25,7 +25,7 @@ export const DataAnalysisLabModal: React.FC<DataAnalysisLabModalProps> = ({ isOp
   // Auto-compute on first open if result is empty
   React.useEffect(() => {
     if (isOpen && !result) {
-      const initial = executeAnalysisQuery(query, DEFAULT_DATASET);
+      const initial = executeAnalysisQuery('Calculate the percentage change between Q1 and Q4', DEFAULT_DATASET);
       setResult(initial);
     }
   }, [isOpen]);
