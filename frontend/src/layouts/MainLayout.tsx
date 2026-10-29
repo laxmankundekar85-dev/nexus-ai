@@ -150,7 +150,7 @@ export const MainLayout: React.FC = () => {
   );
 
   return (
-    <div className="flex flex-col md:flex-row h-screen overflow-hidden font-sans text-slate-900 dark:text-white bg-[#f8fafc] dark:bg-[#09090b]">
+    <div className="flex flex-col md:flex-row min-h-screen md:h-screen md:overflow-hidden font-sans text-slate-900 dark:text-white bg-[#f8fafc] dark:bg-[#09090b]">
       {/* Mobile Top Header */}
       <header className="md:hidden flex items-center justify-between px-4 py-3 bg-white/90 dark:bg-[#09090b]/95 backdrop-blur-2xl border-b border-slate-200/80 dark:border-white/10 sticky top-0 z-30 shrink-0 shadow-xs">
         <div onClick={() => navigate('/dashboard')} className="flex items-center gap-2.5 cursor-pointer">
@@ -299,7 +299,7 @@ export const MainLayout: React.FC = () => {
       </aside>
 
       {/* Main Page Body */}
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 md:overflow-y-auto min-h-0">
         <Outlet />
       </main>
 

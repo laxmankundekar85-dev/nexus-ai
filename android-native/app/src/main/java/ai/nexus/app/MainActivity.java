@@ -11,7 +11,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.PermissionRequest;
@@ -38,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private WebView mWebView;
     private SwipeRefreshLayout mSwipeRefresh;
     private ProgressBar mProgressBar;
+    private volatile boolean mWebCanScrollUp = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
         settings.setAllowContentAccess(true);
         settings.setMediaPlaybackRequiresUserGesture(false);
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
         
         // Custom user-agent identifier to signal native Android app
         String defaultUA = settings.getUserAgentString();
@@ -99,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 mProgressBar.setVisibility(View.VISIBLE);
+                mWebCanScrollUp = false;
             }
 
             @Override
@@ -106,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                 mProgressBar.setVisibility(View.GONE);
                 mSwipeRefresh.setRefreshing(false);
 
-                // Inject native bridge helper for notifications so Web Notification API routes to native Android notification
+                // Inject notification bridge and continuous scroll tracking
                 String injection = 
                     "(function() {" +
                     "  if (window.__nexusNativeHooked) return;" +
@@ -121,6 +124,17 @@ public class MainActivity extends AppCompatActivity {
                     "  };" +
                     "  window.Notification.permission = 'granted';" +
                     "  window.Notification.requestPermission = function() { return Promise.resolve('granted'); };" +
+                    "  function reportScroll() {" +
+                    "    var top = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;" +
+                    "    var canScroll = top > 2;" +
+                    "    var main = document.querySelector('main');" +
+                    "    if (main && main.scrollTop > 2) canScroll = true;" +
+                    "    if (window.NexusNativeBridge && window.NexusNativeBridge.setWebScrollState) {" +
+                    "      window.NexusNativeBridge.setWebScrollState(canScroll);" +
+                    "    }" +
+                    "  }" +
+                    "  window.addEventListener('scroll', reportScroll, { passive: true, capture: true });" +
+                    "  document.addEventListener('scroll', reportScroll, { passive: true, capture: true });" +
                     "})();";
                 view.evaluateJavascript(injection, null);
             }
@@ -149,9 +163,12 @@ public class MainActivity extends AppCompatActivity {
         mSwipeRefresh.setProgressBackgroundColorSchemeResource(R.color.background);
         mSwipeRefresh.setOnRefreshListener(() -> mWebView.reload());
         
-        // Disable swipe refresh when not at top of page to avoid scroll conflicts
-        mWebView.getViewTreeObserver().addOnScrollChangedListener(() -> {
-            mSwipeRefresh.setEnabled(mWebView.getScrollY() == 0);
+        // Fix: Only trigger pull-to-refresh when at the VERY top of the page (like YouTube).
+        // If scrolled down anywhere in the app, canChildScrollUp returns true,
+        // which prevents SwipeRefreshLayout from intercepting downward touches and lets the user scroll back up!
+        mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> {
+            boolean canNativeScrollUp = mWebView.canScrollVertically(-1) || mWebView.getScrollY() > 0;
+            return canNativeScrollUp || mWebCanScrollUp;
         });
     }
 
@@ -205,11 +222,16 @@ public class MainActivity extends AppCompatActivity {
         mWebView.saveState(outState);
     }
 
-    public static class NexusNativeBridge {
+    public class NexusNativeBridge {
         private final Context context;
 
         public NexusNativeBridge(Context context) {
             this.context = context;
+        }
+
+        @JavascriptInterface
+        public void setWebScrollState(boolean canScrollUp) {
+            mWebCanScrollUp = canScrollUp;
         }
 
         @JavascriptInterface
