@@ -17,10 +17,84 @@ import Button from '../components/Button';
 import toast from 'react-hot-toast';
 import type { EvaluationRun, BenchmarkTestCase } from '../types';
 
+const INITIAL_RUNS: EvaluationRun[] = [
+  {
+    id: 'eval-run-88',
+    benchmark_name: 'Enterprise Financial & SEC Synthesis Golden Benchmark v3',
+    test_cases_count: 48,
+    executed_at: '2026-10-29T08:00:00Z',
+    status: 'completed',
+    regression_detected: false,
+    notes: 'Validated against Q1-Q3 audited enterprise data with strict numerical tolerance (+/- 0.01%).',
+    models_evaluated: [
+      {
+        model_id: 'gpt-4o',
+        model_name: 'OpenAI GPT-4o (2024-11-20)',
+        citation_precision: 96.4,
+        evidence_coverage: 94.2,
+        factual_consistency: 97.8,
+        numerical_accuracy: 98.1,
+        average_latency_ms: 1850,
+        cost_per_1k_runs_usd: 12.40,
+        overall_score: 96.6,
+      },
+      {
+        model_id: 'claude-3-5-sonnet',
+        model_name: 'Anthropic Claude 3.5 Sonnet',
+        citation_precision: 98.2,
+        evidence_coverage: 95.8,
+        factual_consistency: 98.6,
+        numerical_accuracy: 97.4,
+        average_latency_ms: 2120,
+        cost_per_1k_runs_usd: 14.80,
+        overall_score: 97.5,
+      },
+      {
+        model_id: 'llama-3-3-70b',
+        model_name: 'Meta Llama 3.3 70B Instruct',
+        citation_precision: 89.1,
+        evidence_coverage: 88.4,
+        factual_consistency: 91.2,
+        numerical_accuracy: 92.5,
+        average_latency_ms: 1340,
+        cost_per_1k_runs_usd: 3.20,
+        overall_score: 90.3,
+      },
+    ],
+  },
+];
+
+const INITIAL_TEST_CASES: BenchmarkTestCase[] = [
+  {
+    id: 'tc-1',
+    name: 'Segmental Margin Extraction',
+    category: 'factual_extraction',
+    prompt: 'Extract Q3 gross margin percentage for APAC cloud infrastructure operations.',
+    ground_truth_reference: '42.8% GAAP gross margin reported in footnote 7.',
+    expected_facts: ['42.8%', 'APAC cloud', 'GAAP'],
+  },
+  {
+    id: 'tc-2',
+    name: 'Consolidated Variance Math',
+    category: 'numerical_synthesis',
+    prompt: 'Calculate absolute YoY revenue difference and percentage CAGR across 3 fiscal years.',
+    ground_truth_reference: 'CAGR: 18.42%, Absolute delta: $1.42B.',
+    expected_facts: ['18.42%', '$1.42B'],
+  },
+  {
+    id: 'tc-3',
+    name: 'Executive Guidance Contradiction',
+    category: 'adversarial_contradiction',
+    prompt: 'Identify any divergence between press release forward estimates and 10-Q risk factors.',
+    ground_truth_reference: 'Press release projected 20% growth; 10-Q disclosed supply chain headwinds lowering target to 12%.',
+    expected_facts: ['20% vs 12%', 'supply chain risk'],
+  },
+];
+
 export const EvaluationLabPage: React.FC = () => {
-  const [runs, setRuns] = useState<EvaluationRun[]>([]);
-  const [testCases, setTestCases] = useState<BenchmarkTestCase[]>([]);
-  const [selectedRun, setSelectedRun] = useState<EvaluationRun | null>(null);
+  const [runs, setRuns] = useState<EvaluationRun[]>(INITIAL_RUNS);
+  const [testCases, setTestCases] = useState<BenchmarkTestCase[]>(INITIAL_TEST_CASES);
+  const [selectedRun, setSelectedRun] = useState<EvaluationRun | null>(INITIAL_RUNS[0]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

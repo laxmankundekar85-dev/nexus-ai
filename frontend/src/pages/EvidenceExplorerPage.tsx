@@ -20,11 +20,87 @@ import Input from '../components/Input';
 import toast from 'react-hot-toast';
 import type { EvidenceLineageItem, ClaimStatus } from '../types';
 
+const INITIAL_EVIDENCE: EvidenceLineageItem[] = [
+  {
+    id: 'ev-101',
+    claim_id: 'cl-781',
+    claim_text: 'Q3 Enterprise cloud net revenue expanded 28.4% YoY to $4.2B with margin expansion.',
+    status: 'verified',
+    confidence: 0.98,
+    sources: [
+      {
+        document_id: 'doc-001',
+        document_name: 'Q3_Financial_Release_Final.pdf',
+        version: 2,
+        passage: 'Cloud infrastructure segment revenue rose 28.4% to $4,210 million compared to $3,278 million in the prior year quarter.',
+        page: 4,
+        match_score: 0.99,
+      },
+    ],
+    affected_reports: [
+      { report_id: 'rep-01', report_title: 'Executive Financial Synthesis Q3', impact_severity: 'high' },
+      { report_id: 'rep-02', report_title: 'Global Cloud Infrastructure Benchmark', impact_severity: 'medium' },
+    ],
+    revalidation_status: 'valid',
+    last_verified_at: '2026-10-29T10:15:00Z',
+  },
+  {
+    id: 'ev-102',
+    claim_id: 'cl-782',
+    claim_text: 'Operating expenses contracted 4.2% across North American operations due to automation.',
+    status: 'partially_verified',
+    confidence: 0.81,
+    sources: [
+      {
+        document_id: 'doc-002',
+        document_name: 'Operational_Review_Deck.pdf',
+        version: 1,
+        passage: 'NA headcount and administrative overhead decreased roughly 4%, primarily attributed to automated ingestion systems.',
+        page: 12,
+        match_score: 0.82,
+      },
+    ],
+    affected_reports: [
+      { report_id: 'rep-01', report_title: 'Executive Financial Synthesis Q3', impact_severity: 'medium' },
+    ],
+    revalidation_status: 'needs_revalidation',
+    last_verified_at: '2026-10-28T16:30:00Z',
+  },
+  {
+    id: 'ev-103',
+    claim_id: 'cl-783',
+    claim_text: 'Gross margins in APAC declined by 6.1% due to FX volatility and local currency weakness.',
+    status: 'contradicted',
+    confidence: 0.92,
+    sources: [
+      {
+        document_id: 'doc-001',
+        document_name: 'Q3_Financial_Release_Final.pdf',
+        version: 2,
+        passage: 'APAC segmental gross margin gained 1.4% constant currency; FX drag accounted for -2.1% net.',
+        page: 8,
+        match_score: 0.94,
+      },
+    ],
+    affected_reports: [
+      { report_id: 'rep-03', report_title: 'APAC Market Risk Analysis', impact_severity: 'critical' },
+    ],
+    revalidation_status: 'invalidated',
+    last_verified_at: '2026-10-29T09:45:00Z',
+  },
+];
+
 export const EvidenceExplorerPage: React.FC = () => {
-  const [items, setItems] = useState<EvidenceLineageItem[]>([]);
+  const [items, setItems] = useState<EvidenceLineageItem[]>(() => {
+    const saved = localStorage.getItem('nexus_evidence_lineage');
+    if (saved) {
+      try { return JSON.parse(saved); } catch {}
+    }
+    return INITIAL_EVIDENCE;
+  });
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [selectedItem, setSelectedItem] = useState<EvidenceLineageItem | null>(null);
+  const [selectedItem, setSelectedItem] = useState<EvidenceLineageItem | null>(() => items[0] || null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

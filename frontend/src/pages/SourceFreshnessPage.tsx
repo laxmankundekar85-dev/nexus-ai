@@ -17,8 +17,69 @@ import Button from '../components/Button';
 import toast from 'react-hot-toast';
 import type { SourceFreshnessItem } from '../types';
 
+const INITIAL_SOURCES: SourceFreshnessItem[] = [
+  {
+    id: 'src-1',
+    name: 'SEC EDGAR 10-Q & 8-K Feed',
+    source_type: 'regulatory_api',
+    version: 14,
+    last_ingested_at: '2026-10-29T09:30:00Z',
+    refresh_interval_hours: 6,
+    staleness_status: 'fresh',
+    dependent_claims_count: 42,
+    dependent_reports_count: 5,
+    endpoint_or_file: 'https://data.sec.gov/api/xbrl/companyfacts',
+    hash: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+  },
+  {
+    id: 'src-2',
+    name: 'Bloomberg FX & Bond Yield Stream',
+    source_type: 'market_feed',
+    version: 88,
+    last_ingested_at: '2026-10-29T10:10:00Z',
+    refresh_interval_hours: 1,
+    staleness_status: 'fresh',
+    dependent_claims_count: 67,
+    dependent_reports_count: 8,
+    endpoint_or_file: 'wss://stream.bloomberg.com/v2/rates',
+    hash: '4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a',
+  },
+  {
+    id: 'src-3',
+    name: 'Internal Q2 Audit & Capex Master',
+    source_type: 'internal_corpus',
+    version: 1,
+    last_ingested_at: '2026-10-15T14:22:00Z',
+    refresh_interval_hours: 168,
+    staleness_status: 'needs_review',
+    dependent_claims_count: 19,
+    dependent_reports_count: 3,
+    endpoint_or_file: 's3://nexus-corp-vault/2026/Q2_Internal_Audit.xlsx',
+    hash: 'ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d',
+  },
+  {
+    id: 'src-4',
+    name: 'Statista Competitive AI Landscape',
+    source_type: 'web_index',
+    version: 3,
+    last_ingested_at: '2026-09-28T08:00:00Z',
+    refresh_interval_hours: 336,
+    staleness_status: 'stale',
+    dependent_claims_count: 8,
+    dependent_reports_count: 2,
+    endpoint_or_file: 'https://statista.com/reports/ai-enterprise-2026',
+    hash: '8f434346648f6b96df89dda901c5176b10a6d83961dd3c1ac88b59b2dc327aa4',
+  },
+];
+
 export const SourceFreshnessPage: React.FC = () => {
-  const [sources, setSources] = useState<SourceFreshnessItem[]>([]);
+  const [sources, setSources] = useState<SourceFreshnessItem[]>(() => {
+    const saved = localStorage.getItem('nexus_sources_freshness');
+    if (saved) {
+      try { return JSON.parse(saved); } catch {}
+    }
+    return INITIAL_SOURCES;
+  });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

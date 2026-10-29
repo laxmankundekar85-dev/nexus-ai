@@ -17,10 +17,78 @@ import Button from '../components/Button';
 import toast from 'react-hot-toast';
 import type { AgentToolPermission, PendingToolApproval } from '../types';
 
+const INITIAL_POLICIES: AgentToolPermission[] = [
+  {
+    agent_role: 'planner',
+    allowed_tools: ['knowledge_search', 'document_catalog', 'schedule_lookup'],
+    denied_tools: ['database_write', 'api_webhook_post', 'credential_access'],
+    requires_approval_tools: ['replan_active_mission', 'budget_expansion'],
+    max_requests_per_minute: 60,
+    max_execution_time_seconds: 30,
+  },
+  {
+    agent_role: 'research',
+    allowed_tools: ['web_search', 'sec_edgar_read', 'vector_similarity_search', 'document_chunk_read'],
+    denied_tools: ['shell_exec', 'file_write_disk', 'raw_sql_query'],
+    requires_approval_tools: ['external_api_post'],
+    max_requests_per_minute: 120,
+    max_execution_time_seconds: 60,
+  },
+  {
+    agent_role: 'analysis',
+    allowed_tools: ['ast_python_sandbox', 'matrix_multiplication', 'stats_variance', 'chart_generator'],
+    denied_tools: ['socket_connect', 'os_system', 'subprocess_run', 'file_delete'],
+    requires_approval_tools: ['custom_code_eval'],
+    max_requests_per_minute: 40,
+    max_execution_time_seconds: 15,
+  },
+  {
+    agent_role: 'reviewer',
+    allowed_tools: ['claim_cross_check', 'contradiction_detect', 'diff_documents'],
+    denied_tools: ['modify_ground_truth', 'delete_records'],
+    requires_approval_tools: ['mark_claim_invalidated'],
+    max_requests_per_minute: 80,
+    max_execution_time_seconds: 45,
+  },
+];
+
+const INITIAL_APPROVALS: PendingToolApproval[] = [
+  {
+    id: 'appr-901',
+    mission_id: 'sm-9041',
+    agent_role: 'analysis',
+    tool_name: 'custom_code_eval',
+    target_resource: 'AST Python Computation Sandbox',
+    payload: {
+      formula: 'np.polynomial.polynomial.polyfit(quarters, earnings, 2)',
+      timeout_ms: 5000,
+    },
+    risk_level: 'medium',
+    reason: 'Non-standard polynomial regression model requires operator verification.',
+    requested_at: '2026-10-29T10:02:40Z',
+    status: 'pending',
+  },
+  {
+    id: 'appr-902',
+    mission_id: 'sm-9041',
+    agent_role: 'planner',
+    tool_name: 'budget_expansion',
+    target_resource: 'Token Allocation Pool',
+    payload: {
+      additional_tokens: 50000,
+      estimated_cost_usd: 1.10,
+    },
+    risk_level: 'low',
+    reason: 'Mission scope expanded to include footnote 18 legal risk reconciliation.',
+    requested_at: '2026-10-29T10:03:00Z',
+    status: 'pending',
+  },
+];
+
 export const SecurityPermissionsPage: React.FC = () => {
-  const [policies, setPolicies] = useState<AgentToolPermission[]>([]);
-  const [pendingApprovals, setPendingApprovals] = useState<PendingToolApproval[]>([]);
-  const [selectedAgent, setSelectedAgent] = useState<AgentToolPermission | null>(null);
+  const [policies, setPolicies] = useState<AgentToolPermission[]>(INITIAL_POLICIES);
+  const [pendingApprovals, setPendingApprovals] = useState<PendingToolApproval[]>(INITIAL_APPROVALS);
+  const [selectedAgent, setSelectedAgent] = useState<AgentToolPermission | null>(INITIAL_POLICIES[0]);
 
   useEffect(() => {
     loadData();

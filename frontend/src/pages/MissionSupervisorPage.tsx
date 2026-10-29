@@ -26,10 +26,112 @@ import Input from '../components/Input';
 import toast from 'react-hot-toast';
 import type { SupervisorMission, SupervisorTaskNode, SupervisorMissionStatus } from '../types';
 
+const INITIAL_SUPERVISOR_MISSIONS: SupervisorMission[] = [
+  {
+    id: 'sm-9041',
+    title: 'Q3 Enterprise Revenue & Cross-Regional Market Analysis',
+    objective: 'Synthesize quarterly filing across EU and APAC subsidiaries with automated anomaly reconciliation.',
+    status: 'running',
+    current_revision: 2,
+    budget: {
+      max_tokens: 350000,
+      consumed_tokens: 184500,
+      max_cost_usd: 8.50,
+      consumed_cost_usd: 4.12,
+      max_time_seconds: 600,
+      elapsed_time_seconds: 218,
+      max_iterations: 12,
+      current_iteration: 5,
+    },
+    tasks: [
+      {
+        id: 'task-1',
+        name: 'Ingest Financial Statements',
+        agent_role: 'document',
+        status: 'completed',
+        dependencies: [],
+        description: 'Extract 10-Q tables and normalize currency exchange rates.',
+        output_summary: 'Processed 3 quarterly filings; extracted 18 tables.',
+        started_at: '2026-10-29T10:00:00Z',
+        completed_at: '2026-10-29T10:01:15Z',
+        confidence: 0.99,
+      },
+      {
+        id: 'task-2',
+        name: 'Extract Revenue Line Items',
+        agent_role: 'research',
+        status: 'completed',
+        dependencies: ['task-1'],
+        description: 'Map regional segmental gross margins and FX variations.',
+        output_summary: 'Discovered 14.8% YoY APAC growth; flagged EU margin contraction.',
+        started_at: '2026-10-29T10:01:20Z',
+        completed_at: '2026-10-29T10:02:40Z',
+        confidence: 0.96,
+      },
+      {
+        id: 'task-3',
+        name: 'Cross-Document Reconciliation',
+        agent_role: 'analysis',
+        status: 'running',
+        dependencies: ['task-2'],
+        description: 'Apply AST sandbox formula to verify consolidated GAAP figures.',
+        started_at: '2026-10-29T10:02:45Z',
+      },
+      {
+        id: 'task-4',
+        name: 'Adversarial Contradiction Review',
+        agent_role: 'reviewer',
+        status: 'pending',
+        dependencies: ['task-3'],
+        description: 'Cross-check forward guidance claims against risk disclosure sections.',
+      },
+      {
+        id: 'task-5',
+        name: 'Synthesize Executive Dossier',
+        agent_role: 'report',
+        status: 'pending',
+        dependencies: ['task-4'],
+        description: 'Compile verified claims, citation badges, and SVG charts into final report.',
+      },
+    ],
+    decision_log: [
+      {
+        id: 'dec-1',
+        timestamp: '2026-10-29T10:00:00Z',
+        decision_type: 'plan_created',
+        title: 'DAG Topology Generated',
+        detail: 'Supervisor decomposed objective into 5 sequential and parallel execution nodes.',
+      },
+      {
+        id: 'dec-2',
+        timestamp: '2026-10-29T10:01:15Z',
+        decision_type: 'checkpoint_saved',
+        title: 'Checkpoint 1 Created',
+        detail: 'Document ingestion verified with SHA-256 state snapshot.',
+      },
+      {
+        id: 'dec-3',
+        timestamp: '2026-10-29T10:02:40Z',
+        decision_type: 'replan_triggered',
+        title: 'Dynamic Plan Revision 2',
+        detail: 'Adjusted analysis node timeout after detecting 3 new subsidiary tables.',
+      },
+    ],
+    created_at: '2026-10-29T10:00:00Z',
+    updated_at: '2026-10-29T10:03:00Z',
+  },
+];
+
 export const MissionSupervisorPage: React.FC = () => {
-  const [missions, setMissions] = useState<SupervisorMission[]>([]);
-  const [selectedMission, setSelectedMission] = useState<SupervisorMission | null>(null);
-  const [selectedTask, setSelectedTask] = useState<SupervisorTaskNode | null>(null);
+  const [missions, setMissions] = useState<SupervisorMission[]>(() => {
+    const saved = localStorage.getItem('nexus_supervisor_missions');
+    if (saved) {
+      try { return JSON.parse(saved); } catch {}
+    }
+    return INITIAL_SUPERVISOR_MISSIONS;
+  });
+  const [selectedMission, setSelectedMission] = useState<SupervisorMission | null>(() => missions[0] || null);
+  const [selectedTask, setSelectedTask] = useState<SupervisorTaskNode | null>(() => missions[0]?.tasks[0] || null);
   const [isCreating, setIsCreating] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [newObjective, setNewObjective] = useState('');

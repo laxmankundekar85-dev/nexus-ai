@@ -6,8 +6,17 @@ import Button from '../components/Button';
 import Input from '../components/Input';
 import toast from 'react-hot-toast';
 
+const DEFAULT_GRAPH_NODES = [
+  { id: '1', label: 'Cloud Infrastructure Revenue', type: 'metric', value: '$4.21B', status: 'verified', connections: 4 },
+  { id: '2', label: 'APAC Regional Expansion', type: 'market', value: '+28.4% YoY', status: 'verified', connections: 3 },
+  { id: '3', label: 'Footnote 18 Contingency', type: 'risk', value: 'High Risk', status: 'review_needed', connections: 2 },
+  { id: '4', label: 'Q3 Financial Release 10-Q', type: 'source', value: 'SEC Filing', status: 'verified', connections: 5 },
+  { id: '5', label: 'FX Currency Volatility Drag', type: 'risk', value: '-2.1% net', status: 'contradicted', connections: 2 },
+  { id: '6', label: 'Operating Margin Expansion', type: 'metric', value: '24.6% GAAP', status: 'verified', connections: 3 },
+];
+
 export const KnowledgeGraphPage: React.FC = () => {
-  const [nodes, setNodes] = useState<any[]>([]);
+  const [nodes, setNodes] = useState<any[]>(DEFAULT_GRAPH_NODES);
   const [edges, setEdges] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [crossResults, setCrossResults] = useState<any[]>([]);

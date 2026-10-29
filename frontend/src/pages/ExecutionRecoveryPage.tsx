@@ -18,9 +18,45 @@ import Button from '../components/Button';
 import toast from 'react-hot-toast';
 import type { RecoveryIncident, CircuitBreakerState } from '../types';
 
+const INITIAL_CIRCUITS: CircuitBreakerState[] = [
+  { provider_id: 'prov-openai', provider_name: 'OpenAI GPT-4o Gateway', status: 'closed', failure_count: 0, threshold: 5 },
+  { provider_id: 'prov-anthropic', provider_name: 'Anthropic Claude 3.5 Sonnet', status: 'closed', failure_count: 1, threshold: 5 },
+  { provider_id: 'prov-sec-edgar', provider_name: 'SEC EDGAR Public API', status: 'closed', failure_count: 0, threshold: 3 },
+  { provider_id: 'prov-bloomberg', provider_name: 'Bloomberg Enterprise Rate Stream', status: 'closed', failure_count: 0, threshold: 4 },
+];
+
+const INITIAL_INCIDENTS: RecoveryIncident[] = [
+  {
+    id: 'rec-401',
+    mission_id: 'sm-9041',
+    task_id: 'task-3',
+    task_name: 'AST Sandbox Numerical Calculation',
+    failure_class: 'timeout',
+    error_message: 'Execution exceeded 4000ms threshold during multi-sheet matrix multiplication.',
+    attempt_number: 1,
+    max_attempts: 3,
+    strategy_applied: 're_prompt_clarification',
+    status: 'recovered',
+    timestamp: '2026-10-29T10:02:48Z',
+  },
+  {
+    id: 'rec-402',
+    mission_id: 'sm-9038',
+    task_id: 'task-2',
+    task_name: 'OpenAI Embeddings Generation',
+    failure_class: 'rate_limit',
+    error_message: 'HTTP 429 Too Many Requests: TPM limit exceeded for text-embedding-3-small.',
+    attempt_number: 2,
+    max_attempts: 4,
+    strategy_applied: 'exponential_backoff',
+    status: 'recovered',
+    timestamp: '2026-10-29T09:15:22Z',
+  },
+];
+
 export const ExecutionRecoveryPage: React.FC = () => {
-  const [incidents, setIncidents] = useState<RecoveryIncident[]>([]);
-  const [circuitBreakers, setCircuitBreakers] = useState<CircuitBreakerState[]>([]);
+  const [incidents, setIncidents] = useState<RecoveryIncident[]>(INITIAL_INCIDENTS);
+  const [circuitBreakers, setCircuitBreakers] = useState<CircuitBreakerState[]>(INITIAL_CIRCUITS);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {

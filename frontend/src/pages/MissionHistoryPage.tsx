@@ -18,10 +18,54 @@ import Input from '../components/Input';
 import toast from 'react-hot-toast';
 import type { MissionHistoryItem } from '../types';
 
+const INITIAL_HISTORY: MissionHistoryItem[] = [
+  {
+    id: 'sm-9041',
+    title: 'Q3 Enterprise Revenue & Cross-Regional Market Analysis',
+    objective: 'Synthesize quarterly filing across EU and APAC subsidiaries with automated anomaly reconciliation.',
+    status: 'running',
+    started_at: '2026-10-29T10:00:00Z',
+    duration_seconds: 218,
+    total_tokens: 184500,
+    cost_usd: 4.12,
+    steps_count: 5,
+    can_replay: true,
+    can_branch: true,
+  },
+  {
+    id: 'sm-9038',
+    title: 'Cybersecurity Threat Intelligence Digest',
+    objective: 'Analyze CVE feed and cross-reference against internal cloud dependencies.',
+    status: 'completed',
+    started_at: '2026-10-29T09:00:00Z',
+    completed_at: '2026-10-29T09:08:14Z',
+    duration_seconds: 494,
+    total_tokens: 289400,
+    cost_usd: 6.35,
+    steps_count: 7,
+    can_replay: true,
+    can_branch: true,
+  },
+  {
+    id: 'sm-9022',
+    title: 'Automated Regulatory Antitrust Compliance Scan',
+    objective: 'Inspect multi-party M&A filings for overlapping market share thresholds.',
+    status: 'completed',
+    started_at: '2026-10-28T14:15:00Z',
+    completed_at: '2026-10-28T14:26:30Z',
+    duration_seconds: 690,
+    total_tokens: 412000,
+    cost_usd: 9.18,
+    steps_count: 9,
+    can_replay: true,
+    can_branch: true,
+  },
+];
+
 export const MissionHistoryPage: React.FC = () => {
-  const [history, setHistory] = useState<MissionHistoryItem[]>([]);
+  const [history, setHistory] = useState<MissionHistoryItem[]>(INITIAL_HISTORY);
   const [search, setSearch] = useState('');
-  const [selectedItem, setSelectedItem] = useState<MissionHistoryItem | null>(null);
+  const [selectedItem, setSelectedItem] = useState<MissionHistoryItem | null>(INITIAL_HISTORY[0]);
 
   useEffect(() => {
     missionHistoryApi.getHistory().then((data) => {

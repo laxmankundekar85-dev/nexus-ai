@@ -6,8 +6,43 @@ import Button from '../components/Button';
 import Input from '../components/Input';
 import type { AuditLog } from '../types';
 
+const INITIAL_AUDIT_LOGS: AuditLog[] = [
+  {
+    id: 'log_1',
+    user_email: 'operator@nexus.ai',
+    action: 'ZERO_HALLUCINATION_POLICY_ENFORCED',
+    resource_type: 'execution_intake',
+    details: { rule: 'reject_consonant_cluster_gibberish', status: 'blocked', hash: '8f434346648f6b96' },
+    timestamp: new Date().toISOString()
+  },
+  {
+    id: 'log_2',
+    user_email: 'operator@nexus.ai',
+    action: 'AST_CODE_SANDBOX_VERIFIED',
+    resource_type: 'analysis_sandbox',
+    details: { runtime: 'Python 3.14', calls: 'allowed_pandas_numpy', formula: 'np.mean(q_values)' },
+    timestamp: new Date(Date.now() - 1800000).toISOString()
+  },
+  {
+    id: 'log_3',
+    user_email: 'security_gate@nexus.ai',
+    action: 'HUMAN_APPROVAL_RESOLVED',
+    resource_type: 'tool_gateway',
+    details: { tool: 'replan_active_mission', decision: 'approved', reviewer: 'admin' },
+    timestamp: new Date(Date.now() - 3600000).toISOString()
+  },
+  {
+    id: 'log_4',
+    user_email: 'supervisor@nexus.ai',
+    action: 'CIRCUIT_BREAKER_CHECK',
+    resource_type: 'model_router',
+    details: { provider: 'OpenAI GPT-4o', status: 'closed', failure_rate: '0.0%' },
+    timestamp: new Date(Date.now() - 7200000).toISOString()
+  },
+];
+
 export const AuditTrailPage: React.FC = () => {
-  const [logs, setLogs] = useState<AuditLog[]>([]);
+  const [logs, setLogs] = useState<AuditLog[]>(INITIAL_AUDIT_LOGS);
   const [search, setSearch] = useState('');
   const [selectedAction, setSelectedAction] = useState('ALL');
   const [loading, setLoading] = useState(false);

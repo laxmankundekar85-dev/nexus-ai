@@ -8,9 +8,11 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"JetBrains Mono"', 'monospace'],
-        mono: ['"JetBrains Mono"', 'monospace'],
-        inter: ['"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['"Inter"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+        heading: ['"Plus Jakarta Sans"', '"Inter"', '-apple-system', 'sans-serif'],
+        title: ['"Plus Jakarta Sans"', '"Inter"', '-apple-system', 'sans-serif'],
+        body: ['"Inter"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
       },
       colors: {
         // Medium Blue & Eye-friendly soft glass palette

@@ -7,8 +7,33 @@ import Input from '../components/Input';
 import toast from 'react-hot-toast';
 import type { ScheduledMission } from '../types';
 
+const INITIAL_SCHEDULES: ScheduledMission[] = [
+  {
+    id: 'sched_1',
+    name: 'Weekly Semiconductor Benchmark',
+    objective: 'Track NVIDIA Blackwell B200 and AMD Instinct MI300X enterprise pricing shifts and supply timelines.',
+    schedule_type: 'weekly',
+    cron_expression: '0 9 * * 1',
+    is_active: true,
+    notify_on_delta: true,
+    last_run_at: new Date(Date.now() - 86400000 * 3).toISOString(),
+    next_run_at: new Date(Date.now() + 86400000 * 4).toISOString(),
+  },
+  {
+    id: 'sched_2',
+    name: 'Daily SEC 8-K Regulatory Scanner',
+    objective: 'Inspect overnight material event filings and extract executive compensation adjustments.',
+    schedule_type: 'daily',
+    cron_expression: '0 6 * * *',
+    is_active: true,
+    notify_on_delta: true,
+    last_run_at: new Date(Date.now() - 43200000).toISOString(),
+    next_run_at: new Date(Date.now() + 43200000).toISOString(),
+  },
+];
+
 export const ScheduledMissionsPage: React.FC = () => {
-  const [schedules, setSchedules] = useState<ScheduledMission[]>([]);
+  const [schedules, setSchedules] = useState<ScheduledMission[]>(INITIAL_SCHEDULES);
   const [name, setName] = useState('');
   const [objective, setObjective] = useState('');
   const [cadence, setCadence] = useState('daily');
