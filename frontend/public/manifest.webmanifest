@@ -3,7 +3,7 @@
   "name": "Nexus AI — Autonomous Multi-Agent Platform",
   "short_name": "Nexus AI",
   "description": "Enterprise platform for planning, coordinating, analyzing, and synthesizing grounded multi-agent intelligence.",
-  "start_url": "/",
+  "start_url": "/dashboard",
   "scope": "/",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],

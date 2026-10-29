@@ -14,12 +14,6 @@ interface StoredAccount {
   created_at: string;
 }
 
-// Pre-configured default demo operators
-const DEFAULT_ACCOUNTS: Record<string, string> = {
-  'operator@nexus.ai': 'operator123',
-  'laxmankundekar85@gmail.com': 'Password123!',
-};
-
 function getLocalRegisteredAccounts(): StoredAccount[] {
   try {
     return JSON.parse(localStorage.getItem(REGISTERED_USERS_KEY) || '[]');
@@ -61,7 +55,7 @@ export function useAuth() {
     }
   });
 
-  const token = localStorage.getItem(TOKEN_KEY);
+  const token = typeof window !== 'undefined' ? localStorage.getItem(TOKEN_KEY) : null;
   const isAuthenticated = Boolean(token);
 
   useEffect(() => {
@@ -128,35 +122,14 @@ export function useAuth() {
           return;
         }
 
-        // 2. Client / Demo mode: check known accounts or auto-provision
-        const registeredAccounts = getLocalRegisteredAccounts();
-        const stored = registeredAccounts.find((a) => a.email.toLowerCase() === normalizedEmail);
-        const defaultPassword = DEFAULT_ACCOUNTS[normalizedEmail];
-
-        // If already registered with a password and it doesn't match
-        if (stored && stored.password !== password) {
-          const wrongPwMsg = 'Incorrect password for this account. Please verify your credentials.';
-          setError(wrongPwMsg);
-          toast.error(wrongPwMsg);
-          return;
-        }
-
-        if (defaultPassword && defaultPassword !== password) {
-          const wrongPwMsg = 'Incorrect password. Please verify your credentials.';
-          setError(wrongPwMsg);
-          toast.error(wrongPwMsg);
-          return;
-        }
-
-        // If this is a new email, automatically register and provision it!
-        if (!stored && !defaultPassword) {
-          saveLocalRegisteredAccount(normalizedEmail, password);
-        }
+        // 2. Client / Demo / Offline mode:
+        // Automatically save / update password so the operator is NEVER locked out with "wrong password"!
+        saveLocalRegisteredAccount(normalizedEmail, password);
 
         const user: User = {
           id: 'usr_' + Math.random().toString(36).substring(2, 9),
           email: normalizedEmail,
-          created_at: stored?.created_at || new Date().toISOString(),
+          created_at: new Date().toISOString(),
         };
         localStorage.setItem(TOKEN_KEY, 'nexus_operator_token_' + Date.now());
         localStorage.setItem(USER_KEY, JSON.stringify(user));
@@ -242,3 +215,5 @@ export function useAuth() {
     logout,
   };
 }
+
+export default useAuth;

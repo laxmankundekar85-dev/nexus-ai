@@ -7,11 +7,28 @@ const LoginPage = lazy(() => import('./pages/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/RegisterPage'));
 const MainApp = lazy(() => import('./MainApp'));
 
+const RootRoute: React.FC = () => {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('nexus_token') : null;
+  const isStandalone =
+    typeof window !== 'undefined' &&
+    (window.matchMedia('(display-mode: standalone)').matches ||
+      (window.navigator as unknown as { standalone?: boolean }).standalone === true);
+
+  // If already authenticated or running inside installed Android App/PWA, jump directly into operating system!
+  if (token) {
+    return <Navigate to="/dashboard" replace />;
+  }
+  if (isStandalone) {
+    return <Navigate to="/login" replace />;
+  }
+  return <LandingPage />;
+};
+
 export const App: React.FC = () => {
   return (
     <Routes>
-      {/* Public Landing - Zero extra JS for ultra-fast Lighthouse score */}
-      <Route path="/" element={<LandingPage />} />
+      {/* Root Route - Intelligently resumes session or opens dashboard */}
+      <Route path="/" element={<RootRoute />} />
 
       {/* Auth routes */}
       <Route
