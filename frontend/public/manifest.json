@@ -1,0 +1,73 @@
+{
+  "id": "/",
+  "name": "Nexus AI — Autonomous Multi-Agent Platform",
+  "short_name": "Nexus AI",
+  "description": "Enterprise platform for planning, coordinating, analyzing, and synthesizing grounded multi-agent intelligence.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "lang": "en-US",
+  "dir": "ltr",
+  "categories": ["business", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/maskable-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "AI Workspace",
+      "short_name": "Workspace",
+      "description": "Open autonomous agent execution studio",
+      "url": "/workspace",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Mission Supervisor",
+      "short_name": "Supervisor",
+      "description": "Inspect live mission DAG and agent assignments",
+      "url": "/supervisor",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Intelligence Reports",
+      "short_name": "Reports",
+      "description": "View ground-truth dossiers and citations",
+      "url": "/reports",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "System Dashboard",
+      "short_name": "Dashboard",
+      "description": "View platform health and active telemetry",
+      "url": "/dashboard",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "prefer_related_applications": false
+}

@@ -32,6 +32,7 @@ import { clsx } from 'clsx';
 import { useAuth } from '../hooks/useAuth';
 import { useTheme } from '../context/ThemeContext';
 import Button from '../components/Button';
+import PWAInstallBanner from '../components/PWAInstallBanner';
 
 interface NavGroup {
   title: string;
@@ -301,6 +302,8 @@ export const MainLayout: React.FC = () => {
       <main className="flex-1 overflow-y-auto">
         <Outlet />
       </main>
+
+      <PWAInstallBanner />
     </div>
   );
 };

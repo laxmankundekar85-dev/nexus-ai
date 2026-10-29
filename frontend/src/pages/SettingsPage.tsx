@@ -15,11 +15,14 @@ import {
 import { useAuth } from '../hooks/useAuth';
 import Card from '../components/Card';
 import Button from '../components/Button';
+import { usePWAInstall } from '../hooks/usePWAInstall';
+import { Smartphone, Download, CheckCircle, Shield } from 'lucide-react';
 import { settingsApi, SystemConfig } from '../services/api';
 import toast from 'react-hot-toast';
 
 export const SettingsPage: React.FC = () => {
   const { currentUser, logout } = useAuth();
+  const { isInstallable, isInstalled, installApp } = usePWAInstall();
   
   const [config, setConfig] = useState<SystemConfig | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -268,6 +271,64 @@ export const SettingsPage: React.FC = () => {
                 Active Authenticated Session
               </span>
             </div>
+          </div>
+        </Card>
+
+        {/* Android & Mobile PWA App Management */}
+        <Card className="p-6 space-y-4 md:col-span-2 bg-gradient-to-br from-blue-950/20 to-transparent border-blue-500/20">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-300 dark:border-white/10">
+            <div className="flex items-center gap-2">
+              <Smartphone className="w-4 h-4 text-blue-500" />
+              <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Android App & Mobile PWA</h3>
+            </div>
+            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">
+              Trusted Web Activity (TWA) Ready
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+            <div className="p-3.5 rounded-xl bg-slate-200/90 dark:bg-zinc-950 border border-slate-300 dark:border-white/15">
+              <span className="text-slate-600 dark:text-zinc-400 block mb-1">Android Package Status</span>
+              <div className="flex items-center gap-1.5 font-bold">
+                {isInstalled ? (
+                  <span className="text-emerald-500 flex items-center gap-1">
+                    <CheckCircle className="w-3.5 h-3.5" /> Installed (Standalone)
+                  </span>
+                ) : isInstallable ? (
+                  <span className="text-blue-400 flex items-center gap-1">
+                    <Smartphone className="w-3.5 h-3.5" /> Ready for Install
+                  </span>
+                ) : (
+                  <span className="text-slate-800 dark:text-slate-200 font-mono text-[11px]">Active (Web Engine)</span>
+                )}
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-slate-200/90 dark:bg-zinc-950 border border-slate-300 dark:border-white/15">
+              <span className="text-slate-600 dark:text-zinc-400 block mb-1">App Package ID (TWA)</span>
+              <span className="font-mono text-slate-800 dark:text-slate-200 font-bold text-[11px]">ai.nexus.app</span>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-slate-200/90 dark:bg-zinc-950 border border-slate-300 dark:border-white/15">
+              <span className="text-slate-600 dark:text-zinc-400 block mb-1">Offline Cache Engine</span>
+              <span className="text-emerald-500 font-mono font-bold text-[11px]">v1 Active (Stale-While-Revalidate)</span>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+            <p className="text-[11px] text-slate-600 dark:text-zinc-400 leading-relaxed">
+              Install Nexus AI directly on your Android home screen and app drawer with instant fullscreen launching and zero browser chrome.
+            </p>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={installApp}
+              disabled={isInstalled || !isInstallable}
+              icon={<Download className="w-3.5 h-3.5" />}
+              className="shrink-0"
+            >
+              {isInstalled ? 'App Installed' : 'Install on Android'}
+            </Button>
           </div>
         </Card>
 

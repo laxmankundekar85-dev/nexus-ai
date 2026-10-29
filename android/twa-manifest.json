@@ -1,0 +1,52 @@
+{
+  "packageId": "ai.nexus.app",
+  "host": "nexus-ai-ecru-nine.vercel.app",
+  "name": "Nexus AI — Autonomous Multi-Agent Platform",
+  "launcherName": "Nexus AI",
+  "themeColor": "#000000",
+  "navigationColor": "#000000",
+  "navigationColorDark": "#000000",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#000000",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "https://nexus-ai-ecru-nine.vercel.app/icon-512.png",
+  "maskableIconUrl": "https://nexus-ai-ecru-nine.vercel.app/maskable-icon-512.png",
+  "appVersionCode": 1,
+  "appVersionName": "1.0.0",
+  "shortcuts": [
+    {
+      "name": "AI Workspace",
+      "shortName": "Workspace",
+      "url": "https://nexus-ai-ecru-nine.vercel.app/workspace",
+      "icon": "https://nexus-ai-ecru-nine.vercel.app/icon-192.png"
+    },
+    {
+      "name": "Mission Supervisor",
+      "shortName": "Supervisor",
+      "url": "https://nexus-ai-ecru-nine.vercel.app/supervisor",
+      "icon": "https://nexus-ai-ecru-nine.vercel.app/icon-192.png"
+    },
+    {
+      "name": "Intelligence Reports",
+      "shortName": "Reports",
+      "url": "https://nexus-ai-ecru-nine.vercel.app/reports",
+      "icon": "https://nexus-ai-ecru-nine.vercel.app/icon-192.png"
+    }
+  ],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://nexus-ai-ecru-nine.vercel.app/manifest.webmanifest",
+  "fallbackType": "customtabs",
+  "features": {
+    "locationDelegation": {
+      "enabled": false
+    },
+    "playBilling": {
+      "enabled": false
+    }
+  },
+  "alphaDependencies": {
+    "enabled": false
+  }
+}

@@ -16,6 +16,7 @@ import {
   FileText,
 } from 'lucide-react';
 import Button from '../components/Button';
+import PWAInstallBanner from '../components/PWAInstallBanner';
 import Card from '../components/Card';
 import { useTheme } from '../context/ThemeContext';
 
@@ -390,6 +391,8 @@ export const LandingPage: React.FC = () => {
           © 2026 Nexus AI. All rights reserved. Coordinated enterprise multi-agent workflows.
         </div>
       </footer>
+
+      <PWAInstallBanner />
     </div>
   );
 };
