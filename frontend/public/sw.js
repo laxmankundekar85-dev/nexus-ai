@@ -1,9 +1,10 @@
-const CACHE_NAME = 'nexus-ai-pwa-v2';
+const CACHE_NAME = 'nexus-ai-pwa-v3';
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
   '/favicon.svg',
   '/icon-192.png',
+  '/maskable-icon-192.png',
   '/icon-512.png',
   '/maskable-icon-512.png',
   '/manifest.webmanifest'
