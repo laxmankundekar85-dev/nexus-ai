@@ -26,13 +26,13 @@ export const PWAInstallBanner: React.FC = () => {
           </div>
           <div>
             <h4 className="text-xs font-bold text-white tracking-tight flex items-center gap-1.5">
-              Native Android App (.apk)
+              Nexus AI Native App (.apk)
               <span className="px-1.5 py-0.2 rounded text-[9px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
-                All Android 11-15
+                All Android Versions (11, 12, 13, 14, 15, 16+)
               </span>
             </h4>
             <p className="text-[11px] text-zinc-400 font-normal leading-tight mt-0.5">
-              No Chrome notifications & native lockscreen alerts
+              Zero Chrome notifications • Native lockscreen task alerts
             </p>
           </div>
         </div>

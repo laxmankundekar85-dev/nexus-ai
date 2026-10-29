@@ -308,7 +308,7 @@ export const SettingsPage: React.FC = () => {
             </div>
 
             <div className="p-3.5 rounded-xl bg-slate-200/90 dark:bg-zinc-950 border border-slate-300 dark:border-white/15">
-              <span className="text-slate-600 dark:text-zinc-400 block mb-1">App Package ID (TWA)</span>
+              <span className="text-slate-600 dark:text-zinc-400 block mb-1">Native App Package ID</span>
               <span className="font-mono text-slate-800 dark:text-slate-200 font-bold text-[11px]">ai.nexus.app</span>
             </div>
 
@@ -357,7 +357,7 @@ export const SettingsPage: React.FC = () => {
 
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
             <p className="text-[11px] text-slate-600 dark:text-zinc-400 leading-relaxed">
-              Official signed native APK for Android 11, 12, 13, 14, and 15 with zero Chrome browser notifications, persistent login, and lockscreen alerts.
+              Official signed native APK for Android (Android 5.0 through 11, 12, 13, 14, 15, 16 and all future versions) with zero Chrome browser notifications, persistent login, and lockscreen alerts.
             </p>
             <div className="flex items-center gap-2 shrink-0">
               <a

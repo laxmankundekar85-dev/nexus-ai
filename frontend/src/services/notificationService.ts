@@ -43,16 +43,6 @@ class NotificationService {
   }
 
   public async sendNotification(options: NexusNotificationOptions): Promise<boolean> {
-    if (!this.isSupported()) return false;
-
-    // If permission is still default, prompt for it
-    if (Notification.permission === 'default') {
-      const granted = await this.requestPermission();
-      if (!granted) return false;
-    }
-
-    if (Notification.permission !== 'granted') return false;
-
     const {
       title,
       body,
@@ -62,6 +52,27 @@ class NotificationService {
       badge = '/favicon.svg',
       data = {},
     } = options;
+
+    // Check if running inside the Native Android APK Bridge
+    const winWithBridge = typeof window !== 'undefined' ? (window as unknown as { NexusNativeBridge?: { showNotification: (t: string, m: string) => void } }) : null;
+    if (winWithBridge?.NexusNativeBridge?.showNotification) {
+      try {
+        winWithBridge.NexusNativeBridge.showNotification(title, body);
+        return true;
+      } catch {
+        // Fallback to standard web notification
+      }
+    }
+
+    if (!this.isSupported()) return false;
+
+    // If permission is still default, prompt for it
+    if (Notification.permission === 'default') {
+      const granted = await this.requestPermission();
+      if (!granted) return false;
+    }
+
+    if (Notification.permission !== 'granted') return false;
 
     // Trigger haptic vibration on Android devices
     if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {

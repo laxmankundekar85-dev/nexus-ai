@@ -11,8 +11,13 @@ export function usePWAInstall() {
   const [isInstalled, setIsInstalled] = useState(false);
 
   useEffect(() => {
-    // Check if already running in native standalone PWA / TWA mode
+    // Check if already running in native standalone PWA or native Android APK
+    const isNativeApp = typeof navigator !== 'undefined' && (
+      navigator.userAgent.includes('NexusAI-Android') ||
+      Boolean((window as unknown as { NexusNativeBridge?: unknown }).NexusNativeBridge)
+    );
     const isStandalone =
+      isNativeApp ||
       window.matchMedia('(display-mode: standalone)').matches ||
       (window.navigator as unknown as { standalone?: boolean }).standalone === true;
 
