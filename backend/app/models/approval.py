@@ -11,7 +11,12 @@ class ApprovalRequest(Base):
     task_id = Column(String(36), nullable=True)
     action_type = Column(String(100), nullable=False)
     proposed_action = Column(JSON, nullable=False, default=dict)
-    # pending, approved, rejected, expired
+    # pending, approved, rejected, edited, evidence_requested, expired
     status = Column(String(50), default="pending", nullable=False)
+    reviewer_id = Column(String(36), nullable=True)
+    reviewer_name = Column(String(255), nullable=True)
+    decision = Column(String(50), nullable=True)
+    comments = Column(String(1000), nullable=True)
+    modified_action = Column(JSON, nullable=True)
     requested_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     resolved_at = Column(DateTime, nullable=True)

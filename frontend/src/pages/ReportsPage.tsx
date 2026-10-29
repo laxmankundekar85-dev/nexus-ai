@@ -17,10 +17,13 @@ import EmptyState from '../components/EmptyState';
 import ReportPreviewModal from '../components/ReportPreviewModal';
 import type { Artifact } from '../types';
 import { exportReportToPdf } from '../utils/pdfExport';
+import { exportReportToPptx } from '../utils/pptxExport';
+import { Presentation } from 'lucide-react';
 
 export const ReportsPage: React.FC = () => {
   const navigate = useNavigate();
   const [previewArtifact, setPreviewArtifact] = useState<Artifact | null>(null);
+  const [exportingPptxId, setExportingPptxId] = useState<string | null>(null);
   const { data, isLoading } = useQuery({
     queryKey: ['artifacts', 1],
     queryFn: () => artifactsApi.list(1, 50),
@@ -131,6 +134,25 @@ export const ReportsPage: React.FC = () => {
                       icon={<Eye className="w-3 h-3 text-blue-700 dark:text-white" />}
                     >
                       Preview
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      size="xs"
+                      onClick={async () => {
+                        const meta = rep.metadata as { title?: string; content?: string };
+                        const repTitle = meta?.title || title;
+                        const repContent = meta?.content || '# Intelligence Report';
+                        setExportingPptxId(rep.id);
+                        try {
+                          await exportReportToPptx({ title: repTitle, objective: 'Executive Strategic Dossier', markdownContent: repContent });
+                        } finally {
+                          setExportingPptxId(null);
+                        }
+                      }}
+                      loading={exportingPptxId === rep.id}
+                      icon={<Presentation className="w-3 h-3 text-amber-500" />}
+                    >
+                      PPTX
                     </Button>
                     <Button
                       variant="secondary"

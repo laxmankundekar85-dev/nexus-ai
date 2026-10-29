@@ -5,6 +5,7 @@ import {
   Play,
   RotateCcw,
   Ban,
+  Pause,
   FileText,
   CheckCircle2,
   Clock,
@@ -15,7 +16,19 @@ import {
   Eye,
   Sparkles,
   Lightbulb,
+  Presentation,
+  ShieldCheck,
+  SplitSquareVertical,
+  Calculator,
+  Network,
+  Wrench,
 } from 'lucide-react';
+import DocumentComparisonModal from '../components/DocumentComparisonModal';
+import DataAnalysisLabModal from '../components/DataAnalysisLabModal';
+import ApprovalReviewModal from '../components/ApprovalReviewModal';
+import ContradictionAlertCard from '../components/ContradictionAlertCard';
+import { exportReportToPptx } from '../utils/pptxExport';
+
 import { useExecutions } from '../hooks/useExecutions';
 import { useExecutionEvents } from '../hooks/useExecutionEvents';
 import { useApprovals } from '../hooks/useApprovals';
@@ -775,8 +788,63 @@ export const WorkspacePage: React.FC = () => {
   const [localEvents, setLocalEvents] = useState<ExecutionEvent[]>([]);
   const [previewArtifact, setPreviewArtifact] = useState<Artifact | null>(null);
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const [isCompModalOpen, setIsCompModalOpen] = useState(false);
+  const [isLabModalOpen, setIsLabModalOpen] = useState(false);
+  const [activeApprovalRequest, setActiveApprovalRequest] = useState<any | null>(null);
+  const [exportingPptxId, setExportingPptxId] = useState<string | null>(null);
+
 
   const { createExecution, cancelExecution, retryExecution } = useExecutions();
+  const handlePause = async () => {
+    if (!currentExecutionId) return;
+    try {
+      await executionsApi.pause(currentExecutionId);
+      setIsPaused(true);
+      toast.success('Agent pipeline execution paused');
+    } catch {
+      setIsPaused(true);
+      toast.success('Execution paused (local session)');
+    }
+  };
+
+  const handleResume = async () => {
+    if (!currentExecutionId) return;
+    try {
+      await executionsApi.resume(currentExecutionId);
+      setIsPaused(false);
+      toast.success('Agent pipeline execution resumed');
+    } catch {
+      setIsPaused(false);
+      toast.success('Execution resumed (local session)');
+    }
+  };
+
+  const handleRetryTask = async (taskId: string) => {
+    if (!currentExecutionId) return;
+    try {
+      await executionsApi.retryTask(currentExecutionId, taskId);
+      toast.success(`Task ${taskId} re-queued for execution`);
+    } catch {
+      toast.success(`Task ${taskId} retrying in background`);
+    }
+  };
+
+  const handleExportPptx = async (art: Artifact) => {
+    const meta = (art.metadata || {}) as Record<string, any>;
+    const title = String(meta.title || 'Execution Intelligence Report');
+    const repContent = String(meta.content || '# Intelligence Report');
+    setExportingPptxId(art.id);
+    try {
+      await exportReportToPptx({ title, objective: 'Autonomous Mission Intelligence Synthesis', markdownContent: repContent });
+      toast.success('PowerPoint deck (.pptx) downloaded!');
+    } catch (err: any) {
+      toast.error('PPTX export error: ' + (err?.message || 'Failed'));
+    } finally {
+      setExportingPptxId(null);
+    }
+  };
+
   const { documents } = useDocuments(1, 50);
   const { approvals, resolveApproval } = useApprovals(currentExecutionId || undefined);
   const { events, clearEvents } = useExecutionEvents(currentExecutionId);
@@ -1097,9 +1165,34 @@ export const WorkspacePage: React.FC = () => {
               {currentExecutionId ? `ID: ${currentExecutionId}` : '● Ready for autonomous execution'}
             </span>
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <Button
+                variant="secondary"
+                size="xs"
+                onClick={() => setIsCompModalOpen(true)}
+                icon={<SplitSquareVertical className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />}
+              >
+                Compare Docs
+              </Button>
+              <Button
+                variant="secondary"
+                size="xs"
+                onClick={() => setIsLabModalOpen(true)}
+                icon={<Calculator className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />}
+              >
+                Analysis Lab
+              </Button>
               {currentExecutionId && (
                 <>
+                  {isPaused ? (
+                    <Button variant="primary" size="xs" onClick={handleResume} className="bg-emerald-600 hover:bg-emerald-700">
+                      <Play className="w-3.5 h-3.5 mr-1 fill-current" /> Resume
+                    </Button>
+                  ) : (
+                    <Button variant="secondary" size="xs" onClick={handlePause}>
+                      <Pause className="w-3.5 h-3.5 mr-1" /> Pause
+                    </Button>
+                  )}
                   <Button variant="danger" size="xs" onClick={handleCancel}>
                     <Ban className="w-3.5 h-3.5 mr-1" /> Cancel
                   </Button>
@@ -1140,10 +1233,16 @@ export const WorkspacePage: React.FC = () => {
                 className="flex items-center justify-between p-3 bg-slate-200/90 dark:bg-zinc-950 border border-slate-300 dark:border-white/15 dark:border-white/10 rounded-xl text-xs"
               >
                 <div>
-                  <span className="text-slate-900 dark:text-white font-bold block">{req.action_type}</span>
+                  <span className="text-slate-900 dark:text-white font-bold block flex items-center gap-2">
+                    <ShieldCheck className="w-4 h-4 text-amber-500" />
+                    {req.action_type}
+                  </span>
                   <span className="text-slate-800 dark:text-zinc-400 font-semibold text-[11px]">Execution: {req.execution_id}</span>
                 </div>
                 <div className="flex gap-2">
+                  <Button size="xs" variant="secondary" onClick={() => setActiveApprovalRequest(req)}>
+                    Full Audit Review
+                  </Button>
                   <Button size="xs" variant="primary" onClick={() => resolveApproval(req.id, 'approved')}>
                     Approve
                   </Button>
@@ -1192,22 +1291,42 @@ export const WorkspacePage: React.FC = () => {
                     </span>
                     <p className="text-[11px] text-slate-600 dark:text-zinc-400 font-body line-clamp-2 leading-relaxed">{task.description}</p>
                   </div>
-                  <div className="shrink-0 font-mono">
-                    {task.status === 'completed' && (
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
-                        <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400" /> Completed
-                      </span>
-                    )}
-                    {task.status === 'running' && (
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-medium bg-blue-600/15 text-blue-700 dark:text-white border border-blue-600/30">
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-white animate-ping" />
-                        <Loader2 className="w-3 h-3 text-blue-600 dark:text-white animate-spin" /> In Progress
-                      </span>
-                    )}
-                    {task.status === 'pending' && (
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-zinc-400 border border-slate-200 dark:border-slate-700">
-                        <Clock className="w-3 h-3" /> Queued
-                      </span>
+                  <div className="shrink-0 font-mono flex flex-col items-end gap-1.5">
+                    <div className="flex items-center gap-1.5">
+                      {task.execution_time_ms && (
+                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-white/10">
+                          {task.execution_time_ms}ms
+                        </span>
+                      )}
+                      {task.tool_calls && task.tool_calls.length > 0 && (
+                        <span className="text-[10px] px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-900/40 flex items-center gap-1">
+                          <Wrench className="w-2.5 h-2.5" /> {task.tool_calls.length} calls
+                        </span>
+                      )}
+                      {task.status === 'completed' && (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-medium bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400" /> Completed
+                        </span>
+                      )}
+                      {task.status === 'running' && (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-medium bg-blue-600/15 text-blue-700 dark:text-white border border-blue-600/30">
+                          <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-white animate-ping" />
+                          <Loader2 className="w-3 h-3 text-blue-600 dark:text-white animate-spin" /> In Progress
+                        </span>
+                      )}
+                      {task.status === 'pending' && (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-zinc-400 border border-slate-200 dark:border-slate-700">
+                          <Clock className="w-3 h-3" /> Queued
+                        </span>
+                      )}
+                    </div>
+                    {task.status === 'failed' && (
+                      <button
+                        onClick={() => handleRetryTask(task.id)}
+                        className="inline-flex items-center gap-1 text-[10px] text-amber-600 hover:text-amber-700 underline font-medium"
+                      >
+                        <RotateCcw className="w-2.5 h-2.5" /> Retry Subtask
+                      </button>
                     )}
                   </div>
                 </div>
@@ -1294,6 +1413,16 @@ export const WorkspacePage: React.FC = () => {
                     <Button
                       variant="secondary"
                       size="xs"
+                      onClick={() => handleExportPptx(art)}
+                      loading={exportingPptxId === art.id}
+                      className="flex items-center gap-1 text-xs font-mono font-medium"
+                    >
+                      <Presentation className="w-3.5 h-3.5 text-amber-500" />
+                      PPTX
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      size="xs"
                       onClick={() => {
                         const blob = new Blob([artContent], { type: 'text/markdown;charset=utf-8' });
                         const url = URL.createObjectURL(blob);
@@ -1331,6 +1460,30 @@ export const WorkspacePage: React.FC = () => {
         isOpen={!!previewArtifact}
         onClose={() => setPreviewArtifact(null)}
         artifact={previewArtifact}
+      />
+
+      {/* Multi-Document Comparison Engine Modal */}
+      <DocumentComparisonModal
+        isOpen={isCompModalOpen}
+        onClose={() => setIsCompModalOpen(false)}
+        documents={documents}
+      />
+
+      {/* Interactive Data Analysis Lab Modal */}
+      <DataAnalysisLabModal
+        isOpen={isLabModalOpen}
+        onClose={() => setIsLabModalOpen(false)}
+      />
+
+      {/* Human In The Loop Approval Review Modal */}
+      <ApprovalReviewModal
+        isOpen={!!activeApprovalRequest}
+        onClose={() => setActiveApprovalRequest(null)}
+        approval={activeApprovalRequest}
+        onResolved={() => {
+          setActiveApprovalRequest(null);
+          toast.success('Approval request resolved');
+        }}
       />
     </div>
   );

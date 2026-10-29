@@ -15,6 +15,8 @@ import FileUpload from '../components/FileUpload';
 import StatusBadge from '../components/StatusBadge';
 import Modal from '../components/Modal';
 import EmptyState from '../components/EmptyState';
+import DocumentComparisonModal from '../components/DocumentComparisonModal';
+import { SplitSquareVertical } from 'lucide-react';
 import type { Document } from '../types';
 
 export const DocumentsPage: React.FC = () => {
@@ -23,6 +25,7 @@ export const DocumentsPage: React.FC = () => {
   const [extractedText, setExtractedText] = useState<string>('');
   const [loadingText, setLoadingText] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isCompModalOpen, setIsCompModalOpen] = useState(false);
 
   const handleUpload = async (file: File) => {
     setIsUploading(true);
@@ -117,9 +120,19 @@ export const DocumentsPage: React.FC = () => {
           </p>
         </div>
 
-        <Button variant="ghost" size="xs" onClick={() => refetch()} icon={<RefreshCw className="w-3.5 h-3.5 text-blue-700 dark:text-white" />}>
-          Refresh
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="secondary"
+            size="xs"
+            onClick={() => setIsCompModalOpen(true)}
+            icon={<SplitSquareVertical className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />}
+          >
+            Compare Documents
+          </Button>
+          <Button variant="ghost" size="xs" onClick={() => refetch()} icon={<RefreshCw className="w-3.5 h-3.5 text-blue-700 dark:text-white" />}>
+            Refresh
+          </Button>
+        </div>
       </div>
 
       {/* Upload Zone */}

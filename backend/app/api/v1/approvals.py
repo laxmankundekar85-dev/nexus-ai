@@ -55,7 +55,14 @@ async def resolve_approval(
     if approval.status != "pending":
         raise HTTPException(status_code=400, detail=f"Approval request is already '{approval.status}'")
 
-    approval.status = "approved" if req.decision.lower() == "approved" else "rejected"
+    decision_lower = req.decision.lower()
+    approval.status = decision_lower
+    approval.decision = decision_lower
+    approval.reviewer_id = user.id
+    approval.reviewer_name = user.email
+    approval.comments = req.comments or req.reason
+    if req.modified_action:
+        approval.modified_action = req.modified_action
     approval.resolved_at = datetime.now(timezone.utc)
     await db.commit()
     await db.refresh(approval)
@@ -67,7 +74,10 @@ async def resolve_approval(
         {
             "approval_id": approval.id,
             "status": approval.status,
-            "reason": req.reason
+            "decision": decision_lower,
+            "reviewer": user.email,
+            "comments": approval.comments,
+            "modified_action": approval.modified_action
         }
     )
 

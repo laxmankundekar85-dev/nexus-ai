@@ -17,6 +17,8 @@ class Task(Base):
     output_data = Column(JSON, nullable=True)
     dependency_data = Column(JSON, default=dict)
     attempt_count = Column(Integer, default=0)
+    execution_time_ms = Column(Integer, nullable=True)
+    tool_calls = Column(JSON, default=list)
     error_summary = Column(Text, nullable=True)
     started_at = Column(DateTime, nullable=True)
     completed_at = Column(DateTime, nullable=True)

@@ -69,3 +69,4 @@ backend/alembic.ini.local
 secrets/
 
 .vercel
+.env*

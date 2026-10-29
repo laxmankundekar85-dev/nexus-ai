@@ -6,6 +6,10 @@ from app.models.document import Document, DocumentChunk
 from app.models.approval import ApprovalRequest
 from app.models.artifact import Artifact
 from app.models.integration import IntegrationConfiguration
+from app.models.claim import Claim
+from app.models.audit_log import AuditLog
+from app.models.knowledge_graph import GraphNode, GraphEdge
+from app.models.scheduled_mission import ScheduledMission
 
 __all__ = [
     "User",
@@ -18,4 +22,9 @@ __all__ = [
     "ApprovalRequest",
     "Artifact",
     "IntegrationConfiguration",
+    "Claim",
+    "AuditLog",
+    "GraphNode",
+    "GraphEdge",
+    "ScheduledMission",
 ]

@@ -11,6 +11,7 @@ from app.models.user import User
 from app.models.execution import Execution, ExecutionEvent
 from app.models.task import Task
 from app.models.artifact import Artifact
+from app.models.claim import Claim
 from app.schemas.execution import ExecutionCreate, ExecutionResponse, TaskResponse
 from app.schemas.artifact import ArtifactResponse
 from app.schemas.common import PaginatedResponse
@@ -161,6 +162,107 @@ async def retry_execution(
 
     background_tasks.add_task(orchestrator.run_execution, execution.id, user.id)
     return execution
+
+@router.post("/{id}/pause", response_model=ExecutionResponse)
+async def pause_execution(
+    id: str,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    res = await db.execute(select(Execution).where(Execution.id == id, Execution.owner_id == user.id))
+    execution = res.scalar_one_or_none()
+    if not execution:
+        raise HTTPException(status_code=404, detail="Execution not found")
+
+    if execution.status not in ["running", "planning", "reviewing"]:
+        raise HTTPException(status_code=400, detail=f"Cannot pause execution in '{execution.status}' status")
+
+    execution.status = "paused"
+    await db.commit()
+    await db.refresh(execution)
+
+    await orchestrator.emit_event(id, "status_changed", {"status": "paused", "message": "Execution paused by operator"})
+    return execution
+
+@router.post("/{id}/resume", response_model=ExecutionResponse)
+async def resume_execution(
+    id: str,
+    background_tasks: BackgroundTasks,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    res = await db.execute(select(Execution).where(Execution.id == id, Execution.owner_id == user.id))
+    execution = res.scalar_one_or_none()
+    if not execution:
+        raise HTTPException(status_code=404, detail="Execution not found")
+
+    if execution.status != "paused":
+        raise HTTPException(status_code=400, detail="Only paused executions can be resumed")
+
+    execution.status = "running"
+    await db.commit()
+    await db.refresh(execution)
+
+    await orchestrator.emit_event(id, "status_changed", {"status": "running", "message": "Execution resumed by operator"})
+    background_tasks.add_task(orchestrator.run_execution, execution.id, user.id)
+    return execution
+
+@router.post("/{id}/tasks/{task_id}/retry", response_model=TaskResponse)
+async def retry_task(
+    id: str,
+    task_id: str,
+    background_tasks: BackgroundTasks,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    exec_res = await db.execute(select(Execution).where(Execution.id == id, Execution.owner_id == user.id))
+    execution = exec_res.scalar_one_or_none()
+    if not execution:
+        raise HTTPException(status_code=404, detail="Execution not found")
+
+    task_res = await db.execute(select(Task).where(Task.id == task_id, Task.execution_id == id))
+    task = task_res.scalar_one_or_none()
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    task.status = "pending"
+    task.error_summary = None
+    task.attempt_count = (task.attempt_count or 0) + 1
+    await db.commit()
+    await db.refresh(task)
+
+    await orchestrator.emit_event(id, "task_retried", {"task_id": task_id, "agent_role": task.agent_role}, task_id=task_id)
+    background_tasks.add_task(orchestrator.run_execution, execution.id, user.id)
+    return task
+
+@router.get("/{id}/claims")
+async def get_execution_claims(
+    id: str,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    exec_res = await db.execute(select(Execution).where(Execution.id == id, Execution.owner_id == user.id))
+    if not exec_res.scalar_one_or_none():
+        raise HTTPException(status_code=404, detail="Execution not found")
+
+    claims_res = await db.execute(select(Claim).where(Claim.execution_id == id).order_by(Claim.created_at))
+    claims = claims_res.scalars().all()
+    return [
+        {
+            "id": c.id,
+            "execution_id": c.execution_id,
+            "claim_text": c.claim_text,
+            "status": c.status,
+            "confidence_score": c.confidence_score,
+            "source_type": c.source_type,
+            "source_name": c.source_name,
+            "page_number": c.page_number,
+            "extracted_passage": c.extracted_passage,
+            "source_url": c.source_url,
+            "created_at": c.created_at.isoformat() if c.created_at else None
+        }
+        for c in claims
+    ]
 
 @router.get("/{id}/tasks", response_model=List[TaskResponse])
 async def get_execution_tasks(

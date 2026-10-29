@@ -13,6 +13,12 @@ import type {
   RegisterRequest,
   ValidationResult,
   PaginatedResponse,
+  Claim,
+  DocumentComparisonResult,
+  AnalysisResult,
+  ScheduledMission,
+  AuditLog,
+  DashboardMetrics,
 } from '../types';
 
 // ─── Axios Instance ────────────────────────────────────────────────────────────
@@ -166,6 +172,30 @@ export const executionsApi = {
     return res.data;
   },
 
+  pause: async (id: string): Promise<Execution> => {
+    const res = await api.post<Execution>(`/executions/${id}/pause`);
+    return res.data;
+  },
+
+  resume: async (id: string): Promise<Execution> => {
+    const res = await api.post<Execution>(`/executions/${id}/resume`);
+    return res.data;
+  },
+
+  retryTask: async (id: string, taskId: string): Promise<Task> => {
+    const res = await api.post<Task>(`/executions/${id}/tasks/${taskId}/retry`);
+    return res.data;
+  },
+
+  getClaims: async (id: string): Promise<Claim[]> => {
+    try {
+      const res = await api.get<Claim[]>(`/executions/${id}/claims`);
+      return res.data;
+    } catch {
+      return [];
+    }
+  },
+
   getTasks: async (id: string): Promise<Task[]> => {
     const res = await api.get<Task[]>(`/executions/${id}/tasks`);
     return res.data;
@@ -295,6 +325,77 @@ export const settingsApi = {
   },
   testConnection: async (data: { provider: string; api_key?: string }) => {
     const res = await api.post<{ success: boolean; provider: string; latency_ms: number; message: string }>('/settings/test-connection', data);
+    return res.data;
+  },
+};
+
+// ─── Multi-Document Comparison API ───────────────────────────────────────────
+export const comparisonApi = {
+  compare: async (data: { document_ids: string[]; custom_documents?: { id: string; filename: string; text: string }[] }): Promise<DocumentComparisonResult> => {
+    const res = await api.post<DocumentComparisonResult>('/documents/compare', data);
+    return res.data;
+  },
+};
+
+// ─── Data Analysis Lab API ────────────────────────────────────────────────────
+export const analysisApi = {
+  execute: async (query: string, data?: Record<string, any>[]): Promise<AnalysisResult> => {
+    const res = await api.post<AnalysisResult>('/analysis/execute', { query, data });
+    return res.data;
+  },
+};
+
+// ─── Knowledge Graph API ──────────────────────────────────────────────────────
+export const knowledgeGraphApi = {
+  getNodes: async () => {
+    const res = await api.get<any[]>('/knowledge-graph/nodes');
+    return res.data;
+  },
+  getEdges: async () => {
+    const res = await api.get<any[]>('/knowledge-graph/edges');
+    return res.data;
+  },
+  query: async (query: string) => {
+    const res = await api.post<{ query: string; results_count: number; cross_report_findings: any[] }>('/knowledge-graph/query', { query });
+    return res.data;
+  },
+  getDiff: async () => {
+    const res = await api.get<{ analyzed_executions_count: number; timeline: any[]; delta_observations: string[] }>('/knowledge-graph/diff');
+    return res.data;
+  },
+};
+
+// ─── Scheduled Missions API ───────────────────────────────────────────────────
+export const schedulesApi = {
+  list: async (): Promise<ScheduledMission[]> => {
+    const res = await api.get<ScheduledMission[]>('/schedules');
+    return res.data;
+  },
+  create: async (data: { name: string; objective: string; schedule_type: string; cron_expression?: string; notify_on_delta: boolean }): Promise<ScheduledMission> => {
+    const res = await api.post<ScheduledMission>('/schedules', data);
+    return res.data;
+  },
+  update: async (id: string, data: Partial<ScheduledMission>): Promise<ScheduledMission> => {
+    const res = await api.patch<ScheduledMission>(`/schedules/${id}`, data);
+    return res.data;
+  },
+  delete: async (id: string): Promise<void> => {
+    await api.delete(`/schedules/${id}`);
+  },
+};
+
+// ─── Audit Trail API ──────────────────────────────────────────────────────────
+export const auditLogsApi = {
+  list: async (limit = 50): Promise<AuditLog[]> => {
+    const res = await api.get<AuditLog[]>('/audit-logs', { params: { limit } });
+    return res.data;
+  },
+};
+
+// ─── AI Reliability & Dashboard Metrics API ───────────────────────────────────
+export const dashboardApi = {
+  getMetrics: async (): Promise<DashboardMetrics> => {
+    const res = await api.get<DashboardMetrics>('/dashboard/metrics');
     return res.data;
   },
 };
