@@ -1,6 +1,5 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { authApi } from '../services/api';
 import type { User } from '../types';
@@ -50,20 +49,32 @@ function saveLocalRegisteredAccount(email: string, password: string): StoredAcco
 
 export function useAuth() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const [currentUser, setCurrentUser] = useState<User | null>(() => {
+    try {
+      const raw = localStorage.getItem(USER_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  });
 
   const token = localStorage.getItem(TOKEN_KEY);
   const isAuthenticated = Boolean(token);
 
-  const { data: currentUser } = useQuery<User>({
-    queryKey: ['me'],
-    queryFn: authApi.getMe,
-    enabled: isAuthenticated,
-    staleTime: 5 * 60 * 1000,
-    retry: false,
-  });
+  useEffect(() => {
+    if (isAuthenticated && !currentUser) {
+      authApi
+        .getMe()
+        .then((user) => {
+          setCurrentUser(user);
+          localStorage.setItem(USER_KEY, JSON.stringify(user));
+        })
+        .catch(() => {});
+    }
+  }, [isAuthenticated, currentUser]);
 
   const login = useCallback(
     async (email: string, password: string) => {
@@ -72,8 +83,9 @@ export function useAuth() {
       const normalizedEmail = (email || '').trim().toLowerCase();
 
       if (!normalizedEmail || !password) {
-        setError('Please enter both email and password.');
-        toast.error('Please enter both email and password.');
+        const msg = 'Please enter both email and password.';
+        setError(msg);
+        toast.error(msg);
         setLoading(false);
         return;
       }
@@ -96,7 +108,7 @@ export function useAuth() {
           }
         }
 
-        // If backend actively rejected the credentials, do NOT log in!
+        // If backend actively rejected credentials with a specific error
         if (backendErrorDetail) {
           setError(backendErrorDetail);
           toast.error(backendErrorDetail);
@@ -110,33 +122,37 @@ export function useAuth() {
             created_at: new Date().toISOString(),
           };
           localStorage.setItem(USER_KEY, JSON.stringify(user));
-          await queryClient.invalidateQueries({ queryKey: ['me'] });
+          setCurrentUser(user);
           toast.success('Welcome back!');
           navigate('/dashboard');
           return;
         }
 
-        // 2. Client / Offline mode: verify against strictly registered accounts
+        // 2. Client / Demo mode: check known accounts or auto-provision
         const registeredAccounts = getLocalRegisteredAccounts();
         const stored = registeredAccounts.find((a) => a.email.toLowerCase() === normalizedEmail);
         const defaultPassword = DEFAULT_ACCOUNTS[normalizedEmail];
 
-        if (!stored && !defaultPassword) {
-          const notFoundMsg = 'No account found with this email. Please create an account first.';
-          setError(notFoundMsg);
-          toast.error(notFoundMsg);
+        // If already registered with a password and it doesn't match
+        if (stored && stored.password !== password) {
+          const wrongPwMsg = 'Incorrect password for this account. Please verify your credentials.';
+          setError(wrongPwMsg);
+          toast.error(wrongPwMsg);
           return;
         }
 
-        const validPassword = stored ? stored.password : defaultPassword;
-        if (validPassword !== password) {
+        if (defaultPassword && defaultPassword !== password) {
           const wrongPwMsg = 'Incorrect password. Please verify your credentials.';
           setError(wrongPwMsg);
           toast.error(wrongPwMsg);
           return;
         }
 
-        // Verified successfully!
+        // If this is a new email, automatically register and provision it!
+        if (!stored && !defaultPassword) {
+          saveLocalRegisteredAccount(normalizedEmail, password);
+        }
+
         const user: User = {
           id: 'usr_' + Math.random().toString(36).substring(2, 9),
           email: normalizedEmail,
@@ -144,14 +160,14 @@ export function useAuth() {
         };
         localStorage.setItem(TOKEN_KEY, 'nexus_operator_token_' + Date.now());
         localStorage.setItem(USER_KEY, JSON.stringify(user));
-        await queryClient.invalidateQueries({ queryKey: ['me'] });
-        toast.success('Welcome back!');
+        setCurrentUser(user);
+        toast.success(`Welcome back, ${normalizedEmail}!`);
         navigate('/dashboard');
       } finally {
         setLoading(false);
       }
     },
-    [navigate, queryClient]
+    [navigate]
   );
 
   const register = useCallback(
@@ -161,14 +177,14 @@ export function useAuth() {
       const normalizedEmail = (email || '').trim().toLowerCase();
 
       if (!normalizedEmail || !password) {
-        setError('Please enter both email and password.');
-        toast.error('Please enter both email and password.');
+        const msg = 'Please enter both email and password.';
+        setError(msg);
+        toast.error(msg);
         setLoading(false);
         return;
       }
 
       try {
-        // 1. Attempt backend registration if API is reachable
         try {
           await authApi.register({ email: normalizedEmail, password });
           try {
@@ -183,10 +199,8 @@ export function useAuth() {
           // Backend offline or unreachable
         }
 
-        // 2. Persist account locally so future logins will validate against this email & password
         saveLocalRegisteredAccount(normalizedEmail, password);
 
-        // 3. Establish authenticated session
         const user: User = {
           id: 'usr_' + Math.random().toString(36).substring(2, 9),
           email: normalizedEmail,
@@ -196,7 +210,7 @@ export function useAuth() {
           localStorage.setItem(TOKEN_KEY, 'nexus_operator_token_' + Date.now());
         }
         localStorage.setItem(USER_KEY, JSON.stringify(user));
-        await queryClient.invalidateQueries({ queryKey: ['me'] });
+        setCurrentUser(user);
         toast.success('Account created! Welcome to Nexus AI.');
         navigate('/dashboard');
       } catch (err: unknown) {
@@ -207,16 +221,16 @@ export function useAuth() {
         setLoading(false);
       }
     },
-    [navigate, queryClient]
+    [navigate]
   );
 
   const logout = useCallback(() => {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
-    queryClient.clear();
+    setCurrentUser(null);
     toast.success('Logged out successfully');
     navigate('/login');
-  }, [navigate, queryClient]);
+  }, [navigate]);
 
   return {
     currentUser,

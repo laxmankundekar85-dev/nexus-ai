@@ -7,14 +7,6 @@ const LoginPage = lazy(() => import('./pages/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/RegisterPage'));
 const MainApp = lazy(() => import('./MainApp'));
 
-const PublicOnlyRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const token = localStorage.getItem('nexus_token');
-  if (token) {
-    return <Navigate to="/dashboard" replace />;
-  }
-  return <>{children}</>;
-};
-
 export const App: React.FC = () => {
   return (
     <Routes>
@@ -24,10 +16,8 @@ export const App: React.FC = () => {
       {/* Auth routes */}
       <Route
         element={
-          <Suspense fallback={null}>
-            <PublicOnlyRoute>
-              <AuthLayout />
-            </PublicOnlyRoute>
+          <Suspense fallback={<div className="min-h-screen bg-[#eaeff6] dark:bg-black" />}>
+            <AuthLayout />
           </Suspense>
         }
       >

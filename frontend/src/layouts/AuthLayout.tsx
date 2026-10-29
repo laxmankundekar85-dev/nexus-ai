@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Layers, Sun, Moon } from 'lucide-react';
+import { Toaster } from 'react-hot-toast';
 import { useTheme } from '../context/ThemeContext';
 
 export const AuthLayout: React.FC = () => {
@@ -35,8 +36,23 @@ export const AuthLayout: React.FC = () => {
       </div>
 
       <main role="main" className="mt-2 sm:mx-auto sm:w-full sm:max-w-md relative z-10 px-4">
-        <Outlet />
+        <Suspense fallback={<div className="h-48 flex items-center justify-center text-xs text-slate-700 dark:text-zinc-400 font-medium">Initializing operator authentication...</div>}>
+          <Outlet />
+        </Suspense>
       </main>
+
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: '#1a1d2e',
+            color: '#fff',
+            border: '1px solid #2a2d3e',
+            fontSize: '13px',
+          },
+        }}
+      />
     </div>
   );
 };
