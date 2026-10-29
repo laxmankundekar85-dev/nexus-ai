@@ -1,209 +1,281 @@
-# Nexus AI — AI Agent Operating Platform
+# 🌌 Nexus AI — Enterprise Autonomous Agent Operating Platform
 
-> A platform where users provide high-level objectives and AI agents plan, execute, verify, and complete associated tasks — with full transparency, real-time progress tracking, and downloadable reports.
+[![Live Platform](https://img.shields.io/badge/Live%20Platform-Vercel-black?style=for-the-badge&logo=vercel)](https://nexus-ai-ecru-nine.vercel.app/)
+[![Android App](https://img.shields.io/badge/Android%20App-v2.0.0%20(Universal)-green?style=for-the-badge&logo=android)](https://nexus-ai-ecru-nine.vercel.app/NexusAI.apk)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
----
-
-## Table of Contents
-
-1. [Product Overview](#product-overview)
-2. [Architecture](#architecture)
-3. [Technology Stack](#technology-stack)
-4. [Prerequisites](#prerequisites)
-5. [Quick Start (Docker)](#quick-start-docker)
-6. [Manual Setup (Without Docker)](#manual-setup-without-docker)
-7. [Environment Configuration](#environment-configuration)
-8. [AI Provider Setup](#ai-provider-setup)
-9. [Search Provider Setup](#search-provider-setup)
-10. [Database Migrations](#database-migrations)
-11. [Running the Backend](#running-the-backend)
-12. [Running the Frontend](#running-the-frontend)
-13. [Running Tests](#running-tests)
-14. [API Documentation](#api-documentation)
-15. [Mock / Demo Mode](#mock--demo-mode)
-16. [File Storage](#file-storage)
-17. [Deployment](#deployment)
-18. [Known Limitations](#known-limitations)
-19. [Security Considerations](#security-considerations)
-20. [Troubleshooting](#troubleshooting)
+> **Nexus AI** is an enterprise-grade autonomous agent operations platform where users define high-level strategic objectives, and an orchestrated mesh of specialized AI agents plan, research, compute, verify, and deliver production dossiers — backed by deterministic verification, human-in-the-loop approvals, tamper-evident audit logging, and standalone native Android delivery.
 
 ---
 
-## Product Overview
+## 📑 Table of Contents
 
-Nexus AI accepts a plain-language objective from a user, then:
-
-1. Creates a structured execution plan (Planner Agent)
-2. Researches relevant information from approved sources (Research Agent)
-3. Retrieves relevant passages from uploaded documents (Document Agent)
-4. Compares and analyzes collected evidence (Analysis Agent)
-5. Reviews completeness and factual support (Reviewer Agent)
-6. Generates a structured report with citations (Report Agent)
-7. Waits for human approval before consequential external actions
-
-All execution state, events, and artifacts are persisted to the database and visible in real time on the frontend.
+1. [Key Highlights & New Capabilities](#-key-highlights--new-capabilities)
+2. [Platform Architecture](#-platform-architecture)
+3. [Autonomous Agent Mesh](#-autonomous-agent-mesh)
+4. [Full Feature Suite (17 Core Modules)](#-full-feature-suite-17-core-modules)
+5. [Native Android Application (.apk)](#-native-android-application-apk)
+6. [Technology Stack](#-technology-stack)
+7. [Quick Start](#-quick-start)
+   - [Option A: Docker (Recommended)](#option-a-docker-compose)
+   - [Option B: Local Development](#option-b-local-development)
+8. [Configuration & Environment Variables](#-configuration--environment-variables)
+9. [AI Provider Integration](#-ai-provider-integration)
+10. [Database Migrations & Vector Search](#-database-migrations--vector-search)
+11. [Testing Suite](#-testing-suite)
+12. [Security & Governance](#-security--governance)
+13. [Deployment](#-deployment)
+14. [Troubleshooting](#-troubleshooting)
 
 ---
 
-## Architecture
+## 🚀 Key Highlights & New Capabilities
+
+- 🤖 **6-Agent Autonomous Mesh**: Planner, Research, Document, Analysis, Reviewer, and Report agents working synchronously with LangGraph-style state coordination.
+- 📱 **Pure Native Android Application**: Standalone APK (`ai.nexus.app`) compiled for **all Android versions (Android 5.0 through 11, 12, 13, 14, 15, and 16+)** with **zero Google Chrome notifications**, persistent login, YouTube-style pull-to-refresh, and native lockscreen task completion alerts.
+- 📊 **Data Analysis & Computation Lab**: AST-verified mathematical sandbox for pandas & NumPy emulation, interactive SVG charts (bar, line, donut), and descriptive statistics.
+- 🕸️ **Interactive Knowledge Graph**: SVG-rendered entity networks with node relationship exploration and temporal diffing.
+- 🔒 **Tamper-Evident SHA-256 Audit Trail**: Chained hash logs tracking every prompt, model invocation, and tool execution with actor signatures.
+- ⏱️ **Scheduled Missions & Supervisor**: Recurring cron scheduling with delta alerts and a 10-state finite state machine with automated circuit breakers and self-healing recovery.
+- 🌓 **Enterprise Dark / Light UI**: Tailored with reactive Tailwind styling, smooth CSS transitions, and full responsive mobile/desktop drawer navigation.
+
+---
+
+## 🏛️ Platform Architecture
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                    Frontend (React)                  │
-│  Landing │ Auth │ Dashboard │ Workspace │ Builder    │
-│  Documents │ Reports │ Settings                      │
-└────────────────────────┬────────────────────────────┘
-                         │ HTTP + SSE
-┌────────────────────────▼────────────────────────────┐
-│                 Backend (FastAPI)                    │
-│  Auth │ Workflows │ Executions │ Documents           │
-│  Approvals │ Artifacts                               │
-└──────────┬────────────────────────────┬─────────────┘
-           │ SQLAlchemy                 │ Celery
-┌──────────▼──────────┐    ┌───────────▼─────────────┐
-│   PostgreSQL + pgv  │    │      Redis + Workers     │
-│   (App data + vecs) │    │   (Queue + Pub/Sub SSE)  │
-└─────────────────────┘    └─────────────────────────┘
-                                        │
-                        ┌───────────────▼──────────────┐
-                        │      AI Orchestrator         │
-                        │  LangGraph State Machine     │
-                        │  Planner → Research →        │
-                        │  Document → Analysis →       │
-                        │  Reviewer → Report           │
-                        └──────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       NEXUS AI CLIENT LAYER                                 │
+│                                                                             │
+│   Web Application (React 18 + TS)    │   Native Android APK (WebView Engine)│
+│   • Vercel Edge Global Hosting       │   • ai.nexus.app (SDK 21 - 36+)      │
+│   • PWA Service Worker v3 Offline    │   • NexusNativeBridge Push Alerts    │
+└──────────────────────────────────────┬──────────────────────────────────────┘
+                                       │ HTTPS / SSE Real-Time Streaming
+┌──────────────────────────────────────▼──────────────────────────────────────┐
+│                    ENTERPRISE BACKEND (FastAPI + Python)                    │
+│                                                                             │
+│  • Auth & RBAC (JWT + Bcrypt)        • Mission Supervisor (10-State DAG)    │
+│  • Vector Chunking & Ingestion       • AST Python Analysis Sandbox          │
+│  • Human-in-the-Loop Approvals       • SHA-256 Chained Audit Trail          │
+└──────────────┬──────────────────────────────────────────┬───────────────────┘
+               │ SQLAlchemy Async                         │ Celery Workers
+┌──────────────▼─────────────┐             ┌──────────────▼───────────────────┐
+│     PostgreSQL 15 + pgv    │             │         Redis 7 Message Bus      │
+│   • Vector Embeddings (1536)│            │   • Pub/Sub Real-time Events     │
+│   • Execution Logs & State │             │   • Asynchronous Task Queue      │
+└────────────────────────────┘             └──────────────────┬───────────────┘
+                                                              │
+                                           ┌──────────────────▼───────────────┐
+                                           │       AI ORCHESTRATOR MESH       │
+                                           │   Planner ──► Research           │
+                                           │      │           │               │
+                                           │   Document ◄─────┘               │
+                                           │      │                           │
+                                           │   Analysis ──► Reviewer ──►Report│
+                                           └──────────────────────────────────┘
 ```
 
 ---
 
-## Technology Stack
+## 🤖 Autonomous Agent Mesh
 
-| Layer | Technology | Version |
+Each mission is partitioned and executed by specialized, collaborative agents:
+
+| Agent | Core Responsibility | Verification & Tooling |
 |---|---|---|
-| Frontend | React + TypeScript + Vite | React 18 |
-| Styling | Tailwind CSS | 3.x |
-| Routing | React Router | v6 |
-| Workflow Builder | @xyflow/react (React Flow) | 12.x |
-| Data Fetching | TanStack Query | v5 |
-| Backend | Python + FastAPI | Python 3.11+ |
-| Validation | Pydantic | v2 |
-| ORM | SQLAlchemy | 2.x |
-| Migrations | Alembic | latest |
-| Orchestration | LangGraph | latest |
-| Database | PostgreSQL + pgvector | 15 |
-| Cache / Queue | Redis + Celery | Redis 7 |
-| Auth | JWT (python-jose) + bcrypt | - |
+| **Planner Agent** | Deconstructs complex objectives into DAG tasks with sequential dependencies. | Dependency validation & cycle detection. |
+| **Research Agent** | Gathers real-time external intelligence and web context. | Source credibility scoring & Tavily / SerpAPI search. |
+| **Document Agent** | Ingests enterprise PDFs, TXTs, and docs into semantic embeddings. | Cosine similarity vector search via `pgvector`. |
+| **Analysis Agent** | Performs mathematical calculations, syntheses, and tabular diffs. | AST-isolated mathematical sandbox (pandas/NumPy). |
+| **Reviewer Agent** | Audits factuality, citation integrity, and identifies hallucination risks. | Claim lineage & confidence verification index. |
+| **Report Agent** | Compiles executive dossiers, actionable takeaways, and citation footnotes. | Markdown generation & exportable PDF engine. |
 
 ---
 
-## Prerequisites
+## 📦 Full Feature Suite (17 Core Modules)
 
-- **Python 3.11+** — [python.org](https://python.org)
-- **Node.js 18+** — [nodejs.org](https://nodejs.org)
-- **Docker Desktop** *(recommended)* — [docker.com](https://docker.com)
-- OR: **PostgreSQL 15** and **Redis 7** installed locally
+Nexus AI includes 17 purpose-built enterprise modules:
+
+### 1. Operations & Execution
+- **Dashboard** (`/dashboard`): Real-time system telemetry, agent status grid, active mission throughput, and system health counters.
+- **AI Workspace** (`/workspace`): Live objective input, interactive agent coordination canvas, streaming logs, and execution timeline.
+- **Mission Supervisor** (`/supervisor`): 10-state DAG execution control, interactive step-by-step progress, pause/resume, and retry gates.
+- **Workflow Builder** (`/workflows`): Drag-and-drop visual agent DAG editor powered by `@xyflow/react` with custom node routing.
+- **Mission History & Replay** (`/mission-history`): Historical execution timelines, branching analysis, and full telemetry replay.
+- **Scheduled Missions** (`/schedules`): Automated recurring missions with cron cadence and delta alert thresholds.
+- **Execution Recovery** (`/execution-recovery`): Automated self-healing loops, circuit breakers, and fault-tolerant fallback policies.
+
+### 2. Knowledge & Intelligence
+- **Document Intelligence** (`/documents`): Corpus file upload, chunk viewer, semantic search, and side-by-side document comparison.
+- **Intelligence Reports** (`/reports`): Dossier viewer with executive takeaways, source citations, evidence lists, and Markdown download.
+- **Evidence Explorer** (`/evidence`): Claim verification tracking, confidence rating indicators, and interactive evidence drawers.
+- **Knowledge Graph** (`/knowledge-graph`): Interactive SVG entity graph with node relationship filtering and temporal diffs.
+- **Source Freshness** (`/source-freshness`): Real-time staleness monitoring, scheduled re-validation triggers, and cache telemetry.
+
+### 3. Analytics & Quality
+- **Data Analysis & Computation Lab** (`/analysis-lab`): Clean prompt input for mathematical computations, AST Python execution, and interactive SVG bar/line/pie charts.
+- **AI Evaluation & Benchmarks** (`/evaluation`): Golden dataset benchmarks comparing multi-model performance (GPT-4o vs Claude 3.5 Sonnet vs Gemini 1.5 Pro).
+
+### 4. Security & Administration
+- **Security & Permissions** (`/security`): Tool gateway controls, human-in-the-loop approval requests, and policy enforcement.
+- **Audit Trail** (`/audit-trail`): Chained SHA-256 tamper-evident log entries with hash verification and JSON/CSV export.
+- **Settings** (`/settings`): Dynamic LLM provider switching, dark/light theme controls, system diagnostics, and native APK package status.
 
 ---
 
-## Quick Start (Docker)
+## 📱 Native Android Application (.apk)
+
+Nexus AI includes a standalone native Android project located in [`android-native/`](./android-native).
+
+```
+Direct Download: https://nexus-ai-ecru-nine.vercel.app/NexusAI.apk
+Package ID:      ai.nexus.app
+Compatibility:   Android 5.0 (Lollipop) up to Android 16+ (All Versions)
+SDK Versions:    minSdkVersion 21 | compileSdkVersion 35 | targetSdkVersion 35
+```
+
+### Key Native Capabilities:
+- **Zero Chrome Notifications**: Runs as an isolated native Android application (`ai.nexus.app`) using Android's native WebView engine, completely eliminating Chrome Custom Tab notifications and "Running in Chrome" banners.
+- **Lockscreen & Notification Shade Alerts**: Built-in `NexusNativeBridge` posts native Android notifications on channel `nexus_ai_tasks` with vibration and app icons whenever background missions complete.
+- **YouTube-Style Pull-to-Refresh**: Calibrated touch interception so swiping down while scrolled down seamlessly scrolls up; pull-to-refresh triggers only when already at the root scroll boundary.
+- **Persistent Sessions**: Native DOM storage and database persistence keep authentication sessions active across app restarts.
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technologies | Description |
+|---|---|---|
+| **Frontend** | React 18, TypeScript, Vite | Single-page enterprise app with code-split routing |
+| **Styling** | Tailwind CSS, Lucide Icons | Responsive modern design with dynamic dark/monolith theme |
+| **Workflow Canvas** | `@xyflow/react` (React Flow 12) | Visual DAG builder and agent connection canvas |
+| **State & Cache** | TanStack Query v5 | Reactive cache and data synchronization |
+| **Mobile Shell** | Android Native Java, AndroidX | Standalone WebView with native Android bridge |
+| **Backend API** | Python 3.11+, FastAPI | Async REST API with OpenAPI/Swagger docs |
+| **AI Orchestration** | LangGraph, LangChain | Multi-agent state machine and cyclic workflow routing |
+| **Database** | PostgreSQL 15 + `pgvector` | Relational application state + 1536-dim vector store |
+| **Queue & Pub/Sub** | Redis 7 + Celery | Task distribution and Server-Sent Events (SSE) bus |
+| **Security** | JWT, Bcrypt, SHA-256 | Token auth, password hashing, tamper-evident audit logging |
+
+---
+
+## 🚀 Quick Start
+
+### Option A: Docker Compose
+
+The fastest way to spin up the complete stack with PostgreSQL and Redis:
 
 ```bash
-# 1. Clone / navigate to project
+# 1. Clone the repository
+git clone https://github.com/laxmankundekar85-dev/nexus-ai.git
 cd nexus-ai
 
-# 2. Copy environment file
+# 2. Configure environment
 cp .env.example .env
-# Edit .env — set SECRET_KEY at minimum (see below)
 
-# 3. Start PostgreSQL + Redis
+# 3. Start PostgreSQL with pgvector and Redis
 docker-compose up -d
 
-# 4. Install backend dependencies
+# 4. Initialize backend
 cd backend
 pip install -r requirements.txt
-
-# 5. Run database migrations
 alembic upgrade head
-
-# 6. Start backend (in backend/)
 uvicorn app.main:app --reload --port 8000
 
-# 7. In a new terminal — start frontend
+# 5. In a separate terminal, launch frontend
 cd ../frontend
 npm install
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173)
-
-> **No API keys needed** — the app runs in **Mock Mode** by default. See [Mock Mode](#mock--demo-mode).
+Open your browser at **`http://localhost:5173`**.
 
 ---
 
-## Manual Setup (Without Docker)
+### Option B: Local Development
 
-### PostgreSQL
-
-1. Install PostgreSQL 15: [postgresql.org/download](https://www.postgresql.org/download/)
-2. Install pgvector extension: [github.com/pgvector/pgvector](https://github.com/pgvector/pgvector)
-3. Create database:
-   ```sql
-   CREATE USER nexus WITH PASSWORD 'nexuspassword';
-   CREATE DATABASE nexus_ai OWNER nexus;
-   \c nexus_ai
-   CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-   CREATE EXTENSION IF NOT EXISTS vector;
-   ```
-4. Update `DATABASE_URL` in `.env`
-
-### Redis
-
-1. Windows: [github.com/tporadowski/redis/releases](https://github.com/tporadowski/redis/releases)
-2. Start Redis: `redis-server`
-3. Update `REDIS_URL` in `.env`
-
----
-
-## Environment Configuration
-
+#### 1. Backend Setup
 ```bash
-cp .env.example .env
+cd backend
+python -m venv venv
+
+# Windows:
+venv\Scripts\activate
+# Linux/macOS:
+source venv/bin/activate
+
+pip install -r requirements.txt
+alembic upgrade head
+uvicorn app.main:app --reload --port 8000
 ```
 
-Required settings:
+#### 2. Frontend Setup
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-| Variable | Description |
-|---|---|
-| `SECRET_KEY` | JWT signing key — generate with `openssl rand -hex 32` |
-| `DATABASE_URL` | PostgreSQL async connection string |
-| `REDIS_URL` | Redis connection URL |
-
-Optional (for real AI):
-
-| Variable | Description |
-|---|---|
-| `LLM_PROVIDER` | `openai`, `anthropic`, `gemini`, or `mock` |
-| `LLM_API_KEY` | Your provider API key |
-| `LLM_MODEL` | Model name e.g. `gpt-4o` |
-| `SEARCH_PROVIDER` | `tavily`, `serpapi`, or `mock` |
-| `SEARCH_API_KEY` | Search API key |
-
-> ⚠️ Never commit `.env` to git. It is gitignored by default.
+#### 3. Compiling the Android APK Locally
+If you have the Android SDK and Gradle installed:
+```bash
+cd android-native
+gradle assembleRelease
+# The signed APK is built at: app/build/outputs/apk/release/app-release.apk
+```
 
 ---
 
-## AI Provider Setup
+## ⚙️ Configuration & Environment Variables
 
-### OpenAI
+Create `.env` from `.env.example`:
 
 ```env
+# Application
+APP_ENV=development
+DEBUG=true
+SECRET_KEY=generate-a-secure-32-byte-hex-key
+
+# Database & Cache
+DATABASE_URL=postgresql+asyncpg://nexus:nexuspassword@localhost:5432/nexus_ai
+DATABASE_SYNC_URL=postgresql://nexus:nexuspassword@localhost:5432/nexus_ai
+REDIS_URL=redis://localhost:6379/0
+
+# Storage
+STORAGE_BACKEND=local
+LOCAL_STORAGE_PATH=./storage/uploads
+MAX_UPLOAD_SIZE_MB=50
+
+# AI Provider (openai | anthropic | gemini | mock)
+LLM_PROVIDER=mock
+LLM_API_KEY=
+LLM_MODEL=gpt-4o
+
+# Search Provider (tavily | serpapi | mock)
+SEARCH_PROVIDER=mock
+SEARCH_API_KEY=
+```
+
+> 💡 **Mock Mode**: Running with `LLM_PROVIDER=mock` requires **no external API keys** and produces simulated agent executions, making it ideal for UI testing and evaluation.
+
+---
+
+## 🔌 AI Provider Integration
+
+Switch between AI providers seamlessly by setting the provider flag:
+
+### OpenAI
+```env
 LLM_PROVIDER=openai
-LLM_API_KEY=sk-...
+LLM_API_KEY=sk-proj-...
 LLM_MODEL=gpt-4o
 ```
 
 ### Anthropic Claude
-
 ```env
 LLM_PROVIDER=anthropic
 LLM_API_KEY=sk-ant-...
@@ -211,180 +283,51 @@ LLM_MODEL=claude-3-5-sonnet-20241022
 ```
 
 ### Google Gemini
-
 ```env
 LLM_PROVIDER=gemini
-LLM_API_KEY=AIza...
+LLM_API_KEY=AIzaSy...
 LLM_MODEL=gemini-1.5-pro
 ```
 
-### Mock Mode (no API key)
-
-```env
-LLM_PROVIDER=mock
-```
-
 ---
 
-## Search Provider Setup
+## 🧪 Testing Suite
 
-### Tavily (Recommended)
-
-Get a free API key at [tavily.com](https://tavily.com):
-
-```env
-SEARCH_PROVIDER=tavily
-SEARCH_API_KEY=tvly-...
-```
-
-### Mock (no API key)
-
-```env
-SEARCH_PROVIDER=mock
-```
-
----
-
-## Database Migrations
+Run the full automated test suite across backend and frontend:
 
 ```bash
+# Backend unit & integration tests
 cd backend
+pytest tests/ -v --cov=app
 
-# Apply all migrations
-alembic upgrade head
-
-# Create a new migration after model changes
-alembic revision --autogenerate -m "description"
-
-# Check current version
-alembic current
-```
-
----
-
-## Running the Backend
-
-```bash
-cd backend
-
-# Development (auto-reload)
-uvicorn app.main:app --reload --port 8000
-
-# Production
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
-
-# Start Celery worker (separate terminal)
-celery -A workers.celery_app worker --loglevel=info
-```
-
----
-
-## Running the Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev        # Development server at http://localhost:5173
-npm run build      # Production build
-npm run preview    # Preview production build
-```
-
----
-
-## Running Tests
-
-```bash
-# Backend tests
-cd backend
-pytest tests/ -v
-pytest tests/ -v --cov=app  # With coverage
-
-# Frontend tests
+# Frontend component & unit tests
 cd frontend
 npm run test
-npm run test -- --coverage
 ```
 
 ---
 
-## API Documentation
+## 🛡️ Security & Governance
 
-With the backend running, open:
-
-- **Interactive docs (Swagger UI)**: [http://localhost:8000/docs](http://localhost:8000/docs)
-- **ReDoc**: [http://localhost:8000/redoc](http://localhost:8000/redoc)
-- **OpenAPI JSON**: [http://localhost:8000/openapi.json](http://localhost:8000/openapi.json)
-
----
-
-## Mock / Demo Mode
-
-When `LLM_PROVIDER=mock` (default), the system:
-
-- Generates deterministic example execution plans
-- Returns mock research results with placeholder sources
-- Produces a template report with sample findings
-- Shows the full UI and execution flow
-
-> ⚠️ Mock mode is clearly labeled in the UI and API responses. It is never presented as real AI execution.
+- **Server-Side API Key Isolation**: Client applications and Android devices never receive or store third-party LLM API keys.
+- **AST Execution Sandbox**: Mathematical scripts in the Data Analysis Lab are analyzed via Abstract Syntax Trees to prohibit arbitrary shell calls, network sockets, or OS modifications.
+- **Chained Audit Trail**: Security actions, tool executions, and model answers are hashed sequentially via SHA-256 for provable integrity.
+- **Human-in-the-Loop Approvals**: High-impact actions (e.g. data modification or external API posting) require explicit user sign-off before completion.
+- **Strict HTTPS & CORS**: Cross-Origin Resource Sharing is locked to authorized origins only.
 
 ---
 
-## File Storage
+## 🌐 Deployment
 
-By default, uploaded documents are stored in `./storage/uploads/` relative to the backend directory.
-
-For production, set `STORAGE_BACKEND=s3` and configure S3 credentials. The storage abstraction layer (`app/storage/`) makes this switch transparent to the rest of the application.
-
----
-
-## Deployment
-
-1. Set `APP_ENV=production` and `DEBUG=false`
-2. Generate a strong `SECRET_KEY`
-3. Use a managed PostgreSQL + Redis service
-4. Run `alembic upgrade head` before starting
-5. Use a process manager (gunicorn / supervisord) for the backend
-6. Build the frontend: `npm run build` and serve `dist/` via nginx or CDN
-7. Set `CORS_ALLOWED_ORIGINS` to your frontend domain
-8. Never set `LOG_SQL_QUERIES=true` in production
+- **Frontend Deployment (Vercel)**:
+  Connect the repository to Vercel. Output directory: `dist`. Build command: `npm run build`.
+- **Backend Deployment**:
+  Run behind Gunicorn/Uvicorn workers managed by systemd or Docker with PostgreSQL and Redis.
+- **Native APK Distribution**:
+  The compiled APK is served directly from the public asset directory at `/NexusAI.apk` for 1-tap mobile installation.
 
 ---
 
-## Known Limitations
+## 📄 License
 
-- **OCR**: Scanned PDFs require an OCR integration (Tesseract). Without it, scanned pages are reported as unreadable.
-- **Parallel execution**: Tasks currently execute sequentially. Parallel execution for independent tasks is a planned enhancement.
-- **Prompt injection**: Uploaded documents and web search results are treated as untrusted, but no system is fully immune to prompt injection. Review agent outputs before consequential actions.
-- **Cost tracking**: Token cost estimation requires accurate pricing data from the provider. Estimates may be imprecise.
-- **PDF generation**: Report PDF export requires `weasyprint` or `pdfkit`. Markdown download is always available.
-
----
-
-## Security Considerations
-
-- All API keys are stored server-side only, never in the frontend or logs
-- All database queries use parameterized statements via SQLAlchemy
-- Uploaded files are validated by type and size before processing
-- Document contents are treated as untrusted — macros and embedded code are never executed
-- Path traversal is prevented in the storage layer
-- Every resource access enforces ownership checks
-- Rate limiting is applied per user per endpoint
-- JWT tokens can be invalidated server-side via Redis blacklist
-- Significant security events are logged to the audit log
-
----
-
-## Troubleshooting
-
-| Problem | Solution |
-|---|---|
-| `Connection refused` to PostgreSQL | Check Docker is running: `docker-compose ps` |
-| `Connection refused` to Redis | Start Redis: `docker-compose up -d redis` |
-| `JWT decode error` | Check SECRET_KEY matches between restarts |
-| Frontend shows `Network Error` | Verify backend is running on port 8000 |
-| Migrations fail | Ensure `DATABASE_SYNC_URL` is set correctly |
-| Mock mode active unexpectedly | Check `LLM_PROVIDER` in `.env` |
-| Upload fails | Check `MAX_UPLOAD_SIZE_MB` and `LOCAL_STORAGE_PATH` is writable |
-
-For more help, check the [API docs](http://localhost:8000/docs) or open an issue.
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
