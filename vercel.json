@@ -1,42 +1,19 @@
 {
-  "services": {
-    "frontend": {
-      "root": "frontend",
-      "framework": "vite"
-    },
-    "backend": {
-      "root": "backend",
-      "entrypoint": "app.main:app"
-    }
-  },
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/dist",
+  "framework": "vite",
   "rewrites": [
     {
-      "source": "/api(/.*)?",
-      "destination": {
-        "type": "service",
-        "service": "backend"
-      }
+      "source": "/api/(.*)",
+      "destination": "https://nexus-ai-backend-api.loca.lt/api/$1"
     },
     {
       "source": "/assets/(.*)",
-      "destination": {
-        "type": "service",
-        "service": "frontend"
-      }
+      "destination": "/assets/$1"
     },
     {
-      "source": "/(robots\\.txt|sitemap\\.xml|llms\\.txt|ai-catalog\\.json|favicon\\.svg)",
-      "destination": {
-        "type": "service",
-        "service": "frontend"
-      }
-    },
-    {
-      "source": "/(.*)",
-      "destination": {
-        "type": "service",
-        "service": "frontend"
-      }
+      "source": "/((?!assets/|robots\\.txt|sitemap\\.xml|llms\\.txt|ai-catalog\\.json|favicon\\.svg|\\.well-known/).*)",
+      "destination": "/index.html"
     }
   ]
 }
