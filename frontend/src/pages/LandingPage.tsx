@@ -22,13 +22,11 @@ import { useTheme } from '../context/ThemeContext';
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
-  React.useEffect(() => {
-    // Warm up MainApp bundle in background after initial paint so dashboard navigation is instant
-    const timer = setTimeout(() => {
-      import('../MainApp');
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, []);
+
+  // Prefetch operational bundle on user intent (hover or touch) so dashboard navigation remains 0ms
+  const prefetchApp = () => {
+    import('../MainApp');
+  };
 
 
   return (
@@ -56,13 +54,21 @@ export const LandingPage: React.FC = () => {
               {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-300" /> : <Moon className="w-4 h-4 text-blue-700" />}
             </button>
 
-            <Button variant="ghost" size="sm" onClick={() => navigate('/login')}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate('/login')}
+              onMouseEnter={prefetchApp}
+              onTouchStart={prefetchApp}
+            >
               Sign in
             </Button>
             <Button
               variant="primary"
               size="sm"
               onClick={() => navigate('/workspace')}
+              onMouseEnter={prefetchApp}
+              onTouchStart={prefetchApp}
               iconRight={<ArrowRight className="w-4 h-4" />}
             >
               Launch workspace →
@@ -93,6 +99,8 @@ export const LandingPage: React.FC = () => {
               size="md"
               variant="primary"
               onClick={() => navigate('/workspace')}
+              onMouseEnter={prefetchApp}
+              onTouchStart={prefetchApp}
               iconRight={<ArrowRight className="w-4 h-4" />}
               className="w-full sm:w-auto px-7 py-2.5 font-bold"
             >
@@ -102,6 +110,8 @@ export const LandingPage: React.FC = () => {
               size="md"
               variant="secondary"
               onClick={() => navigate('/dashboard')}
+              onMouseEnter={prefetchApp}
+              onTouchStart={prefetchApp}
               className="w-full sm:w-auto px-7 py-2.5 font-bold"
             >
               Explore the platform
@@ -342,6 +352,8 @@ export const LandingPage: React.FC = () => {
             size="md"
             variant="primary"
             onClick={() => navigate('/workspace')}
+            onMouseEnter={prefetchApp}
+            onTouchStart={prefetchApp}
             iconRight={<ArrowRight className="w-4 h-4" />}
             className="px-8 py-3 text-sm font-bold shadow-lg shadow-blue-600/30"
           >
