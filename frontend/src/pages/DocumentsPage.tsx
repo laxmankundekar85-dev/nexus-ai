@@ -113,10 +113,10 @@ export const DocumentsPage: React.FC = () => {
             <div className="p-2 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/30">
               <FolderArchive className="w-5 h-5 text-white" />
             </div>
-            Document Store & Knowledge Context
+            Knowledge base
           </h1>
           <p className="text-xs text-slate-600 dark:text-zinc-400 font-body mt-1">
-            Indexed documents (PDF, DOCX, XLSX, CSV, TXT) parsed for grounded agent retrieval and citation.
+            Manage your source documents and monitor their processing status so they can be used in evidence-grounded research and analysis.
           </p>
         </div>
 
@@ -144,8 +144,8 @@ export const DocumentsPage: React.FC = () => {
           <div className="p-8">
             <EmptyState
               icon={<FileText className="w-6 h-6 text-blue-600 dark:text-white" />}
-              title="No documents uploaded"
-              description="Drop PDF or office documents above to parse and enable semantic agent grounding."
+              title="Build your knowledge base."
+              description="Upload your first document to enable document-grounded research and analysis."
             />
           </div>
         ) : (
@@ -183,7 +183,7 @@ export const DocumentsPage: React.FC = () => {
                         onClick={() => handleViewText(doc)}
                         icon={<Eye className="w-3.5 h-3.5 text-blue-700 dark:text-white" />}
                       >
-                        Preview Text
+                        View extracted text
                       </Button>
                       <Button
                         variant="danger"

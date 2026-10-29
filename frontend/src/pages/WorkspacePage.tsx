@@ -1064,15 +1064,15 @@ export const WorkspacePage: React.FC = () => {
             <Terminal className="w-4 h-4 text-white" />
           </div>
           <div>
-            <h2 className="text-sm font-semibold font-heading text-slate-950 dark:text-white tracking-wide">Execution Objective</h2>
-            <p className="text-[11px] text-slate-500 dark:text-zinc-400 font-body">Submit an enterprise research goal for autonomous agent coordination</p>
+            <h2 className="text-sm font-semibold font-heading text-slate-950 dark:text-white tracking-wide">Mission objective</h2>
+            <p className="text-[11px] text-slate-500 dark:text-zinc-400 font-body">Define an objective, provide supporting documents, and coordinate specialized agents to produce a structured intelligence report.</p>
           </div>
         </div>
 
         <div className="space-y-4">
           <textarea
             rows={3}
-            placeholder="Specify target objective (e.g. Compare NVIDIA and AMD AI GPU market share and price benchmarks in 2024 to 2026)."
+            placeholder="Describe the question you want to answer, the problem you want to solve, or the outcome you want to achieve."
             value={objective}
             onChange={(e) => {
               setObjective(e.target.value);
@@ -1099,7 +1099,7 @@ export const WorkspacePage: React.FC = () => {
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-[10px] font-heading font-semibold text-slate-500 dark:text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
                 <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
-                Prompt Inspiration & Examples (Click to Auto-Fill):
+                Sample objectives (click to configure):
               </span>
             </div>
             <div className="flex flex-wrap gap-1.5">
@@ -1131,7 +1131,7 @@ export const WorkspacePage: React.FC = () => {
           {documents && documents.length > 0 && (
             <div>
               <span className="text-[11px] font-bold text-slate-900 dark:text-white block mb-1.5 uppercase tracking-wider">
-                Attach Knowledge Grounding (Optional)
+                Supporting documents
               </span>
               <div className="flex flex-wrap gap-2">
                 {documents.map((doc: any) => {
@@ -1212,7 +1212,7 @@ export const WorkspacePage: React.FC = () => {
                 ) : (
                   <Play className="w-3.5 h-3.5 mr-1 fill-current" />
                 )}
-                Execute Pipeline
+                Start mission
               </Button>
             </div>
           </div>
@@ -1224,7 +1224,7 @@ export const WorkspacePage: React.FC = () => {
         <Card className="p-4 border-amber-500/30 bg-amber-500/10">
           <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 mb-2">
             <AlertCircle className="w-4 h-4" />
-            <h3 className="text-xs font-bold uppercase tracking-wider">Human In The Loop Approval Required</h3>
+            <h3 className="text-xs font-bold uppercase tracking-wider">Approval gate — Reviewer authorization required</h3>
           </div>
           <div className="space-y-2">
             {approvals.map((req: any) => (
@@ -1263,7 +1263,7 @@ export const WorkspacePage: React.FC = () => {
           <div className="flex items-center justify-between pb-3.5 border-b border-slate-200/80 dark:border-white/10 mb-3.5">
             <h3 className="text-xs font-semibold font-heading text-slate-950 dark:text-white uppercase tracking-wider flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-blue-600 shadow-xs shadow-blue-500/50" />
-              Subtasks Pipeline
+              Mission execution
             </h3>
             <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 font-medium border border-blue-200/80 dark:border-blue-900/40">
               {tasks.length} tasks
@@ -1274,7 +1274,7 @@ export const WorkspacePage: React.FC = () => {
             {tasks.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-slate-400 dark:text-slate-500 text-xs gap-2 font-body">
                 <Clock className="w-8 h-8 text-blue-500/60 dark:text-white/60 animate-pulse" />
-                <span>No active task pipeline. Submit an objective to initiate execution.</span>
+                <span>No active mission pipeline. Define an objective to begin execution.</span>
               </div>
             ) : (
               tasks.map((task, idx) => (
@@ -1340,7 +1340,7 @@ export const WorkspacePage: React.FC = () => {
           <div className="flex items-center justify-between pb-3.5 border-b border-slate-200/80 dark:border-white/10 mb-3.5">
             <h3 className="text-xs font-semibold font-heading text-slate-950 dark:text-white uppercase tracking-wider flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-xs shadow-emerald-500/50" />
-              Telemetry Stream (SSE)
+              Live agent activity
             </h3>
             <span className="inline-flex items-center gap-1.5 text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 font-medium">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Live Stream
@@ -1350,7 +1350,7 @@ export const WorkspacePage: React.FC = () => {
           <div className="bg-white/60 dark:bg-zinc-950/70 border border-slate-200/80 dark:border-white/10 rounded-xl p-3.5 overflow-y-auto flex-1 font-mono text-[11px] space-y-2 shadow-inner">
             {displayEvents.length === 0 ? (
               <div className="text-slate-400 dark:text-slate-500 flex items-center justify-center h-full font-body text-xs">
-                Telemetry stream idle. Waiting for events...
+                Live agent activity feed is waiting for events...
               </div>
             ) : (
               displayEvents.map((ev: any, i: number) => (
@@ -1375,10 +1375,10 @@ export const WorkspacePage: React.FC = () => {
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold font-heading text-slate-950 dark:text-white uppercase tracking-wider flex items-center gap-2">
               <FileCode className="w-4 h-4 text-emerald-500" />
-              Synthesized Intelligence Output Artifacts
+              Intelligence report preview
             </h3>
             <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 font-medium font-mono">
-              Ready for Download
+              Ready for review
             </span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

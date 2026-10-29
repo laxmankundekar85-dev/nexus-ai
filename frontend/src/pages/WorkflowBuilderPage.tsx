@@ -212,10 +212,10 @@ export const WorkflowBuilderPage: React.FC = () => {
 
         <div className="flex items-center gap-2">
           <Button variant="secondary" size="xs" onClick={handleValidate} icon={<CheckCircle className="w-3.5 h-3.5" />}>
-            Validate DAG
+            Validate workflow
           </Button>
           <Button variant="primary" size="xs" loading={loading} onClick={handleSave} icon={<Save className="w-3.5 h-3.5" />}>
-            Save Pipeline
+            Save workflow
           </Button>
         </div>
       </div>

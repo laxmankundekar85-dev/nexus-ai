@@ -20,12 +20,12 @@ import { useTheme } from '../context/ThemeContext';
 import Button from '../components/Button';
 
 const navItems = [
-  { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-  { label: 'AI Workspace', path: '/workspace', icon: Cpu },
-  { label: 'Workflow Builder', path: '/workflows', icon: GitFork },
-  { label: 'Documents', path: '/documents', icon: FolderArchive },
-  { label: 'Reports', path: '/reports', icon: FileText },
-  { label: 'Settings', path: '/settings', icon: Settings },
+  { label: 'Dashboard', sublabel: 'System overview', path: '/dashboard', icon: LayoutDashboard },
+  { label: 'AI mission workspace', sublabel: 'Execute missions', path: '/workspace', icon: Cpu },
+  { label: 'Workflow builder', sublabel: 'Workflow studio', path: '/workflows', icon: GitFork },
+  { label: 'Knowledge base', sublabel: 'Source documents', path: '/documents', icon: FolderArchive },
+  { label: 'Intelligence reports', sublabel: 'Synthesized dossiers', path: '/reports', icon: FileText },
+  { label: 'Platform configuration', sublabel: 'Settings & models', path: '/settings', icon: Settings },
 ];
 
 export const MainLayout: React.FC = () => {
@@ -129,7 +129,12 @@ export const MainLayout: React.FC = () => {
                       {({ isActive }) => (
                         <>
                           <Icon className={clsx('w-4 h-4', isActive ? 'text-white dark:text-black' : 'text-slate-500 dark:text-zinc-400')} />
-                          <span>{item.label}</span>
+                          <div className="flex flex-col">
+                            <span>{item.label}</span>
+                            <span className={clsx('text-[10px] font-normal', isActive ? 'text-white/80 dark:text-black/70' : 'text-slate-500 dark:text-zinc-500')}>
+                              {item.sublabel}
+                            </span>
+                          </div>
                         </>
                       )}
                     </NavLink>
@@ -146,7 +151,7 @@ export const MainLayout: React.FC = () => {
                 </p>
                 <div className="flex items-center gap-1.5 mt-0.5">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono uppercase tracking-wider font-bold">Online</span>
+                  <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono uppercase tracking-wider font-bold">Operational</span>
                 </div>
               </div>
 
@@ -160,7 +165,7 @@ export const MainLayout: React.FC = () => {
                 icon={<LogOut className="w-3.5 h-3.5 text-slate-500 dark:text-zinc-400" />}
                 className="w-full justify-start text-xs text-slate-700 dark:text-zinc-300 hover:text-rose-600 dark:hover:text-rose-400 font-bold"
               >
-                Sign Out
+                Sign out
               </Button>
             </div>
           </div>
@@ -182,7 +187,7 @@ export const MainLayout: React.FC = () => {
               <h1 className="text-sm font-bold font-title text-slate-950 dark:text-white tracking-wide flex items-center gap-1.5">
                 NEXUS <span className="text-blue-600 dark:text-blue-400 text-xs font-mono font-medium">OS</span>
               </h1>
-              <p className="text-[10px] text-slate-500 dark:text-zinc-400 font-mono tracking-wider uppercase font-medium">Agent Operating Platform</p>
+              <p className="text-[10px] text-slate-500 dark:text-zinc-400 font-mono tracking-wider uppercase font-medium">Enterprise intelligence</p>
             </div>
           </div>
 
@@ -206,7 +211,12 @@ export const MainLayout: React.FC = () => {
                   {({ isActive }) => (
                     <>
                       <Icon className={clsx('w-4 h-4', isActive ? 'text-white dark:text-black' : 'text-slate-500 dark:text-zinc-400')} />
-                      <span>{item.label}</span>
+                      <div className="flex flex-col text-left">
+                        <span>{item.label}</span>
+                        <span className={clsx('text-[10px] font-normal leading-tight', isActive ? 'text-white/80 dark:text-black/70' : 'text-slate-500 dark:text-zinc-500')}>
+                          {item.sublabel}
+                        </span>
+                      </div>
                     </>
                   )}
                 </NavLink>
@@ -238,7 +248,7 @@ export const MainLayout: React.FC = () => {
               </p>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono uppercase tracking-wider font-medium">Online</span>
+                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono uppercase tracking-wider font-medium">Operational</span>
               </div>
             </div>
 
@@ -249,7 +259,7 @@ export const MainLayout: React.FC = () => {
               icon={<LogOut className="w-3.5 h-3.5 text-slate-500 dark:text-zinc-400" />}
               className="text-xs text-slate-700 dark:text-zinc-300 hover:text-rose-600 dark:hover:text-rose-400 font-body"
             >
-              Sign Out
+              Sign out
             </Button>
           </div>
         </div>

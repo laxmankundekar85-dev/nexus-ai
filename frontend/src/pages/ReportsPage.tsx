@@ -71,10 +71,10 @@ export const ReportsPage: React.FC = () => {
           <div className="p-2 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/30">
             <FileText className="w-5 h-5 text-white" />
           </div>
-          Intelligence Reports & Synthesized Artifacts
+          Intelligence reports
         </h1>
         <p className="text-xs text-slate-600 dark:text-zinc-400 font-body mt-1">
-          Executive summaries, empirical findings, and verified citations generated across all agent executions.
+          Access, review, compare, and export the reports produced by your completed missions.
         </p>
       </div>
 
@@ -82,8 +82,8 @@ export const ReportsPage: React.FC = () => {
         <div className="space-y-4">
           <EmptyState
             icon={<Layers className="w-6 h-6 text-blue-600 dark:text-white" />}
-            title="No intelligence reports generated yet"
-            description="Submit an objective in the AI Workspace. The Report Generator Agent will compile verified findings into downloadable artifacts."
+            title="Your reports will appear here."
+            description="Complete a mission to create your first intelligence dossier."
           />
           <div className="flex justify-center">
             <Button
@@ -92,7 +92,7 @@ export const ReportsPage: React.FC = () => {
               onClick={() => navigate('/workspace')}
               iconRight={<ArrowRight className="w-4 h-4" />}
             >
-              Launch AI Workspace to Generate a Report
+              Start a mission
             </Button>
           </div>
         </div>
