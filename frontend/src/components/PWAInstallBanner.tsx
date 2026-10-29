@@ -3,12 +3,12 @@ import { Smartphone, Download, X } from 'lucide-react';
 import { usePWAInstall } from '../hooks/usePWAInstall';
 
 export const PWAInstallBanner: React.FC = () => {
-  const { isInstallable, isInstalled, installApp } = usePWAInstall();
+  const { isInstallable, isInstalled } = usePWAInstall();
   const [dismissed, setDismissed] = useState(() => {
     return sessionStorage.getItem('nexus_pwa_dismissed') === '1';
   });
 
-  if (!isInstallable || isInstalled || dismissed) {
+  if (isInstalled || dismissed) {
     return null;
   }
 
@@ -26,25 +26,26 @@ export const PWAInstallBanner: React.FC = () => {
           </div>
           <div>
             <h4 className="text-xs font-bold text-white tracking-tight flex items-center gap-1.5">
-              Install Android App
-              <span className="px-1.5 py-0.2 rounded text-[9px] font-mono bg-blue-500/20 text-blue-300 border border-blue-400/30">
-                PWA
+              Native Android App (.apk)
+              <span className="px-1.5 py-0.2 rounded text-[9px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+                All Android 11-15
               </span>
             </h4>
             <p className="text-[11px] text-zinc-400 font-normal leading-tight mt-0.5">
-              Instant fullscreen launch & offline intelligence
+              No Chrome notifications & native lockscreen alerts
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-1.5 shrink-0">
-          <button
-            onClick={installApp}
+          <a
+            href="/NexusAI.apk"
+            download="NexusAI.apk"
             className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-md shadow-blue-600/30"
           >
             <Download className="w-3.5 h-3.5" />
-            Install
-          </button>
+            Download APK
+          </a>
           <button
             onClick={handleDismiss}
             aria-label="Dismiss install banner"

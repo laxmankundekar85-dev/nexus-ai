@@ -357,18 +357,18 @@ export const SettingsPage: React.FC = () => {
 
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
             <p className="text-[11px] text-slate-600 dark:text-zinc-400 leading-relaxed">
-              Install Nexus AI directly on your Android home screen and app drawer with instant fullscreen launching and zero browser chrome.
+              Official signed native APK for Android 11, 12, 13, 14, and 15 with zero Chrome browser notifications, persistent login, and lockscreen alerts.
             </p>
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={installApp}
-              disabled={isInstalled || !isInstallable}
-              icon={<Download className="w-3.5 h-3.5" />}
-              className="shrink-0"
-            >
-              {isInstalled ? 'App Installed' : 'Install on Android'}
-            </Button>
+            <div className="flex items-center gap-2 shrink-0">
+              <a
+                href="/NexusAI.apk"
+                download="NexusAI.apk"
+                className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-blue-600/30 transition-all"
+              >
+                <Download className="w-3.5 h-3.5" />
+                Download Native APK (.apk)
+              </a>
+            </div>
           </div>
         </Card>
 
