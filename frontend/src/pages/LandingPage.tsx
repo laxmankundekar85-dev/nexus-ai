@@ -22,6 +22,14 @@ import { useTheme } from '../context/ThemeContext';
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
+  React.useEffect(() => {
+    // Warm up MainApp bundle in background after initial paint so dashboard navigation is instant
+    const timer = setTimeout(() => {
+      import('../MainApp');
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
 
   return (
     <div className="min-h-screen bg-[#eaeff6] dark:bg-black text-slate-900 dark:text-white font-sans selection:bg-blue-600/20 selection:text-blue-900 dark:selection:text-white relative overflow-hidden transition-colors duration-200">
@@ -101,7 +109,7 @@ export const LandingPage: React.FC = () => {
           </div>
 
           {/* Supporting Trust Statement */}
-          <p className="text-xs font-medium text-slate-600 dark:text-zinc-400 mb-14 tracking-wide">
+          <p className="text-xs font-medium text-slate-700 dark:text-zinc-300 mb-14 tracking-wide">
             One coordinated workflow. Multiple specialized agents. Evidence-backed deliverables.
           </p>
 
@@ -114,7 +122,7 @@ export const LandingPage: React.FC = () => {
                   <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
                 </div>
-                <span className="ml-2 font-mono text-[10px] uppercase font-bold text-slate-600 dark:text-zinc-400">
+                <span className="ml-2 font-mono text-[10px] uppercase font-bold text-slate-700 dark:text-zinc-300">
                   LIVE MISSION OVERVIEW
                 </span>
               </div>
@@ -123,7 +131,7 @@ export const LandingPage: React.FC = () => {
               </span>
             </div>
 
-            <p className="px-3 pt-3 text-[11px] text-slate-600 dark:text-zinc-400 font-body">
+            <p className="px-3 pt-3 text-[11px] text-slate-700 dark:text-zinc-300 font-body">
               Watch specialized agents plan, investigate, analyze, and validate findings in a unified execution pipeline.
             </p>
 
@@ -145,15 +153,15 @@ export const LandingPage: React.FC = () => {
                     <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-white motion-safe:animate-ping will-change-[transform,opacity] shrink-0 mt-1" />
                     <span>3. Document analysis — Extracting source-backed findings</span>
                   </li>
-                  <li className="flex items-start gap-2 text-slate-600 dark:text-zinc-500 text-[11px]">
+                  <li className="flex items-start gap-2 text-slate-700 dark:text-zinc-400 text-[11px]">
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-zinc-700 shrink-0 mt-1.5" />
                     <span>4. Synthesis — Connecting evidence and evaluating results</span>
                   </li>
-                  <li className="flex items-start gap-2 text-slate-600 dark:text-zinc-500 text-[11px]">
+                  <li className="flex items-start gap-2 text-slate-700 dark:text-zinc-400 text-[11px]">
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-zinc-700 shrink-0 mt-1.5" />
                     <span>5. Verification — Checking claims and identifying discrepancies</span>
                   </li>
-                  <li className="flex items-start gap-2 text-slate-600 dark:text-zinc-500 text-[11px]">
+                  <li className="flex items-start gap-2 text-slate-700 dark:text-zinc-400 text-[11px]">
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-zinc-700 shrink-0 mt-1.5" />
                     <span>6. Reporting — Preparing the final intelligence dossier</span>
                   </li>
@@ -173,7 +181,7 @@ export const LandingPage: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="mt-3 pt-2.5 border-t border-slate-300 dark:border-white/10 flex items-center justify-between text-[10px] font-mono text-slate-500 dark:text-zinc-400">
+                <div className="mt-3 pt-2.5 border-t border-slate-300 dark:border-white/10 flex items-center justify-between text-[10px] font-mono text-slate-700 dark:text-zinc-300">
                   <span>Status: Autonomous Pipeline Active</span>
                   <span>Telemetry: Real-time SSE</span>
                 </div>
@@ -201,7 +209,7 @@ export const LandingPage: React.FC = () => {
               <h3 className="text-sm font-semibold font-heading text-slate-950 dark:text-white mb-1.5">
                 Autonomous agent orchestration
               </h3>
-              <p className="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed font-normal">
+              <p className="text-xs text-slate-700 dark:text-zinc-300 leading-relaxed font-normal">
                 Break complex objectives into coordinated tasks executed by specialized AI agents.
               </p>
             </Card>
@@ -213,7 +221,7 @@ export const LandingPage: React.FC = () => {
               <h3 className="text-sm font-semibold font-heading text-slate-950 dark:text-white mb-1.5">
                 Evidence-backed research
               </h3>
-              <p className="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed font-normal">
+              <p className="text-xs text-slate-700 dark:text-zinc-300 leading-relaxed font-normal">
                 Collect relevant information, preserve source references, and make findings easier to verify.
               </p>
             </Card>
@@ -225,7 +233,7 @@ export const LandingPage: React.FC = () => {
               <h3 className="text-sm font-semibold font-heading text-slate-950 dark:text-white mb-1.5">
                 Document intelligence
               </h3>
-              <p className="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed font-normal">
+              <p className="text-xs text-slate-700 dark:text-zinc-300 leading-relaxed font-normal">
                 Extract meaningful insights from technical documents, reports, spreadsheets, and other supported files.
               </p>
             </Card>
@@ -237,7 +245,7 @@ export const LandingPage: React.FC = () => {
               <h3 className="text-sm font-semibold font-heading text-slate-950 dark:text-white mb-1.5">
                 Analytical reasoning
               </h3>
-              <p className="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed font-normal">
+              <p className="text-xs text-slate-700 dark:text-zinc-300 leading-relaxed font-normal">
                 Compare evidence, evaluate data, and perform reproducible calculations to support conclusions.
               </p>
             </Card>
@@ -249,7 +257,7 @@ export const LandingPage: React.FC = () => {
               <h3 className="text-sm font-semibold font-heading text-slate-950 dark:text-white mb-1.5">
                 Quality assurance
               </h3>
-              <p className="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed font-normal">
+              <p className="text-xs text-slate-700 dark:text-zinc-300 leading-relaxed font-normal">
                 Review findings for missing evidence, inconsistencies, and unsupported statements.
               </p>
             </Card>
@@ -261,7 +269,7 @@ export const LandingPage: React.FC = () => {
               <h3 className="text-sm font-semibold font-heading text-slate-950 dark:text-white mb-1.5">
                 Publication-ready reporting
               </h3>
-              <p className="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed font-normal">
+              <p className="text-xs text-slate-700 dark:text-zinc-300 leading-relaxed font-normal">
                 Transform reviewed findings into structured reports with citations, tables, and export options.
               </p>
             </Card>
@@ -282,40 +290,40 @@ export const LandingPage: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             <div className="p-4 rounded-xl bg-white/70 dark:bg-zinc-950/70 border border-slate-200 dark:border-white/10 shadow-xs">
               <span className="text-[10px] font-mono font-bold text-blue-600 dark:text-blue-400 block mb-1">Step 1</span>
-              <h4 className="text-xs font-semibold font-heading text-slate-950 dark:text-white mb-1.5">Define the objective</h4>
-              <p className="text-[11px] text-slate-600 dark:text-zinc-400 font-body leading-relaxed">
+              <h3 className="text-xs font-semibold font-heading text-slate-950 dark:text-white mb-1.5">Define the objective</h3>
+              <p className="text-[11px] text-slate-700 dark:text-zinc-300 font-body leading-relaxed">
                 Describe the question, problem, or business outcome you want to investigate.
               </p>
             </div>
 
             <div className="p-4 rounded-xl bg-white/70 dark:bg-zinc-950/70 border border-slate-200 dark:border-white/10 shadow-xs">
               <span className="text-[10px] font-mono font-bold text-blue-600 dark:text-blue-400 block mb-1">Step 2</span>
-              <h4 className="text-xs font-semibold font-heading text-slate-950 dark:text-white mb-1.5">Coordinate the agents</h4>
-              <p className="text-[11px] text-slate-600 dark:text-zinc-400 font-body leading-relaxed">
+              <h3 className="text-xs font-semibold font-heading text-slate-950 dark:text-white mb-1.5">Coordinate the agents</h3>
+              <p className="text-[11px] text-slate-700 dark:text-zinc-300 font-body leading-relaxed">
                 Nexus AI organizes the work into specialized tasks and assigns the appropriate capabilities.
               </p>
             </div>
 
             <div className="p-4 rounded-xl bg-white/70 dark:bg-zinc-950/70 border border-slate-200 dark:border-white/10 shadow-xs">
               <span className="text-[10px] font-mono font-bold text-blue-600 dark:text-blue-400 block mb-1">Step 3</span>
-              <h4 className="text-xs font-semibold font-heading text-slate-950 dark:text-white mb-1.5">Gather the evidence</h4>
-              <p className="text-[11px] text-slate-600 dark:text-zinc-400 font-body leading-relaxed">
+              <h3 className="text-xs font-semibold font-heading text-slate-950 dark:text-white mb-1.5">Gather the evidence</h3>
+              <p className="text-[11px] text-slate-700 dark:text-zinc-300 font-body leading-relaxed">
                 Retrieve relevant documents, research sources, and supporting data.
               </p>
             </div>
 
             <div className="p-4 rounded-xl bg-white/70 dark:bg-zinc-950/70 border border-slate-200 dark:border-white/10 shadow-xs">
               <span className="text-[10px] font-mono font-bold text-blue-600 dark:text-blue-400 block mb-1">Step 4</span>
-              <h4 className="text-xs font-semibold font-heading text-slate-950 dark:text-white mb-1.5">Analyze and validate</h4>
-              <p className="text-[11px] text-slate-600 dark:text-zinc-400 font-body leading-relaxed">
+              <h3 className="text-xs font-semibold font-heading text-slate-950 dark:text-white mb-1.5">Analyze and validate</h3>
+              <p className="text-[11px] text-slate-700 dark:text-zinc-300 font-body leading-relaxed">
                 Synthesize the findings, check calculations, and flag claims that require additional evidence.
               </p>
             </div>
 
             <div className="p-4 rounded-xl bg-white/70 dark:bg-zinc-950/70 border border-slate-200 dark:border-white/10 shadow-xs">
               <span className="text-[10px] font-mono font-bold text-blue-600 dark:text-blue-400 block mb-1">Step 5</span>
-              <h4 className="text-xs font-semibold font-heading text-slate-950 dark:text-white mb-1.5">Deliver the report</h4>
-              <p className="text-[11px] text-slate-600 dark:text-zinc-400 font-body leading-relaxed">
+              <h3 className="text-xs font-semibold font-heading text-slate-950 dark:text-white mb-1.5">Deliver the report</h3>
+              <p className="text-[11px] text-slate-700 dark:text-zinc-300 font-body leading-relaxed">
                 Review the final findings and export the resulting intelligence dossier.
               </p>
             </div>
@@ -352,7 +360,7 @@ export const LandingPage: React.FC = () => {
               </div>
               <span className="font-extrabold text-slate-950 dark:text-white">Nexus AI</span>
             </div>
-            <p className="text-[11px] text-slate-600 dark:text-zinc-400 max-w-md font-normal leading-relaxed">
+            <p className="text-[11px] text-slate-700 dark:text-zinc-300 max-w-md font-normal leading-relaxed">
               Nexus AI is an enterprise intelligence platform for coordinated AI research, document analysis, evidence verification, and structured reporting.
             </p>
           </div>
@@ -366,7 +374,7 @@ export const LandingPage: React.FC = () => {
             <button onClick={() => navigate('/settings')} className="hover:text-blue-600 dark:hover:text-white transition-colors">Settings</button>
           </div>
         </div>
-        <div className="max-w-6xl mx-auto mt-8 pt-4 border-t border-slate-300/60 dark:border-white/10 text-center text-[10px] text-slate-500 dark:text-zinc-500">
+        <div className="max-w-6xl mx-auto mt-8 pt-4 border-t border-slate-300/60 dark:border-white/10 text-center text-[10px] text-slate-700 dark:text-zinc-400">
           © 2026 Nexus AI. All rights reserved. Coordinated enterprise multi-agent workflows.
         </div>
       </footer>
